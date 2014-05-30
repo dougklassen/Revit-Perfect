@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<RevitAddIns>
+  <AddIn Type="Command">
+    <Assembly>"C:\ProgramData\AutoDesk\Revit\AddIns\2014\NewAddIn\NewAddIn.dll"</Assembly>
+    <AddInId>2b81f0b0-5cbc-43f4-ac40-be70e37b461f</AddInId>
+    <FullClassName>DougKlassen.Revit.NewAddIn.Commands.NewCommand</FullClassName>
+    <Text>New Command</Text>
+    <VendorId>TSRA</VendorId>
+    <VendorDescription>Doug Klassen</VendorDescription>
+  </AddIn>
+  <AddIn Type="Application">
+    <Name>NewAddInPanel</Name>
+    <Assembly>C:\ProgramData\AutoDesk\Revit\AddIns\2014\NewAddIn\NewAddIn.dll</Assembly>
+    <AddInId>f78e5539-0065-4bbd-8cf1-be086c1b6d1a</AddInId>
+    <FullClassName>DougKlassen.Revit.NewAddIn.StartUp.StartUpApp</FullClassName>
+    <VendorId>TSRA</VendorId>
+    <VendorDescription>Doug Klassen</VendorDescription>
+  </AddIn>
+</RevitAddIns>
