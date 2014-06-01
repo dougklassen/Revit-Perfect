@@ -31,14 +31,45 @@ namespace DougKlassen.Revit.Perfect.StartUp
             BitmapImage smallIcon = GetEmbeddedImageResource("iconSmall.png");
 
             PushButtonData renameFamiliesCommandPushButtonData = new PushButtonData(
-                "RenameFamiliesCommandButton", //name of the button
-                "Family Names", //text on the button
-                FileLocations.AddInDirectory + FileLocations.AssemblyName + ".dll",
-                "DougKlassen.Revit.Perfect.Commands.RenameFamiliesCommand");
+                name: "RenameFamiliesCommandButton",
+                text: "Family Names",
+                assemblyName: FileLocations.AddInDirectory + FileLocations.AssemblyName + ".dll",
+                className: "DougKlassen.Revit.Perfect.Commands.RenameFamiliesCommand")
+                {
+                    LargeImage = largeIcon,
+                    Image = smallIcon
+                };
             renameFamiliesCommandPushButtonData.LargeImage = largeIcon;
+
+            PushButtonData exportImportStylesCommandPushButtonData = new PushButtonData(
+                name: "ExportImportStylesCommandButton",
+                text: "Export Styles",
+                assemblyName: FileLocations.AddInDirectory + FileLocations.AssemblyName + ".dll",
+                className: "DougKlassen.Revit.Perfect.Commands.ExportImportStylesCommand")
+                {
+                    LargeImage = largeIcon,
+                    Image = smallIcon
+                };
+
+            PushButtonData loadImportStylesCommandPushButtonData = new PushButtonData(
+                name: "LoadImportStylesCommandButton",
+                text: "Import Styles",
+                assemblyName: FileLocations.AddInDirectory + FileLocations.AssemblyName + ".dll",
+                className: "DougKlassen.Revit.Perfect.Commands.LoadImportStylesCommand")
+            {
+                LargeImage = largeIcon,
+                Image = smallIcon
+            };
 
             RibbonPanel PerfectRibbonPanel = application.CreateRibbonPanel("Perfect Standards");
             PerfectRibbonPanel.AddItem(renameFamiliesCommandPushButtonData);
+
+            SplitButtonData stylesSplitButtonData = new SplitButtonData(
+                name: "StylesSplitButton",
+                text: "Manage Import Styles");
+            SplitButton sb = PerfectRibbonPanel.AddItem(stylesSplitButtonData) as SplitButton;
+            sb.AddPushButton(exportImportStylesCommandPushButtonData);
+            sb.AddPushButton(loadImportStylesCommandPushButtonData);
 
             return Result.Succeeded;
         }
