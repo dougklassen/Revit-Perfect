@@ -32,12 +32,12 @@ namespace DougKlassen.Revit.Perfect.StartUp
 
             PushButtonData renameFamiliesCommandPushButtonData = new PushButtonData(
                 "RenameFamiliesCommandButton", //name of the button
-                "RenameFamiliesCommand", //text on the button
+                "Family Names", //text on the button
                 FileLocations.AddInDirectory + FileLocations.AssemblyName + ".dll",
-                "Perfect.Commands.RenameFamiliesCommand");
+                "DougKlassen.Revit.Perfect.Commands.RenameFamiliesCommand");
             renameFamiliesCommandPushButtonData.LargeImage = largeIcon;
 
-            RibbonPanel PerfectRibbonPanel = application.CreateRibbonPanel("Perfect");
+            RibbonPanel PerfectRibbonPanel = application.CreateRibbonPanel("Perfect Standards");
             PerfectRibbonPanel.AddItem(renameFamiliesCommandPushButtonData);
 
             return Result.Succeeded;
