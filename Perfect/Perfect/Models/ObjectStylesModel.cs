@@ -60,5 +60,12 @@ namespace DougKlassen.Revit.Perfect.Models
             get;
             set;
         }
+
+        [DataMember(Order = 6)]
+        public Boolean Delete
+        {
+            get;
+            set;
+        }
     }
 }

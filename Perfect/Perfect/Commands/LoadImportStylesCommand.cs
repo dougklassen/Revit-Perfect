@@ -60,8 +60,17 @@ namespace DougKlassen.Revit.Perfect.Commands
 
                         if (null != matchingStyle)
                         {
-                            sc.SetLineWeight(matchingStyle.ProjectionLineweight.Value, GraphicsStyleType.Projection);
-                            sc.LineColor = matchingStyle.LineColor;
+                            if (matchingStyle.Delete)
+                            {
+                                //Delete will remove the category but not any linework belonging to it
+                                //All elements that were on the corresponding layer will display per the parent category for the import
+                                dbDoc.Delete(sc.Id);
+                            }
+                            else
+                            {
+                                sc.SetLineWeight(matchingStyle.ProjectionLineweight.Value, GraphicsStyleType.Projection);
+                                sc.LineColor = matchingStyle.LineColor;
+                            }
                         }
                     }
                 }

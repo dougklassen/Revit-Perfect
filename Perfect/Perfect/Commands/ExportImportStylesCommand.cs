@@ -44,7 +44,8 @@ namespace DougKlassen.Revit.Perfect.Commands
                         {
                             Name = sc.Name,
                             ProjectionLineweight = sc.GetLineWeight(GraphicsStyleType.Projection),
-                            LineColor = sc.LineColor
+                            LineColor = sc.LineColor,
+                            Delete = false
                         });
                     }
                 }
