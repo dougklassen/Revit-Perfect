@@ -60,6 +60,9 @@
     <Compile Include="Commands\ExportImportStylesCommand\ExportImportStylesCommand.cs" />
     <Compile Include="Commands\LoadImportStylesCommand\LoadImportStylesCommand.cs" />
     <Compile Include="Commands\PurgeLinePatternsCommand\PurgeLinePatternsCommand.cs" />
+    <Compile Include="Commands\PurgeLinePatternsCommand\PurgeLinePatternsWindow.xaml.cs">
+      <DependentUpon>PurgeLinePatternsWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Commands\PurgeParametersCommand\PurgeParametersCommand.cs" />
     <Compile Include="Commands\RenameFamiliesCommand\RenameFamiliesCommand.cs" />
     <Compile Include="Helpers.cs" />
@@ -89,7 +92,12 @@
   <ItemGroup>
     <EmbeddedResource Include="Resources\iconLarge.png" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Page Include="Commands\PurgeLinePatternsCommand\PurgeLinePatternsWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>xcopy "$(ProjectDir)""$(OutDir)"* "C:\ProgramData\Autodesk\Revit\Addins\2014\Perfect" /S /Y</PostBuildEvent>
