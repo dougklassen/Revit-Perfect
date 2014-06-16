@@ -60,8 +60,8 @@
     <Compile Include="Commands\ExportImportStylesCommand\ExportImportStylesCommand.cs" />
     <Compile Include="Commands\LoadImportStylesCommand\LoadImportStylesCommand.cs" />
     <Compile Include="Commands\PurgeLinePatternsCommand\PurgeLinePatternsCommand.cs" />
-    <Compile Include="Commands\PurgeLinePatternsCommand\PurgeLinePatternsWindow.xaml.cs">
-      <DependentUpon>PurgeLinePatternsWindow.xaml</DependentUpon>
+    <Compile Include="Interface\PurgeElementsWindow.xaml.cs">
+      <DependentUpon>PurgeElementsWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Commands\PurgeParametersCommand\PurgeParametersCommand.cs" />
     <Compile Include="Commands\RenameFamiliesCommand\RenameFamiliesCommand.cs" />
@@ -93,7 +93,7 @@
     <EmbeddedResource Include="Resources\iconLarge.png" />
   </ItemGroup>
   <ItemGroup>
-    <Page Include="Commands\PurgeLinePatternsCommand\PurgeLinePatternsWindow.xaml">
+    <Page Include="Interface\PurgeElementsWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

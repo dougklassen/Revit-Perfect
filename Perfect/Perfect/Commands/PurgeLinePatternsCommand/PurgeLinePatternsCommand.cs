@@ -7,6 +7,8 @@ using System.Text.RegularExpressions;
 using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
 
+using DougKlassen.Revit.Perfect.Interface;
+
 namespace DougKlassen.Revit.Perfect.Commands
 {
     [Autodesk.Revit.Attributes.Transaction(Autodesk.Revit.Attributes.TransactionMode.Manual)]
@@ -18,17 +20,32 @@ namespace DougKlassen.Revit.Perfect.Commands
 
             IEnumerable<LinePatternElement> docLinePatterns = new FilteredElementCollector(dbDoc).OfClass(typeof(LinePatternElement)).AsEnumerable().Cast<LinePatternElement>();
 
-            Regex importPatternRegEx = new Regex(@"^IMPORT-.*");
-            var importLinePatterns = docLinePatterns.Where(p => importPatternRegEx.IsMatch(p.Name));
+            PurgeElementsWindow purgeWindow = new PurgeElementsWindow(dbDoc, typeof(LinePatternElement));
+            purgeWindow.PurgeRegExString = @"^IMPORT-.*$";
 
-            String msg = String.Empty;
-
-            foreach (LinePatternElement pattern in importLinePatterns)
+            purgeWindow.ShowDialog();
+            if (false == purgeWindow.DialogResult)
             {
-                msg += pattern.Name + '\n';
+                return Result.Cancelled;
             }
 
-            TaskDialog.Show("Purge Line Patterns", msg,);
+            ICollection<ElementId> patternsToDelete = new List<ElementId>();
+            ElementId match;
+            foreach (String patName in purgeWindow.MatchingElementsListBox.Items)
+            {
+                match = docLinePatterns.Where(p => patName == p.Name).FirstOrDefault().Id;
+                if (null != match)
+                {
+                    patternsToDelete.Add(match);
+                }
+            }
+
+            using (Transaction t = new Transaction(dbDoc, "Purge Line Patterns"))
+            {
+                t.Start();
+                dbDoc.Delete(patternsToDelete);
+                t.Commit();
+            }
 
             return Result.Succeeded;
         }
