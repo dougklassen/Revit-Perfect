@@ -5,16 +5,17 @@
         Title="Perfect - Purge Elements" Height="300" Width="500">
     <DockPanel LastChildFill="True">
         <Canvas Height="40" DockPanel.Dock="Top">
-            <TextBlock TextWrapping="Wrap" Text="Purge Elements Matching Regular Expression:" Margin="20"/>
+            <TextBlock TextWrapping="Wrap" Text="Purge Elements Matching Regular Expression (Case Sensitive):" Margin="20, 15"/>
         </Canvas>
         <Canvas Height="40" DockPanel.Dock="Bottom">
             <Button x:Name="CancelButton" Content="Cancel" Width="75" Canvas.Right="20" Canvas.Bottom="10" IsCancel="True"/>
             <Button x:Name="OkButton" Content="OK" Canvas.Right="110" Canvas.Bottom="10" Width="75" Click="OkButton_Click"/>
         </Canvas>
-        <ListBox x:Name="MatchingElementsListBox" DockPanel.Dock="Right" Width="200" Margin="10,20,10,20"/>
+        <ListBox x:Name="MatchingElementsListBox" DockPanel.Dock="Right" Width="200" Margin="20, 4"/>
         <StackPanel>
-            <TextBox x:Name="PurgeRegExTextBox" Height="23" Margin="20" TextChanged="PurgeRegExTextBox_TextChanged"
+            <TextBox x:Name="PurgeRegExTextBox" Height="23" Margin="20, 4" TextChanged="PurgeRegExTextBox_TextChanged"
                      Text="{Binding Path=PurgeRegExString, UpdateSourceTrigger=PropertyChanged}"/>
+            <Label x:Name="PurgeElementCountLabel" Margin="20, 4"/>
         </StackPanel>
     </DockPanel>
 </Window>

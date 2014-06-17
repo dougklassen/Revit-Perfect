@@ -77,7 +77,12 @@ namespace DougKlassen.Revit.Perfect.Interface
 
         private void PurgeRegExTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-            MatchingElementsListBox.ItemsSource = GetMatchingDocLinePatternNames();
+            IEnumerable<String> matchingLinePatterns = GetMatchingDocLinePatternNames();
+            PurgeElementCountLabel.Content = 
+                1 == matchingLinePatterns.Count() ?
+                matchingLinePatterns.Count() + " element will be purged" :
+                matchingLinePatterns.Count() + " elements will be purged";
+            MatchingElementsListBox.ItemsSource = matchingLinePatterns;
         }
 
         private void OkButton_Click(object sender, RoutedEventArgs e)

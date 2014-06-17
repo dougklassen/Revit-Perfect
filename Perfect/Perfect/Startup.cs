@@ -39,11 +39,21 @@ namespace DougKlassen.Revit.Perfect
                 text: "About Perfect",
                 assemblyName: FileLocations.AssemblyPath,
                 className: "DougKlassen.Revit.Perfect.Commands.AboutCommand")
-                {
-                    LargeImage = largeIcon,
-                    Image = smallIcon,
-                    AvailabilityClassName = "DougKlassen.Revit.Perfect.Commands.AboutCommandAvailability"
-                };
+            {
+                LargeImage = largeIcon,
+                Image = smallIcon,
+                AvailabilityClassName = "DougKlassen.Revit.Perfect.Commands.AboutCommandAvailability"
+            };
+
+            PushButtonData auditViewNamesCommandPushButtonData = new PushButtonData(
+                name: "AuditViewNamesPushButton",
+                text: "Audit View Naming",
+                assemblyName: FileLocations.AssemblyPath,
+                className: "DougKlassen.Revit.Perfect.Commands.AuditViewNamesCommand")
+            {
+                LargeImage = largeIcon,
+                Image = smallIcon
+            };
 
             PushButtonData exportImportStylesCommandPushButtonData = new PushButtonData(
                 name: "ExportImportStylesCommandButton",
@@ -114,6 +124,7 @@ namespace DougKlassen.Revit.Perfect
             cleanUpToolsPullDownButton.AddPushButton(purgeLinePatternsCommandPushButtonData);
             cleanUpToolsPullDownButton.AddPushButton(purgeParametersCommandPushButtonData);
             cleanUpToolsPullDownButton.AddPushButton(renameFamiliesCommandPushButtonData);
+            cleanUpToolsPullDownButton.AddPushButton(auditViewNamesCommandPushButtonData);
 
             PulldownButton stylesPullDownButton = (PulldownButton) stackOne[1];
             stylesPullDownButton.AddPushButton(exportImportStylesCommandPushButtonData);
