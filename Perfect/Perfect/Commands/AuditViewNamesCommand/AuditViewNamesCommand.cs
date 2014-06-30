@@ -30,21 +30,43 @@ namespace DougKlassen.Revit.Perfect.Commands
             msg += planViews.Count() + " plan views found\n\n";
 
             Regex splitRegex = new Regex("_");
-            String[] segsMatch;
+            List<String> oldName, newName;
 
-            foreach (ViewPlan plan in planViews)
+            using (Transaction t = new Transaction(dbDoc, "Standardize View Names"))
             {
-                segsMatch = splitRegex.Split(plan.Name);
+                t.Start();
 
-                msg += segsMatch.Count() + " Segments: ";
-                String segs = String.Empty;
-                foreach (String s in segsMatch)
+                foreach (ViewPlan plan in planViews)
                 {
-                    segs += s + " - ";
-                }
-                msg += segs;
+                    oldName = splitRegex.Split(plan.Name).ToList();
+                    newName = new List<String>();
 
-                msg += GetTypeSeg(plan) + '\n';
+                    if (HasDefaultName(plan))
+                    {
+                        newName = GetStandardName(plan);
+                    }
+
+                    msg += oldName.Count() + " Segments: ";
+                    String segs = String.Empty;
+                    foreach (String s in oldName)
+                    {
+                        segs += s + " - ";
+                    }
+                    msg += segs;
+
+                    msg += GetTypeSeg(plan) + '\n';
+
+                    String nameUpdate = String.Empty;
+                    for (int i = 0; i < (newName.Count() - 1); i++)
+                    {
+                        nameUpdate += newName[i] + '_';
+                    }
+                    nameUpdate += newName.Last();
+
+                    plan.Name = nameUpdate;
+                }
+
+                t.Commit();
             }
 
             TaskDialog.Show("View names", msg);
@@ -67,9 +89,23 @@ namespace DougKlassen.Revit.Perfect.Commands
             }
         }
 
-        Viewport GetViewport(View v)
+        List<String> GetStandardName(View v)
         {
-            return projectViewports.Where(vp => v.Id == vp.ViewId).FirstOrDefault();
+            List<String> name = new List<String>();
+            name.Add(GetTypeSeg(v));
+
+            return name;
+        }
+
+        Boolean HasDefaultName(View v)
+        {
+            Regex elevationNameRegex = new Regex(@"Elevation \d - \s");
+            if (elevationNameRegex.IsMatch(v.Name))
+            {
+                return true;
+            }
+
+            return false;
         }
     }
 }
