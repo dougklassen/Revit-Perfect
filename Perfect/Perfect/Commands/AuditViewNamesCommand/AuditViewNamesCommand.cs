@@ -19,11 +19,6 @@ namespace DougKlassen.Revit.Perfect.Commands
         {
             dbDoc = commandData.Application.ActiveUIDocument.Document;
 
-            //why is this broken?
-            //FilteredElementCollector c = new FilteredElementCollector(dbDoc);
-            //projectViewports = c.OfCategory(BuiltInCategory.OST_Viewports).AsEnumerable().Cast<Viewport>();
-            //c = new FilteredElementCollector(dbDoc);
-            //IEnumerable<ViewPlan> planViews = c.OfClass(typeof(ViewPlan)).AsEnumerable().Cast<ViewPlan>();
             projectViewports = new FilteredElementCollector(dbDoc).OfCategory(BuiltInCategory.OST_Viewports).AsEnumerable().Cast<Viewport>();
             IEnumerable<ViewPlan> planViews = new FilteredElementCollector(dbDoc).OfClass(typeof(ViewPlan)).AsEnumerable().Cast<ViewPlan>();
             IEnumerable<ViewSection> sectionViews = new FilteredElementCollector(dbDoc).OfClass(typeof(ViewSection)).AsEnumerable().Cast<ViewSection>();
@@ -31,12 +26,24 @@ namespace DougKlassen.Revit.Perfect.Commands
             IEnumerable<ViewDrafting> draftingViews = new FilteredElementCollector(dbDoc).OfClass(typeof(ViewDrafting)).AsEnumerable().Cast<ViewDrafting>();
 
             String msg = String.Empty;
-
             msg += projectViewports.Count() + " viewports found\n";
             msg += planViews.Count() + " plan views found\n\n";
 
+            Regex splitRegex = new Regex("_");
+            String[] segsMatch;
+
             foreach (ViewPlan plan in planViews)
             {
+                segsMatch = splitRegex.Split(plan.Name);
+
+                msg += segsMatch.Count() + " Segments: ";
+                String segs = String.Empty;
+                foreach (String s in segsMatch)
+                {
+                    segs += s + " - ";
+                }
+                msg += segs;
+
                 msg += GetTypeSeg(plan) + '\n';
             }
 
