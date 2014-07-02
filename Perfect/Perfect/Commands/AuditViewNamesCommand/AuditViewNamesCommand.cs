@@ -24,9 +24,11 @@ namespace DougKlassen.Revit.Perfect.Commands
         Regex seg1rcPlanRegex = new Regex(@"RCP(\(\w+\))?");
         Regex seg1SectionRegex = new Regex(@"BS|WS(\(\w+\))?");
         Regex seg1ElevationRegex = new Regex(@"EV|IE(\(\w+\))?");
+        Regex seg1ThreeDRegex = new Regex(@"3D|PV(\(\w+\))?");
         Regex seg2LevelRegex = new Regex(@"[A-Z]?\d{1,2}");
         Regex seg2ElevationRegex = new Regex(@"N(orth)?|E(ast)?|S(outh)?|W(est)?");
         Regex seg2SectionRegex = new Regex(@"NS|SN|EW|WE");
+        Regex default3DRegex = new Regex(@"{3D( - [a-z]{2,20})?}");
         Regex levelNumberRegex = new Regex(@"(\S* )?([A-B]?\d{1,3})$", RegexOptions.IgnoreCase);
 
         public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
@@ -163,7 +165,7 @@ namespace DougKlassen.Revit.Perfect.Commands
                         cmdResultMsg += docViewPlan.Name + " => " + nameUpdate + "\n"; 
                     }
 
-                    //docViewPlan.Name = nameUpdate;
+                    docViewPlan.Name = nameUpdate;
                 }
                 #endregion Evaluation of ViewPlans
 
@@ -248,6 +250,123 @@ namespace DougKlassen.Revit.Perfect.Commands
                 }
                 #endregion Evaluation of ViewSections
 
+                #region Evaluation of ViewDraftings
+                foreach (ViewDrafting docViewDrafting in docViewDraftings)
+                {
+                    oldName = splitRegex.Split(docViewDrafting.Name).ToList();
+                    newName = new List<string>();
+
+                    if (oldName.Count() != 2) //drafting view names may only have 2 segments
+                	{
+		                nonConformingViews.Add(docViewDrafting);
+                        continue;
+                	}
+
+                    #region Evaluate Segment 0
+                    String newSeg0 = GetSeg0(docViewDrafting, oldName[0]);
+                    if (null != newSeg0)
+                    {
+                        newName.Add(newSeg0);
+                    }
+                    else
+                    {
+                        nonConformingViews.Add(docViewDrafting);
+                        continue;
+                    }
+                    #endregion Evaluate Segment 0
+                    
+                    #region Evaluate Segment 1
+                    newName.Add(oldName[1]);
+                    #endregion Evaluate Segment 1
+
+                    String nameUpdate = String.Empty;
+                    for (int i = 0; i < (newName.Count() - 1); i++)
+                    {
+                        nameUpdate += newName[i] + '_';
+                    }
+                    nameUpdate += newName.Last();
+
+                    if (nameUpdate != docViewDrafting.Name)
+                    {
+                        cmdResultMsg += docViewDrafting.Name + " => " + nameUpdate + "\n";
+                    }
+
+                    //docViewDrafting.Name = nameUpdate;
+                }
+                #endregion Evaluation of ViewDraftings
+
+                #region Evaluation of View3Ds
+                foreach (View3D docView3D in docView3Ds)
+                {
+                    oldName = splitRegex.Split(docView3D.Name).ToList();
+                    newName = new List<String>();
+
+                    if (oldName.Count() < 2 || oldName.Count() > 4)
+                	{
+		                nonConformingViews.Add(docView3D);
+                        continue;
+                	}
+
+                    if (default3DRegex.IsMatch(docView3D.Name)) //ignore View3Ds with the default name
+                	{
+		                continue;
+                	}
+
+                    #region Audit Segment 0
+                    String newSeg0 = GetSeg0(docView3D, oldName[0]);
+                    if (null != newSeg0)
+                    {
+                        newName.Add(oldName[0]);
+                    }
+                    else
+                    {
+                        nonConformingViews.Add(docView3D);
+                        continue;
+                    }
+                    #endregion Audit Segment 0
+
+                    #region Audit Segment 1
+                    if (seg1ThreeDRegex.IsMatch(oldName[1]))
+                    {
+                        newName.Add(oldName[1]);
+                    }
+                    else
+                    {
+                        nonConformingViews.Add(docView3D);
+                        continue;
+                    }
+                    #endregion Audit Segment 1
+
+                    #region Audit Segment 2
+                    if (oldName.Count() > 2)
+                    {
+                        newName.Add(oldName[2]);
+                    }
+                    #endregion Audit Segment 2
+
+                    #region Audit Segment 3
+                    if (4 == oldName.Count())
+                    {
+                        newName.Add(oldName[3]);
+                    }
+                    #endregion Audit Segment 3
+
+                    String nameUpdate = String.Empty;
+                    for (int i = 0; i < (newName.Count() - 1); i++)
+                    {
+                        nameUpdate += newName[i] + '_';
+                    }
+                    nameUpdate += newName.Last();
+
+                    if (nameUpdate != docView3D.Name)
+                    {
+                        cmdResultMsg += docView3D.Name + " => " + nameUpdate + "\n";
+                    }
+
+                    //docView3D.Name = nameUpdate;
+                }
+                #endregion Evaluation of View3Ds
+
                 cmdResultMsg += "\nNon-Conforming:\n";
                 foreach (View v in nonConformingViews)
                 {
@@ -265,32 +384,32 @@ namespace DougKlassen.Revit.Perfect.Commands
         /// Returns Segment 0 for a view based on whether it is placed and whether its name indicates it should be placed
         /// </summary>
         /// <param name="view">A view in the document</param>
-        /// <param name="oldName">The current name of the view</param>
+        /// <param name="oldSeg0">The current name of the view</param>
         /// <returns>The new name of the view, which may be the same as the old name, or null if the view name doesn't match project standards</returns>
-        String GetSeg0(View view, String oldName)
+        String GetSeg0(View view, String oldSeg0)
         {
             if (IsPlaced(view))
             {
-                if (numberedDetailRegex.IsMatch(oldName) || "DOC" == oldName)
+                if (numberedDetailRegex.IsMatch(oldSeg0) || "DOC" == oldSeg0)
                 {
                     return GetPlacedViewPrefix(view);
                 }
-                else if ("EXPORT" == oldName || "PRES" == oldName) //EXPORT and PRES are valid prefixes for a placed view
+                else if ("EXPORT" == oldSeg0 || "PRES" == oldSeg0) //EXPORT and PRES are valid prefixes for a placed view
                 {
-                    return oldName;
+                    return oldSeg0;
                 }
                 else
                 {
                     return null;
                 }
             }
-            else if (numberedDetailRegex.IsMatch(oldName))
+            else if (numberedDetailRegex.IsMatch(oldSeg0))
             {
                 return "DOC"; //rename unplaced but numbered DOC view to DOC
             }
-            else if (seg0UnPlacedViewRegex.IsMatch(oldName))
+            else if (seg0UnPlacedViewRegex.IsMatch(oldSeg0))
             {
-                return oldName;
+                return oldSeg0;
             }
             else
             {

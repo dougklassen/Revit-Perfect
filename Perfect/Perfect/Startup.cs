@@ -106,8 +106,22 @@ namespace DougKlassen.Revit.Perfect
                     Image = smallIcon
                 };
 
+            PushButtonData setViewTitleCommandPushButtonData = new PushButtonData(
+                name: "SetViewTitleCommandButton",
+                text: "Set Empty View Titles",
+                assemblyName: FileLocations.AddInDirectory + FileLocations.AssemblyName + ".dll",
+                className: "DougKlassen.Revit.Perfect.Commands.SetViewTitleCommand")
+                {
+                    LargeImage = largeIcon,
+                    Image = smallIcon
+                };
+
             RibbonPanel PerfectRibbonPanel = application.CreateRibbonPanel("Perfect Standards");
 
+            PulldownButtonData auditNamesToolsPulldownButtonData = new PulldownButtonData(
+                name: "AuditNamesToolsPulldown",
+                text: "Name Auditing Tools");
+            
             PulldownButtonData cleanUpToolsPullDownButtonData = new PulldownButtonData(
                 name: "CleanUpToolsPulldown",
                 text: "Clean Up Tools");
@@ -117,16 +131,21 @@ namespace DougKlassen.Revit.Perfect
                 text: "Manage Import Styles");
 
             IList<RibbonItem> stackOne = PerfectRibbonPanel.AddStackedItems(
+                auditNamesToolsPulldownButtonData,
                 cleanUpToolsPullDownButtonData,
                 stylesPullDownButttonData);
 
-            PulldownButton cleanUpToolsPullDownButton = (PulldownButton) stackOne[0];
+            PulldownButton auditNamesToolsPullDownButton = (PulldownButton)stackOne[0];
+            auditNamesToolsPullDownButton.AddPushButton(auditViewNamesCommandPushButtonData);
+            auditNamesToolsPullDownButton.AddPushButton(renameFamiliesCommandPushButtonData);
+            auditNamesToolsPullDownButton.AddPushButton(setViewTitleCommandPushButtonData);
+
+            
+            PulldownButton cleanUpToolsPullDownButton = (PulldownButton) stackOne[1];
             cleanUpToolsPullDownButton.AddPushButton(purgeLinePatternsCommandPushButtonData);
             cleanUpToolsPullDownButton.AddPushButton(purgeParametersCommandPushButtonData);
-            cleanUpToolsPullDownButton.AddPushButton(renameFamiliesCommandPushButtonData);
-            cleanUpToolsPullDownButton.AddPushButton(auditViewNamesCommandPushButtonData);
 
-            PulldownButton stylesPullDownButton = (PulldownButton) stackOne[1];
+            PulldownButton stylesPullDownButton = (PulldownButton) stackOne[2];
             stylesPullDownButton.AddPushButton(exportImportStylesCommandPushButtonData);
             stylesPullDownButton.AddPushButton(loadImportStylesCommandPushButtonData);
 
