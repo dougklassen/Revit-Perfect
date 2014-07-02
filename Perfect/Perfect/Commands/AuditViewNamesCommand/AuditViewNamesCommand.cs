@@ -17,9 +17,9 @@ namespace DougKlassen.Revit.Perfect.Commands
         Document dbDoc;
 
         Regex splitRegex = new Regex("_");
-        Regex numberedDetailRegex = new Regex(@"^[A-Z]{1,2}[1]?\d.\d\d[a-z]?-\d?\d"); //valid format for sheet/detail number on placed views
-        Regex seg0UnPlacedViewRegex = new Regex(@"COORD|DIM|EXPORT|PARENT|PRES|WK"); //valid seg 0 values for unplaced views
-        Regex seg1ViewPlanRegex = new Regex(@"EFP|EQP|FP|RP|SP(\(\w+\))?"); //valid seg 1 values for plans
+        Regex numberedDetailRegex = new Regex(@"^[A-Z]{1,2}[1]?\d.\d\d[a-z]?-\d?\d");   //valid format for sheet/detail number on placed views
+        Regex seg0UnPlacedViewRegex = new Regex(@"COORD|DIM|DOC|EXPORT|PARENT|PRES|WK");    //valid seg 0 values for unplaced views
+        Regex seg1ViewPlanRegex = new Regex(@"EFP|EQP|FP|RP|SP(\(\w+\))?");     //valid seg 1 values for plans
         Regex seg1AreaPlanRegex = new Regex(@"AP(\(\w+\))?");
         Regex seg1rcPlanRegex = new Regex(@"RCP(\(\w+\))?");
         Regex seg1SectionRegex = new Regex(@"BS|WS(\(\w+\))?");
@@ -135,6 +135,7 @@ namespace DougKlassen.Revit.Perfect.Commands
                     #endregion Evaluation of Segment 1
 
                     #region Evaluation of segment 2
+                    //todo: add level verification
                     if (seg2LevelRegex.IsMatch(oldName[2]))
                     {
                         newName.Add(oldName[2]);
@@ -246,7 +247,7 @@ namespace DougKlassen.Revit.Perfect.Commands
                         cmdResultMsg += docViewSection.Name + " => " + nameUpdate + "\n"; 
                     }
 
-                    //docViewSection.Name = nameUpdate;
+                    docViewSection.Name = nameUpdate;
                 }
                 #endregion Evaluation of ViewSections
 
@@ -275,9 +276,9 @@ namespace DougKlassen.Revit.Perfect.Commands
                     }
                     #endregion Evaluate Segment 0
                     
-                    #region Evaluate Segment 1
+                    #region Audit Segment 1
                     newName.Add(oldName[1]);
-                    #endregion Evaluate Segment 1
+                    #endregion Audit Segment 1
 
                     String nameUpdate = String.Empty;
                     for (int i = 0; i < (newName.Count() - 1); i++)
@@ -291,7 +292,7 @@ namespace DougKlassen.Revit.Perfect.Commands
                         cmdResultMsg += docViewDrafting.Name + " => " + nameUpdate + "\n";
                     }
 
-                    //docViewDrafting.Name = nameUpdate;
+                    docViewDrafting.Name = nameUpdate;
                 }
                 #endregion Evaluation of ViewDraftings
 
@@ -301,15 +302,15 @@ namespace DougKlassen.Revit.Perfect.Commands
                     oldName = splitRegex.Split(docView3D.Name).ToList();
                     newName = new List<String>();
 
+                    if (default3DRegex.IsMatch(docView3D.Name)) //ignore View3Ds with the default name
+                    {
+                        continue;
+                    }
+
                     if (oldName.Count() < 2 || oldName.Count() > 4)
                 	{
 		                nonConformingViews.Add(docView3D);
                         continue;
-                	}
-
-                    if (default3DRegex.IsMatch(docView3D.Name)) //ignore View3Ds with the default name
-                	{
-		                continue;
                 	}
 
                     #region Audit Segment 0
@@ -363,14 +364,21 @@ namespace DougKlassen.Revit.Perfect.Commands
                         cmdResultMsg += docView3D.Name + " => " + nameUpdate + "\n";
                     }
 
-                    //docView3D.Name = nameUpdate;
+                    docView3D.Name = nameUpdate;
                 }
                 #endregion Evaluation of View3Ds
 
-                cmdResultMsg += "\nNon-Conforming:\n";
-                foreach (View v in nonConformingViews)
+                if (String.IsNullOrEmpty(cmdResultMsg) && 0 == nonConformingViews.Count())
                 {
-                    cmdResultMsg += v.Name + '\n';
+                    cmdResultMsg += "Perfect!";
+                }
+                else if (nonConformingViews.Count != 0)
+                {
+                    cmdResultMsg += "\nNon-Conforming:\n";
+                    foreach (View v in nonConformingViews)
+                    {
+                        cmdResultMsg += v.Name + '\n';
+                    } 
                 }
 
                 t.Commit();
