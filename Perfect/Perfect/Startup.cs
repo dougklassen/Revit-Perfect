@@ -85,22 +85,31 @@ namespace DougKlassen.Revit.Perfect
                 Image = smallIcon
             };
             
-            PushButtonData renameFamiliesCommandPushButtonData = new PushButtonData(
-                name: "RenameFamiliesCommandButton",
-                text: "Family Names",
-                assemblyName: FileLocations.AddInDirectory + FileLocations.AssemblyName + ".dll",
-                className: "DougKlassen.Revit.Perfect.Commands.RenameFamiliesCommand")
-                {
-                    LargeImage = largeIcon,
-                    Image = smallIcon
-                };
-            renameFamiliesCommandPushButtonData.LargeImage = largeIcon;
-
             PushButtonData purgeParametersCommandPushButtonData = new PushButtonData(
                 name: "PurgeParametersCommandButton",
                 text: "Purge Parameters",
                 assemblyName: FileLocations.AddInDirectory + FileLocations.AssemblyName + ".dll",
                 className: "DougKlassen.Revit.Perfect.Commands.PurgeParametersCommand")
+                {
+                    LargeImage = largeIcon,
+                    Image = smallIcon
+                };
+
+            PushButtonData purgeRefPlanesCommandPushButtonData = new PushButtonData(
+                name: "PurgeRefPlanesCommandButton",
+                text: "Purge Unnamed Reference Planes",
+                assemblyName: FileLocations.AddInDirectory + FileLocations.AssemblyName + ".dll",
+                className: "DougKlassen.Revit.Perfect.Commands.PurgeRefPlanesCommand")
+            {
+                LargeImage = largeIcon,
+                Image = smallIcon
+            };
+
+            PushButtonData renameFamiliesCommandPushButtonData = new PushButtonData(
+                name: "RenameFamiliesCommandButton",
+                text: "Family Names",
+                assemblyName: FileLocations.AddInDirectory + FileLocations.AssemblyName + ".dll",
+                className: "DougKlassen.Revit.Perfect.Commands.RenameFamiliesCommand")
                 {
                     LargeImage = largeIcon,
                     Image = smallIcon
@@ -116,6 +125,17 @@ namespace DougKlassen.Revit.Perfect
                     Image = smallIcon
                 };
 
+            PushButtonData UnflipCommandPushButtonData = new PushButtonData(
+                name: "UnflipCommandPushButtonData",
+                text: "Unflip Windows",
+                assemblyName: FileLocations.AddInDirectory + FileLocations.AssemblyName + ".dll",
+                className: "DougKlassen.Revit.Perfect.Commands.UnflipCommand")
+            {
+                LargeImage = largeIcon,
+                Image = smallIcon,
+                AvailabilityClassName = "DougKlassen.Revit.Perfect.Commands.UnflipCommandAvailability"
+            };
+
             RibbonPanel PerfectRibbonPanel = application.CreateRibbonPanel("Perfect Standards");
 
             PulldownButtonData auditNamesToolsPulldownButtonData = new PulldownButtonData(
@@ -128,7 +148,11 @@ namespace DougKlassen.Revit.Perfect
 
             PulldownButtonData stylesPullDownButttonData = new PulldownButtonData(
                 name: "StylesPullDownButton",
-                text: "Manage Import Styles");
+                text: "Import Styles Management");
+
+            PulldownButtonData geometryPullDownButtonData = new PulldownButtonData(
+                name: "GeometryPullDownButton",
+                text: "Geometry Tools");
 
             IList<RibbonItem> stackOne = PerfectRibbonPanel.AddStackedItems(
                 auditNamesToolsPulldownButtonData,
@@ -139,15 +163,19 @@ namespace DougKlassen.Revit.Perfect
             auditNamesToolsPullDownButton.AddPushButton(auditViewNamesCommandPushButtonData);
             auditNamesToolsPullDownButton.AddPushButton(renameFamiliesCommandPushButtonData);
             auditNamesToolsPullDownButton.AddPushButton(setViewTitleCommandPushButtonData);
-
             
             PulldownButton cleanUpToolsPullDownButton = (PulldownButton) stackOne[1];
             cleanUpToolsPullDownButton.AddPushButton(purgeLinePatternsCommandPushButtonData);
             cleanUpToolsPullDownButton.AddPushButton(purgeParametersCommandPushButtonData);
+            cleanUpToolsPullDownButton.AddPushButton(purgeRefPlanesCommandPushButtonData);
 
             PulldownButton stylesPullDownButton = (PulldownButton) stackOne[2];
             stylesPullDownButton.AddPushButton(exportImportStylesCommandPushButtonData);
             stylesPullDownButton.AddPushButton(loadImportStylesCommandPushButtonData);
+
+            PulldownButton geometryPulldownButton = (PulldownButton)PerfectRibbonPanel.AddItem(
+                geometryPullDownButtonData);
+            geometryPulldownButton.AddPushButton(UnflipCommandPushButtonData);
 
             PerfectRibbonPanel.AddSlideOut();
 

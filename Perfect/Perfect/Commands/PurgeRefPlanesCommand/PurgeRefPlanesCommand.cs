@@ -9,11 +9,15 @@ using Autodesk.Revit.UI;
 namespace DougKlassen.Revit.Perfect.Commands
 {
     [Autodesk.Revit.Attributes.Transaction(Autodesk.Revit.Attributes.TransactionMode.Manual)]
-    class PurgeParametersCommand : IExternalCommand
+    class PurgeRefPlanesCommand : IExternalCommand
     {
         public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
         {
-            throw new NotImplementedException();
+            Document dbDoc = commandData.Application.ActiveUIDocument.Document;
+
+            IEnumerable<ReferencePlane> refPlanes = new FilteredElementCollector(dbDoc).OfClass(typeof(ReferencePlane)).Cast<ReferencePlane>();
+
+            return Result.Succeeded;
         }
     }
 }
