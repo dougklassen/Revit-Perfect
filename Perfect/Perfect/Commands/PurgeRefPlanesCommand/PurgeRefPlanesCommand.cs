@@ -15,16 +15,14 @@ namespace DougKlassen.Revit.Perfect.Commands
         {
             Document dbDoc = commandData.Application.ActiveUIDocument.Document;
 
-            IEnumerable<ReferencePlane> refPlanes = new FilteredElementCollector(dbDoc)
+            IEnumerable<ElementId> refPlaneIds = new FilteredElementCollector(dbDoc)
                 .OfClass(typeof(ReferencePlane))
                 .Where(p => String.IsNullOrWhiteSpace(p.Name) || "Reference Plane" == p.Name)
-                .Cast<ReferencePlane>()
+                .Select(e => e.Id)
                 //projecting onto a new list is necessary because deleting from the original FilteredElement during iteration will throw an exception
                 .ToList();
 
-            List<ElementId> refPlaneIds = refPlanes.Select(e => e.Id).ToList();
-
-            Int16 refPlanesDeletedCtr = 0,
+            Int32 refPlanesDeletedCtr = 0,
                 elementsDeletedCtr = 0,
                 groupedRefPlanesCtr = 0,
                 undeletableRefPlanesCtr = 0;
@@ -34,13 +32,13 @@ namespace DougKlassen.Revit.Perfect.Commands
             {
                 t.Start();
 
-                foreach (ReferencePlane rp in refPlanes)
+                foreach (ElementId id in refPlaneIds)
                 {
-                    if (ElementId.InvalidElementId == rp.GroupId)
+                    if (ElementId.InvalidElementId == dbDoc.GetElement(id).GroupId)
                     {
                         try
                         {
-                            dbDoc.Delete(rp);
+                            elementsDeletedCtr += dbDoc.Delete(id).Count();
                             refPlanesDeletedCtr++;
                         }
                         catch (Exception)
@@ -54,26 +52,6 @@ namespace DougKlassen.Revit.Perfect.Commands
                         groupedRefPlanesCtr++;
                     }
                 }
-                //foreach (ElementId id in refPlaneIds)
-                //{
-                //    if (ElementId.InvalidElementId == dbDoc.GetElement(id).GroupId)
-                //    {
-                //        try
-                //        {
-                //            dbDoc.Delete(id);
-                //            refPlanesDeletedCtr++;
-                //        }
-                //        catch (Exception)
-                //        {
-                //            undeletableRefPlanesCtr++;
-                //            continue;
-                //        }
-                //    }
-                //    else
-                //    {
-                //        groupedRefPlanesCtr++;
-                //    }
-                //}
 
                 t.Commit();
             }
@@ -81,7 +59,8 @@ namespace DougKlassen.Revit.Perfect.Commands
             TaskDialog.Show("Result",
                 refPlaneIds.Count() + " unnamed reference planes found\n"
                 + groupedRefPlanesCtr + " grouped reference planes not deleted\n"
-                + refPlanesDeletedCtr + " reference planes deleted\n");
+                + refPlanesDeletedCtr + " reference planes deleted\n"
+                + (elementsDeletedCtr - refPlanesDeletedCtr) + " other elements deleted");
 
             return Result.Succeeded;
         }
