@@ -97,7 +97,7 @@ namespace DougKlassen.Revit.Perfect
 
             PushButtonData purgeRefPlanesCommandPushButtonData = new PushButtonData(
                 name: "PurgeRefPlanesCommandButton",
-                text: "Purge Unnamed Reference Planes",
+                text: "Purge Reference Planes",
                 assemblyName: FileLocations.AddInDirectory + FileLocations.AssemblyName + ".dll",
                 className: "DougKlassen.Revit.Perfect.Commands.PurgeRefPlanesCommand")
             {
