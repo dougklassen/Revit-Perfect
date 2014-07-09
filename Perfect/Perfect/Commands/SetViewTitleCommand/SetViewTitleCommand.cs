@@ -23,6 +23,7 @@ namespace DougKlassen.Revit.Perfect.Commands
                 .Cast<View>()
                 .Where(v => !v.IsTemplate);
 
+            Int32 setViewTitlesCounter = 0;
 
             using (Transaction t = new Transaction(dbDoc, "Set Title on Sheet value"))
             {
@@ -36,11 +37,14 @@ namespace DougKlassen.Revit.Perfect.Commands
                         && String.IsNullOrWhiteSpace(p.AsString()))
                     {
                         p.Set(v.ViewName);
+                        setViewTitlesCounter++;
                     }
                 }
 
                 t.Commit();
             }
+
+            TaskDialog.Show("Result", setViewTitlesCounter + " view titles set");
 
             return Result.Succeeded;
         }
