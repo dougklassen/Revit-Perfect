@@ -12,7 +12,7 @@ namespace DougKlassen.Revit.Perfect.Commands
     [Autodesk.Revit.Attributes.Transaction(Autodesk.Revit.Attributes.TransactionMode.Manual)]
     class FlagUnitElements : IExternalCommand
     {
-        Regex unitGroupRegex = new Regex(@"UNIT [A-Z1-9][A-Z1-9]");
+        Regex unitGroupRegex = new Regex(@"UNIT [A-Z0-9][A-Z0-9]");
 
         public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
         {
