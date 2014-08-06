@@ -24,7 +24,7 @@ namespace DougKlassen.Revit.Perfect.Commands
 
 			PurgeElementsWindow purgeWindow = new PurgeElementsWindow(dbDoc, typeof(View));
 			purgeWindow.PurgeRegExString 
-				= @"(^Elevation ([1-9][0-9]|[1-9]) - [a-d]$)|(^Section ([1-9][0-9]|[1-9])$)|(^Drafting [1-9]?[0-9]$)|(^Callout of .*)";
+				= @"(^Elevation ([1-9][0-9]|[1-9]) - [a-d]$)|(^Section ([1-9][0-9]|[1-9])$)|(^Drafting [1-9]?[0-9]$)|(^Callout of .*)|(^Copy of .*)";
 
 			purgeWindow.ShowDialog();
 			if (false == purgeWindow.DialogResult)
