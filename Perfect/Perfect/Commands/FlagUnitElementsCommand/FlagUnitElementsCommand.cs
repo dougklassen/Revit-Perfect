@@ -10,7 +10,7 @@ using Autodesk.Revit.UI;
 namespace DougKlassen.Revit.Perfect.Commands
 {
     [Autodesk.Revit.Attributes.Transaction(Autodesk.Revit.Attributes.TransactionMode.Manual)]
-    class FlagUnitElements : IExternalCommand
+    class FlagUnitElementsCommand : IExternalCommand
     {
         Regex unitGroupRegex = new Regex(@"UNIT [A-Z0-9][A-Z0-9]");
 
