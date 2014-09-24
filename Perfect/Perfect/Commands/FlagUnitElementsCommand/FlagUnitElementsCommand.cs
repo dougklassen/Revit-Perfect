@@ -54,6 +54,8 @@ namespace DougKlassen.Revit.Perfect.Commands
                 t.Commit();
         	}
 
+					//todo: report on number of elements updated
+
             return Result.Succeeded;
         }
     }
