@@ -207,6 +207,7 @@ namespace DougKlassen.Revit.Perfect.Commands
 						else
 						{
 							nonConformingViews.Add(docViewSection);
+							continue;
 						}
 					}
 					else if (ViewType.Elevation == docViewSection.ViewType && seg1ElevationRegex.IsMatch(oldName[1]))
