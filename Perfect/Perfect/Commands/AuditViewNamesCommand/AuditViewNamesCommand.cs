@@ -19,19 +19,19 @@ namespace DougKlassen.Revit.Perfect.Commands
 		Document dbDoc;
 
 		Regex splitRegex = new Regex("_");
-		Regex numberedDetailRegex = new Regex(@"^[A-Z]{1,2}[1]?\d.\d\d[A-Za-z]?-\w?\w");   //valid format for sheet/detail number on placed views
-		Regex seg0UnPlacedViewRegex = new Regex(@"COORD|DIM|DOC|EXPORT|PARENT|PRES|WK");    //valid seg 0 values for unplaced views
-		Regex seg1ViewPlanRegex = new Regex(@"EFP|EQP|FP|RP|SP(\(\w+\))?");     //valid seg 1 values for plans
-		Regex seg1AreaPlanRegex = new Regex(@"AP(\(\w+\))?");
-		Regex seg1rcPlanRegex = new Regex(@"RCP(\(\w+\))?");
-		Regex seg1SectionRegex = new Regex(@"BS|WS(\(\w+\))?");
-		Regex seg1ElevationRegex = new Regex(@"EV|IE(\(\w+\))?");
-		Regex seg1ThreeDRegex = new Regex(@"3D|PV(\(\w+\))?");
-		Regex seg2LevelRegex = new Regex(@"[A-Z]?\d{1,2}");
-		Regex seg2ElevationRegex = new Regex(@"N(orth)?|E(ast)?|S(outh)?|W(est)?");
-		Regex seg2SectionRegex = new Regex(@"NS|SN|EW|WE");
-		Regex default3DRegex = new Regex(@"{3D( - [a-z]{2,20})?}");
-		Regex levelNumberRegex = new Regex(@"(\S* )?([A-B]?\d{1,3})$", RegexOptions.IgnoreCase);
+		Regex numberedDetailRegex = new Regex(@"^[A-Z]{1,2}[1]?\d.\d\d[A-Za-z]?-\w{1,4}$");   //valid format for sheet/detail number on placed views
+		Regex seg0UnPlacedViewRegex = new Regex(@"^(COORD|DIM|DOC|EXPORT|PARENT|PRES|WK)$");    //valid seg 0 values for unplaced views
+		Regex seg1ViewPlanRegex = new Regex(@"^(EFP|EQP|FP|RP|SP)(\(\w+\))?$");     //valid seg 1 values for plans
+		Regex seg1AreaPlanRegex = new Regex(@"^AP(\(\w+\))?$");
+		Regex seg1rcPlanRegex = new Regex(@"^RCP(\(\w+\))?$");
+		Regex seg1SectionRegex = new Regex(@"^(BS|WS)(\(\w+\))?$");
+		Regex seg1ElevationRegex = new Regex(@"^(EV|IE)(\(\w+\))?$");
+		Regex seg1ThreeDRegex = new Regex(@"^(3D|PV)(\(\w+\))?$");
+		Regex seg2LevelRegex = new Regex(@"^[A-Z]?\d{1,2}$");
+		Regex seg2ElevationRegex = new Regex(@"^(N(orth)?|E(ast)?|S(outh)?|W(est)?)$");
+		Regex seg2SectionRegex = new Regex(@"^(NS|SN|EW|WE)$");
+		Regex default3DRegex = new Regex(@"^{3D( - [a-z]{2,20})?}$");
+		Regex levelNumberRegex = new Regex(@"^(\S* )?([A-B]?\d{1,3})$", RegexOptions.IgnoreCase);
 
 		public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
 		{
@@ -78,7 +78,7 @@ namespace DougKlassen.Revit.Perfect.Commands
 					oldName = splitRegex.Split(docViewPlan.Name).ToList();
 					newName = new List<String>();
 
-					if (oldName.Count() < 3 || oldName.Count() > 4) //plan names must have three segments
+					if (oldName.Count() < 2 || oldName.Count() > 4) //plan names must have two to three segments
 					{
 						nonConformingViews.Add(docViewPlan);
 						continue;
@@ -98,6 +98,24 @@ namespace DougKlassen.Revit.Perfect.Commands
 					#endregion Evaluation of Segment 0
 
 					#region Evaluation of Segment 1
+					//ViewPlans are permitted to have only two segments where they are large scale details
+					if(oldName.Count == 2)
+					{
+						if (
+							((ViewType.FloorPlan == docViewPlan.ViewType) ||
+								(ViewType.CeilingPlan == docViewPlan.ViewType) ||
+								(ViewType.Detail == docViewPlan.ViewType)) &&
+							docViewPlan.get_Parameter(BuiltInParameter.VIEW_SCALE).AsDouble() <= 12)
+						{
+							newName.Add(oldName[1]);
+							continue;
+						}
+						else
+						{
+							nonConformingViews.Add(docViewPlan);
+							continue;
+						}
+					}
 					if (ViewType.FloorPlan == docViewPlan.ViewType)
 					{
 						if (seg1ViewPlanRegex.IsMatch(oldName[1])) //if conforms to a proper view type designation
@@ -176,9 +194,7 @@ namespace DougKlassen.Revit.Perfect.Commands
 				{
 					oldName = splitRegex.Split(docViewSection.Name).ToList();
 					newName = new List<String>();
-					//if (((ViewType.Elevation == docViewSection.ViewType) && (oldName.Count() < 3 || oldName.Count() > 4)) || //Elevations must have three or four segments
-					//	((ViewType.Section == docViewSection.ViewType) && (oldName.Count() < 2 || oldName.Count() > 4)));	//Sections must have two to four segments
-					if (oldName.Count() < 2 || oldName.Count() > 4) //Elevation and Section views must have three or four segments
+					if (oldName.Count() < 2 || oldName.Count() > 4) //Section and elevation views must have between two and four segments
 					{
 						nonConformingViews.Add(docViewSection);
 						continue;
@@ -200,7 +216,8 @@ namespace DougKlassen.Revit.Perfect.Commands
 					#region Evaluation of Segment 1
 					if (2 == oldName.Count)
 					{
-						if (ViewType.Section == docViewSection.ViewType && docViewSection.get_Parameter(BuiltInParameter.VIEW_SCALE).AsDouble() < 12)
+						if (((ViewType.Section == docViewSection.ViewType) || (ViewType.Detail == docViewSection.ViewType))
+							&& docViewSection.get_Parameter(BuiltInParameter.VIEW_SCALE).AsDouble() <= 12)
 						{
 							newName.Add(oldName[1]);
 							continue;
@@ -225,7 +242,6 @@ namespace DougKlassen.Revit.Perfect.Commands
 					}
 					else
 					{
-						String msg = String.Format("View: {0}\nScale: {1}", docViewSection.Name, docViewSection.get_Parameter(BuiltInParameter.VIEW_SCALE).AsDouble());
 						nonConformingViews.Add(docViewSection);
 						continue;
 					}
@@ -233,11 +249,17 @@ namespace DougKlassen.Revit.Perfect.Commands
 
 					#region Evaluation of Segment 2
 					if ((ViewType.Elevation == docViewSection.ViewType && seg2ElevationRegex.IsMatch(oldName[2])) ||
-							(ViewType.Section == docViewSection.ViewType && seg2SectionRegex.IsMatch(oldName[2])))
+						(ViewType.Section == docViewSection.ViewType && seg2SectionRegex.IsMatch(oldName[2])))
 					{
 						newName.Add(oldName[2]);
 					}
-					else if (ViewType.Section == docViewSection.ViewType && "WS" == oldName[1])	//wall types don't need orientation specified in seg 2
+					else if ((ViewType.Elevation == docViewSection.ViewType) &&
+						("IE" == oldName[1])) //interior elevations don't need orientation specified in seg 2
+					{
+						newName.Add(oldName[2]);
+					}
+					else if ((ViewType.Section == docViewSection.ViewType) &&
+						("WS" == oldName[1]))	//wall types don't need orientation specified in seg 2
 					{
 						newName.Add(oldName[2]);
 					}
