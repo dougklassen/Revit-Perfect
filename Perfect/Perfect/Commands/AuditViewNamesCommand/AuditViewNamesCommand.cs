@@ -12,7 +12,9 @@ namespace DougKlassen.Revit.Perfect.Commands
 	[Autodesk.Revit.Attributes.Transaction(Autodesk.Revit.Attributes.TransactionMode.Manual)]
 	class AuditViewNamesCommand : IExternalCommand
 	{
+		private String cmdResultMsg = String.Empty;
 		IEnumerable<Viewport> projectViewports; //all viewports in the project, representing all placed views
+		IEnumerable<String> projectViewNames; //all the view names in the project
 		List<View> nonConformingViews = new List<View>(); //all views with a name not matching standards
 		Document dbDoc;
 
@@ -34,32 +36,36 @@ namespace DougKlassen.Revit.Perfect.Commands
 		public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
 		{
 			dbDoc = commandData.Application.ActiveUIDocument.Document;
+			projectViewNames = new FilteredElementCollector(dbDoc)
+				.OfCategory(BuiltInCategory.OST_Views)
+				.AsEnumerable()
+				.Select(v => v.Name);
 			projectViewports = new FilteredElementCollector(dbDoc)
-					.OfCategory(BuiltInCategory.OST_Viewports)
-					.AsEnumerable()
-					.Cast<Viewport>();
+				.OfCategory(BuiltInCategory.OST_Viewports)
+				.AsEnumerable()
+				.Cast<Viewport>();
 			IEnumerable<ViewPlan> docViewPlans = new FilteredElementCollector(dbDoc)
-					.OfClass(typeof(ViewPlan))
-					.AsEnumerable()
-					.Cast<ViewPlan>()
-					.Where(v => !v.IsTemplate);
+				.OfClass(typeof(ViewPlan))
+				.AsEnumerable()
+				.Cast<ViewPlan>()
+				.Where(v => !v.IsTemplate);
 			IEnumerable<ViewSection> docViewSections = new FilteredElementCollector(dbDoc)
-					.OfClass(typeof(ViewSection))
-					.AsEnumerable()
-					.Cast<ViewSection>()
-					.Where(v => !v.IsTemplate);
+				.OfClass(typeof(ViewSection))
+				.AsEnumerable()
+				.Cast<ViewSection>()
+				.Where(v => !v.IsTemplate);
 			IEnumerable<View3D> docView3Ds = new FilteredElementCollector(dbDoc)
-					.OfClass(typeof(View3D))
-					.AsEnumerable()
-					.Cast<View3D>()
-					.Where(v => !v.IsTemplate);
+				.OfClass(typeof(View3D))
+				.AsEnumerable()
+				.Cast<View3D>()
+				.Where(v => !v.IsTemplate);
 			IEnumerable<ViewDrafting> docViewDraftings = new FilteredElementCollector(dbDoc)
-					.OfClass(typeof(ViewDrafting))
-					.AsEnumerable()
-					.Cast<ViewDrafting>()
-					.Where(v => !v.IsTemplate);
+				.OfClass(typeof(ViewDrafting))
+				.AsEnumerable()
+				.Cast<ViewDrafting>()
+				.Where(v => !v.IsTemplate);
 
-			String cmdResultMsg = String.Empty;
+			cmdResultMsg = String.Empty;
 			List<String> oldName, newName;
 
 			using (Transaction t = new Transaction(dbDoc, "Standardize View Names"))
@@ -161,12 +167,7 @@ namespace DougKlassen.Revit.Perfect.Commands
 					}
 					nameUpdate += newName.Last();
 
-					if (docViewPlan.Name != nameUpdate)
-					{
-						cmdResultMsg += docViewPlan.Name + " => " + nameUpdate + "\n";
-					}
-
-					docViewPlan.Name = nameUpdate;
+					TryRenameView(docViewPlan, nameUpdate);
 				}
 				#endregion Evaluation of ViewPlans
 
@@ -261,12 +262,7 @@ namespace DougKlassen.Revit.Perfect.Commands
 					}
 					nameUpdate += newName.Last();
 
-					if (nameUpdate != docViewSection.Name)
-					{
-						cmdResultMsg += docViewSection.Name + " => " + nameUpdate + "\n";
-					}
-
-					docViewSection.Name = nameUpdate;
+					TryRenameView(docViewSection, nameUpdate);
 				}
 				#endregion Evaluation of ViewSections
 
@@ -306,12 +302,7 @@ namespace DougKlassen.Revit.Perfect.Commands
 					}
 					nameUpdate += newName.Last();
 
-					if (nameUpdate != docViewDrafting.Name)
-					{
-						cmdResultMsg += docViewDrafting.Name + " => " + nameUpdate + "\n";
-					}
-
-					docViewDrafting.Name = nameUpdate;
+					TryRenameView(docViewDrafting, nameUpdate);
 				}
 				#endregion Evaluation of ViewDraftings
 
@@ -378,12 +369,7 @@ namespace DougKlassen.Revit.Perfect.Commands
 					}
 					nameUpdate += newName.Last();
 
-					if (nameUpdate != docView3D.Name)
-					{
-						cmdResultMsg += docView3D.Name + " => " + nameUpdate + "\n";
-					}
-
-					docView3D.Name = nameUpdate;
+					TryRenameView(docView3D, nameUpdate);
 				}
 				#endregion Evaluation of View3Ds
 
@@ -413,7 +399,7 @@ namespace DougKlassen.Revit.Perfect.Commands
 		/// <param name="view">A view in the document</param>
 		/// <param name="oldSeg0">The current name of the view</param>
 		/// <returns>The new name of the view, which may be the same as the old name, or null if the view name doesn't match project standards</returns>
-		String GetSeg0(View view, String oldSeg0)
+		private String GetSeg0(View view, String oldSeg0)
 		{
 			if (IsPlaced(view))
 			{
@@ -444,9 +430,14 @@ namespace DougKlassen.Revit.Perfect.Commands
 			}
 		}
 
-		String GetPlacedViewPrefix(View v)
+		/// <summary>
+		/// Generate a string of the format SHEET NUMBER-VIEW NUMBER for a specified view
+		/// </summary>
+		/// <param name="view">A View in the document</param>
+		/// <returns>A string to be used as a prefix to the View Name</returns>
+		private String GetPlacedViewPrefix(View view)
 		{
-			Viewport viewport = projectViewports.Where(vp => v.Id == vp.ViewId).FirstOrDefault();
+			Viewport viewport = projectViewports.Where(vp => view.Id == vp.ViewId).FirstOrDefault();
 
 			if (null != viewport)
 			{
@@ -456,13 +447,18 @@ namespace DougKlassen.Revit.Perfect.Commands
 			}
 			else
 			{
-				throw new InvalidOperationException(v.Name + " is not placed on a sheet");
+				throw new InvalidOperationException(view.Name + " is not placed on a sheet");
 			}
 		}
 
-		Boolean IsPlaced(View v)
+		/// <summary>
+		/// Determine whether a View is placed onto a sheet
+		/// </summary>
+		/// <param name="view">A View in the document</param>
+		/// <returns>Whether the View is placed</returns>
+		private Boolean IsPlaced(View view)
 		{
-			if (projectViewports.Where(vp => v.Id == vp.ViewId).Count() > 0)
+			if (projectViewports.Where(vp => view.Id == vp.ViewId).Count() > 0)
 			{
 				return true;
 			}
@@ -472,28 +468,32 @@ namespace DougKlassen.Revit.Perfect.Commands
 			}
 		}
 
-		//************* View Name utility methods
-		List<String> GetStandardName(View v)
+		/// <summary>
+		/// Generates a new List representing the components of the new View name
+		/// </summary>
+		/// <param name="view">A View in the document</param>
+		/// <returns>A List to represent the components of a new View name, with the first segment entered</returns>
+		private List<String> GetStandardName(View view)
 		{
-			List<String> name = new List<String>();
-			name.Add(GetPlacedViewPrefix(v));
+			List<String> nameComponents = new List<String>();
+			nameComponents.Add(GetPlacedViewPrefix(view));
 
-			return name;
+			return nameComponents;
 		}
 
-		Boolean HasDefaultName(View v)
+		/// <summary>
+		/// Determine whether a view should be renamed, and if so, set new name. Can only be called within an active transaction.
+		/// </summary>
+		/// <param name="view"></param>
+		/// <param name="newName"></param>
+		private void TryRenameView(View view, String newName)
 		{
-			if (true)
+			//skip if the name is already correct or if there is a View name conflict
+			if ((view.Name != newName) && !projectViewNames.Contains(newName))
 			{
-
+				cmdResultMsg += view.Name + " => " + newName + "\n";
+				view.Name = newName;
 			}
-			Regex elevationNameRegex = new Regex(@"Elevation \d - \s");
-			if (elevationNameRegex.IsMatch(v.Name))
-			{
-				return true;
-			}
-
-			return false;
 		}
 	}
 }
