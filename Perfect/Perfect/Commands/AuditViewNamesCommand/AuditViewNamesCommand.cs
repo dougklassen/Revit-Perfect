@@ -152,9 +152,13 @@ namespace DougKlassen.Revit.Perfect.Commands
 							continue;
 						}
 					}
-					else
+					else if (ViewType.Detail != docViewPlan.ViewType) //details are only permitted at larger scales as checked above
 					{
 						throw new InvalidOperationException(docViewPlan.Name += " is of an unrecognized ViewType");
+					}
+					else
+					{
+						nonConformingViews.Add(docViewPlan);
 					}
 					#endregion Evaluation of Segment 1
 
@@ -236,7 +240,10 @@ namespace DougKlassen.Revit.Perfect.Commands
 					{
 						newName.Add(oldName[1]);
 					}
-					else if (ViewType.Section != docViewSection.ViewType && ViewType.Elevation != docViewSection.ViewType)
+					else if (
+						ViewType.Section != docViewSection.ViewType &&
+						ViewType.Elevation != docViewSection.ViewType &&
+						ViewType.Detail != docViewSection.ViewType)
 					{
 						throw new InvalidOperationException("ViewType of " + docViewSection.Name + " not recognized");
 					}
