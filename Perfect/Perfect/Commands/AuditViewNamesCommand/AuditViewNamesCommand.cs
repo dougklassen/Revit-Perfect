@@ -19,6 +19,7 @@ namespace DougKlassen.Revit.Perfect.Commands
 		Document dbDoc;
 
 		Regex splitRegex = new Regex("_");
+		//todo: this is passing numbering of the form A2.91_DOC
 		Regex numberedDetailRegex = new Regex(@"^[A-Z]{1,2}[1]?\d.\d\d[A-Za-z]?-\w{1,4}$");   //valid format for sheet/detail number on placed views
 		Regex seg0UnPlacedViewRegex = new Regex(@"^(COORD|DIM|DOC|EXPORT|PARENT|PRES|WK)$");    //valid seg 0 values for unplaced views
 		Regex seg1ViewPlanRegex = new Regex(@"^(EFP|EQP|FP|RP|SP)(\(\w+\))?$");     //valid seg 1 values for plans
@@ -78,7 +79,7 @@ namespace DougKlassen.Revit.Perfect.Commands
 					oldName = splitRegex.Split(docViewPlan.Name).ToList();
 					newName = new List<String>();
 
-					if (oldName.Count() < 2 || oldName.Count() > 4) //plan names must have two to three segments
+					if (oldName.Count() < 2 || oldName.Count() > 4) //plan names must have two to four segments
 					{
 						nonConformingViews.Add(docViewPlan);
 						continue;
@@ -86,7 +87,7 @@ namespace DougKlassen.Revit.Perfect.Commands
 
 					#region Evaluation of Segment 0
 					String newSeg0 = GetSeg0(docViewPlan, oldName[0]);
-					if (null != newSeg0)
+					if (newSeg0 != null)
 					{
 						newName.Add(newSeg0);
 					}
@@ -108,6 +109,7 @@ namespace DougKlassen.Revit.Perfect.Commands
 							docViewPlan.get_Parameter(BuiltInParameter.VIEW_SCALE).AsDouble() <= 12)
 						{
 							newName.Add(oldName[1]);
+							TryRenameView(docViewPlan, newName);
 							continue;
 						}
 						else
@@ -116,7 +118,7 @@ namespace DougKlassen.Revit.Perfect.Commands
 							continue;
 						}
 					}
-					if (ViewType.FloorPlan == docViewPlan.ViewType)
+					else if (ViewType.FloorPlan == docViewPlan.ViewType)
 					{
 						if (seg1ViewPlanRegex.IsMatch(oldName[1])) //if conforms to a proper view type designation
 						{
@@ -182,14 +184,7 @@ namespace DougKlassen.Revit.Perfect.Commands
 					}
 					#endregion Evaluation of Segment 3
 
-					String nameUpdate = String.Empty;
-					for (int i = 0; i < (newName.Count() - 1); i++)
-					{
-						nameUpdate += newName[i] + '_';
-					}
-					nameUpdate += newName.Last();
-
-					TryRenameView(docViewPlan, nameUpdate);
+					TryRenameView(docViewPlan, newName);
 				}
 				#endregion Evaluation of ViewPlans
 
@@ -224,6 +219,7 @@ namespace DougKlassen.Revit.Perfect.Commands
 							&& docViewSection.get_Parameter(BuiltInParameter.VIEW_SCALE).AsDouble() <= 12)
 						{
 							newName.Add(oldName[1]);
+							TryRenameView(docViewSection, newName);
 							continue;
 						}
 						else
@@ -284,14 +280,7 @@ namespace DougKlassen.Revit.Perfect.Commands
 					}
 					#endregion Evaluation of Segement 3
 
-					String nameUpdate = String.Empty;
-					for (int i = 0; i < (newName.Count() - 1); i++)
-					{
-						nameUpdate += newName[i] + '_';
-					}
-					nameUpdate += newName.Last();
-
-					TryRenameView(docViewSection, nameUpdate);
+					TryRenameView(docViewSection, newName);
 				}
 				#endregion Evaluation of ViewSections
 
@@ -324,14 +313,7 @@ namespace DougKlassen.Revit.Perfect.Commands
 					newName.Add(oldName[1]);
 					#endregion Audit Segment 1
 
-					String nameUpdate = String.Empty;
-					for (int i = 0; i < (newName.Count() - 1); i++)
-					{
-						nameUpdate += newName[i] + '_';
-					}
-					nameUpdate += newName.Last();
-
-					TryRenameView(docViewDrafting, nameUpdate);
+					TryRenameView(docViewDrafting, newName);
 				}
 				#endregion Evaluation of ViewDraftings
 
@@ -391,14 +373,7 @@ namespace DougKlassen.Revit.Perfect.Commands
 					}
 					#endregion Audit Segment 3
 
-					String nameUpdate = String.Empty;
-					for (int i = 0; i < (newName.Count() - 1); i++)
-					{
-						nameUpdate += newName[i] + '_';
-					}
-					nameUpdate += newName.Last();
-
-					TryRenameView(docView3D, nameUpdate);
+					TryRenameView(docView3D, newName);
 				}
 				#endregion Evaluation of View3Ds
 
@@ -427,7 +402,8 @@ namespace DougKlassen.Revit.Perfect.Commands
 		/// </summary>
 		/// <param name="view">A view in the document</param>
 		/// <param name="oldSeg0">The current name of the view</param>
-		/// <returns>The new name of the view, which may be the same as the old name, or null if the view name doesn't match project standards</returns>
+		/// <returns>The new name of the view, which may be the same as the old name,
+		/// or null if the view name doesn't match project standards</returns>
 		private String GetSeg0(View view, String oldSeg0)
 		{
 			if (IsPlaced(view))
@@ -515,13 +491,20 @@ namespace DougKlassen.Revit.Perfect.Commands
 		/// </summary>
 		/// <param name="view"></param>
 		/// <param name="newName"></param>
-		private void TryRenameView(View view, String newName)
+		private void TryRenameView(View view, List<String> newName)
 		{
-			//skip if the name is already correct or if there is a View name conflict
-			if ((view.Name != newName) && !projectViewNames.Contains(newName))
+			String nameUpdate = String.Empty;
+			for (int i = 0; i < (newName.Count() - 1); i++)
 			{
-				cmdResultMsg += view.Name + " => " + newName + "\n";
-				view.Name = newName;
+				nameUpdate += newName[i] + '_';
+			}
+			nameUpdate += newName.Last();
+
+			//skip if the name is already correct or if there is a View name conflict
+			if ((view.Name != nameUpdate) && !projectViewNames.Contains(nameUpdate))
+			{
+				cmdResultMsg += view.Name + " => " + nameUpdate + "\n";
+				view.Name = nameUpdate;
 			}
 		}
 	}
