@@ -2,7 +2,7 @@
 <RevitAddIns>
   <AddIn Type="Application">
     <Name>Perfect</Name>
-    <Assembly>C:\ProgramData\AutoDesk\Revit\AddIns\2014\Perfect\Perfect.dll</Assembly>
+    <Assembly>.\Perfect\Perfect.dll</Assembly>
     <AddInId>f78e5539-0065-4bbd-8cf1-be086c1b6d1a</AddInId>
     <FullClassName>DougKlassen.Revit.Perfect.StartUpApp</FullClassName>
     <VendorId>TSRA</VendorId>
