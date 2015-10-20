@@ -7,11 +7,11 @@ using System.Resources;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("Perfect")]
-[assembly: AssemblyDescription("A Revit 2014 Add-In")]
+[assembly: AssemblyDescription("A Revit 2016 Add-In")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("")]
-[assembly: AssemblyCopyright("Copyright ©  2014")]
+[assembly: AssemblyCopyright("Copyright ©  2014-2016")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -33,6 +33,6 @@ using System.Resources;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("15.1.*")]
+[assembly: AssemblyVersion("16.1.*")]
 [assembly: NeutralResourcesLanguageAttribute("en-US")]
-[assembly: AssemblyFileVersionAttribute("15.1")]
+[assembly: AssemblyFileVersionAttribute("16.1")]

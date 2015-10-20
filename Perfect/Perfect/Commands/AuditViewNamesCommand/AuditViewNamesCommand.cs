@@ -20,7 +20,7 @@ namespace DougKlassen.Revit.Perfect.Commands
 
 		Regex splitRegex = new Regex("_");
 		//todo: this is passing numbering of the form A2.91_DOC
-		Regex numberedDetailRegex = new Regex(@"^[A-Z]{1,2}[1]?\d.\d\d[A-Za-z]?-\w{1,4}$");   //valid format for sheet/detail number on placed views
+		Regex numberedDetailRegex = new Regex(@"^[A-Z]{1,3}[1]?\d.\d\d[A-Za-z]?-\w{1,4}$");   //valid format for sheet/detail number on placed views
 		Regex seg0UnPlacedViewRegex = new Regex(@"^(COORD|DIM|DOC|EXPORT|PARENT|PRES|WK)$");    //valid seg 0 values for unplaced views
 		Regex seg1ViewPlanRegex = new Regex(@"^(EFP|EQP|FP|RP|SP)(\(\w+\))?$");     //valid seg 1 values for plans
 		Regex seg1AreaPlanRegex = new Regex(@"^AP(\(\w+\))?$");
@@ -100,7 +100,7 @@ namespace DougKlassen.Revit.Perfect.Commands
 
 					#region Evaluation of Segment 1
 					//ViewPlans are permitted to have only two segments where they are large scale details
-					if(oldName.Count == 2)
+					if (oldName.Count == 2)
 					{
 						if (
 							((ViewType.FloorPlan == docViewPlan.ViewType) ||
@@ -446,8 +446,8 @@ namespace DougKlassen.Revit.Perfect.Commands
 
 			if (null != viewport)
 			{
-				String sheetNumber = viewport.get_Parameter("Sheet Number").AsString();
-				String detailNumber = viewport.get_Parameter("Detail Number").AsString();
+				String sheetNumber = viewport.LookupParameter("Sheet Number").AsString();
+				String detailNumber = viewport.LookupParameter("Detail Number").AsString();
 				return String.Format("{0}-{1}", sheetNumber, detailNumber);
 			}
 			else
