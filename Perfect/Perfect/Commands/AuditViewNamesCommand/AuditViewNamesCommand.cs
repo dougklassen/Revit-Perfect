@@ -28,8 +28,8 @@ namespace DougKlassen.Revit.Perfect.Commands
 		Regex seg1SectionRegex = new Regex(@"^(BS|WS)(\(\w+\))?$");
 		Regex seg1ElevationRegex = new Regex(@"^(EV|IE)(\(\w+\))?$");
 		Regex seg1ThreeDRegex = new Regex(@"^(3D|PV)(\(\w+\))?$");
-		Regex seg2LevelRegex = new Regex(@"^[A-Z]?\d{1,2}$");
-		Regex seg2ElevationRegex = new Regex(@"^(N(orth)?|E(ast)?|S(outh)?|W(est)?)$");
+		Regex seg2LevelRegex = new Regex(@"^[A-Z]?\d{1,2}(.\d{1,2})?$");	//valid seg 2 values denoting a level
+		Regex seg2ElevationRegex = new Regex(@"^(N(orth)?|E(ast)?|S(outh)?|W(est)?)$");	//valid seg 2 values denoting an elevation direction
 		Regex seg2SectionRegex = new Regex(@"^(NS|SN|EW|WE)$");
 		Regex default3DRegex = new Regex(@"^{3D( - [a-z]{2,20})?}$");
 		Regex levelNumberRegex = new Regex(@"^(\S* )?([A-B]?\d{1,3})$", RegexOptions.IgnoreCase);
