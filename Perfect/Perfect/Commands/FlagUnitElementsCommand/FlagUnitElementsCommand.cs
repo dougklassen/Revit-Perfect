@@ -12,7 +12,8 @@ namespace DougKlassen.Revit.Perfect.Commands
 	[Autodesk.Revit.Attributes.Transaction(Autodesk.Revit.Attributes.TransactionMode.Manual)]
 	class FlagUnitElementsCommand : IExternalCommand
 	{
-		Regex unitGroupRegex = new Regex(@"UNIT [A-Z0-9][A-Z0-9]");
+		//Regex unitGroupRegex = new Regex(@"UNIT [A-Z0-9][A-Z0-9]");
+		Regex unitGroupRegex = new Regex(@"UNIT ");
 
 		public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
 		{
@@ -27,7 +28,7 @@ namespace DougKlassen.Revit.Perfect.Commands
 
 			IEnumerable<Element> elementsToFlag = new FilteredElementCollector(dbDoc).WherePasses(categoriesToFlag);
 
-			using (Transaction t = new Transaction(dbDoc, "Flag unit doors"))
+			using (Transaction t = new Transaction(dbDoc, "Flag unit doors and walls"))
 			{
 				t.Start();
 
@@ -39,7 +40,7 @@ namespace DougKlassen.Revit.Perfect.Commands
 					{
 						if (unitGroupRegex.IsMatch(dbDoc.GetElement(elemGroupId).Name))
 						{
-							Parameter p = e.LookupParameter("UNIT TYPE");
+							Parameter p = e.LookupParameter("b_Door_Wall_Location");
 							if (null != p)
 							{
 								if (String.IsNullOrWhiteSpace(p.AsString()) && !p.IsReadOnly)
