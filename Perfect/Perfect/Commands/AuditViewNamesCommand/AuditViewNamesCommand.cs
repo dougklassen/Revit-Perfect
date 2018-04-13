@@ -32,7 +32,7 @@ namespace DougKlassen.Revit.Perfect.Commands
 		Regex seg2LevelRegex = new Regex(@"^[A-Z]?\d{1,2}(.\d{1,2})?$");	//valid seg 2 values denoting a level
 		Regex seg2ElevationRegex = new Regex(@"^(N(orth)?|E(ast)?|S(outh)?|W(est)?)$");	//valid seg 2 values denoting an elevation direction
 		Regex seg2SectionRegex = new Regex(@"^(NS|SN|EW|WE)$");
-		Regex default3DRegex = new Regex(@"^{3D( - [\w ]{2,20})?}$");
+		Regex default3DRegex = new Regex(@"^{3D( - [\w@. ]{2,50})?}$");
 		Regex levelNumberRegex = new Regex(@"^(\S* )?([A-B]?\d{1,3})$", RegexOptions.IgnoreCase);
 
 		public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
