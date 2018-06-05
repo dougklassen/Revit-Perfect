@@ -62,6 +62,7 @@
   <ItemGroup>
     <Compile Include="Commands\AboutCommand\AboutCommand.cs" />
     <Compile Include="Commands\AuditViewNamesCommand\AuditViewNamesCommand.cs" />
+    <Compile Include="Commands\ExportDetailTextCommand\ExportDetailTextCommand.cs" />
     <Compile Include="Commands\ExportImportStylesCommand\ExportImportStylesCommand.cs" />
     <Compile Include="Commands\FlagUnitElementsCommand\FlagUnitElementsCommand.cs" />
     <Compile Include="Commands\LoadImportStylesCommand\LoadImportStylesCommand.cs" />
