@@ -57,7 +57,7 @@ namespace DougKlassen.Revit.Perfect
 
 			PushButtonData exportImportStylesCommandPushButtonData = new PushButtonData(
 					name: "ExportImportStylesCommandButton",
-					text: "Export Styles",
+					text: "Export CAD Import Styles",
 					assemblyName: FileLocations.AddInDirectory + FileLocations.AssemblyName + ".dll",
 					className: "DougKlassen.Revit.Perfect.Commands.ExportImportStylesCommand")
 			{
@@ -77,7 +77,7 @@ namespace DougKlassen.Revit.Perfect
 
 			PushButtonData loadImportStylesCommandPushButtonData = new PushButtonData(
 					name: "LoadImportStylesCommandButton",
-					text: "Import Styles",
+                    text: "Load CAD Import Styles",
 					assemblyName: FileLocations.AddInDirectory + FileLocations.AssemblyName + ".dll",
 					className: "DougKlassen.Revit.Perfect.Commands.LoadImportStylesCommand")
 			{
