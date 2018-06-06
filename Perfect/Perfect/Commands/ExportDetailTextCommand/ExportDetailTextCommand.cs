@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using System.IO;
+using System.Windows.Forms;
 
 using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
@@ -10,7 +11,8 @@ using Autodesk.Revit.UI;
 namespace DougKlassen.Revit.Perfect.Commands
 {
     /// <summary>
-    /// Export callout text from all views on selected sheets
+    /// Export callout text from all views sheets selected by the user. Sheets must be
+    /// selected prior to invoking the command.
     /// </summary>
     [Autodesk.Revit.Attributes.Transaction(Autodesk.Revit.Attributes.TransactionMode.Manual)]
     class ExportDetailTextCommand : IExternalCommand
@@ -32,7 +34,57 @@ namespace DougKlassen.Revit.Perfect.Commands
                 return Result.Failed;
             }
 
-            return Result.Succeeded;
+            FilteredElementCollector textCollector;
+            ElementId textNotesCategoryId = new ElementId(BuiltInCategory.OST_TextNotes);
+            StringBuilder output = new StringBuilder();
+            foreach (var sheetId in selectedSheetIds)
+            {
+                var sheet = (ViewSheet)dbDoc.GetElement(sheetId);
+                var viewsOnSheet = sheet.GetAllPlacedViews();
+                foreach (var viewId in viewsOnSheet)
+                {
+                    textCollector = new FilteredElementCollector(dbDoc, viewId)
+                        .OfCategoryId(textNotesCategoryId);
+
+                    foreach (TextNote textNote in textCollector)
+                    {
+                        output.AppendFormat("{0}\t{1}\t{2}\n",
+                            textNote.Text,
+                            sheet.SheetNumber,
+                            dbDoc.GetElement(viewId).Name);
+                    }
+                }
+            }
+
+            String outputFilePath;
+            var saveDialog = new SaveFileDialog();
+            saveDialog.FileName = "Exported callout text.txt";
+            saveDialog.DefaultExt = ".txt";
+            saveDialog.Filter = "Text Documents (.txt)|*.txt";
+            var result = saveDialog.ShowDialog();
+            switch (result)
+            {
+                case DialogResult.OK:
+                    outputFilePath = saveDialog.FileName;
+                    break;
+                case DialogResult.Cancel:
+                    return Result.Cancelled;
+                default:
+                    return Result.Failed;
+            }
+
+            try
+            {
+                File.WriteAllText(outputFilePath, output.ToString());
+                return Result.Succeeded;
+            }
+            catch
+            {
+                TaskDialog.Show(
+                    "Error Saving Output",
+                    "Could not save file " + outputFilePath);
+                return Result.Failed;
+            }
         }
     }
 }

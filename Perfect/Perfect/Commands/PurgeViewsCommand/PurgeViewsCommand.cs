@@ -18,9 +18,9 @@ namespace DougKlassen.Revit.Perfect.Commands
 			Document dbDoc = commandData.Application.ActiveUIDocument.Document;
 
 			IEnumerable<View> docViews = new FilteredElementCollector(dbDoc)
-			.OfClass(typeof(View))
-			.AsEnumerable()
-			.Cast<View>();
+			    .OfClass(typeof(View))
+			    .AsEnumerable()
+			    .Cast<View>();
 
 			PurgeElementsWindow purgeWindow = new PurgeElementsWindow(dbDoc, typeof(View));
 			purgeWindow.PurgeRegExString
