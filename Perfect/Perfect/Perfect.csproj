@@ -74,7 +74,6 @@
     <Compile Include="Interface\PurgeElementsWindow.xaml.cs">
       <DependentUpon>PurgeElementsWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Commands\PurgeParametersCommand\PurgeParametersCommand.cs" />
     <Compile Include="Commands\RenameFamiliesCommand\RenameFamiliesCommand.cs" />
     <Compile Include="Helpers.cs" />
     <Compile Include="Models\ObjectStylesModel.cs" />
