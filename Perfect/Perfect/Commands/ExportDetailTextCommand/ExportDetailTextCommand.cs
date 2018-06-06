@@ -19,12 +19,13 @@ namespace DougKlassen.Revit.Perfect.Commands
     {
         public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
         {
+            //retrieve currently selected sheets
             UIDocument uiDoc = commandData.Application.ActiveUIDocument;
             Document dbDoc = commandData.Application.ActiveUIDocument.Document;
-
             var selectedSheetIds = uiDoc.Selection.GetElementIds().
                 Where(id => dbDoc.GetElement(id).Category.Name == "Sheets");
 
+            //warn the user if no sheets are selected
             if (selectedSheetIds.Count() < 1)
             {
                 TaskDialog.Show(
@@ -34,18 +35,21 @@ namespace DougKlassen.Revit.Perfect.Commands
                 return Result.Failed;
             }
 
+            //retrieve and log all text notes on views on all selected sheets
             FilteredElementCollector textCollector;
             ElementId textNotesCategoryId = new ElementId(BuiltInCategory.OST_TextNotes);
             StringBuilder output = new StringBuilder();
+            //step through sheeets
             foreach (var sheetId in selectedSheetIds)
             {
                 var sheet = (ViewSheet)dbDoc.GetElement(sheetId);
                 var viewsOnSheet = sheet.GetAllPlacedViews();
+                //step through views on each sheet
                 foreach (var viewId in viewsOnSheet)
                 {
                     textCollector = new FilteredElementCollector(dbDoc, viewId)
                         .OfCategoryId(textNotesCategoryId);
-
+                    //step through text notes in each view
                     foreach (TextNote textNote in textCollector)
                     {
                         output.AppendFormat("{0}\t{1}\t{2}\n",
@@ -56,6 +60,7 @@ namespace DougKlassen.Revit.Perfect.Commands
                 }
             }
 
+            //prompt the user for an output location
             String outputFilePath;
             var saveDialog = new SaveFileDialog();
             saveDialog.FileName = "Exported callout text.txt";
@@ -72,7 +77,7 @@ namespace DougKlassen.Revit.Perfect.Commands
                 default:
                     return Result.Failed;
             }
-
+            //write the log to the specified file
             try
             {
                 File.WriteAllText(outputFilePath, output.ToString());
