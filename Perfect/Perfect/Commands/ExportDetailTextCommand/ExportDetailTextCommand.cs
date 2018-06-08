@@ -36,6 +36,7 @@ namespace DougKlassen.Revit.Perfect.Commands
             }
 
             //retrieve and log all text notes on views on all selected sheets
+            Int32 textNoteCount = 0;
             FilteredElementCollector textCollector;
             ElementId textNotesCategoryId = new ElementId(BuiltInCategory.OST_TextNotes);
             StringBuilder output = new StringBuilder();
@@ -52,10 +53,16 @@ namespace DougKlassen.Revit.Perfect.Commands
                     //step through text notes in each view
                     foreach (TextNote textNote in textCollector)
                     {
-                        output.AppendFormat("{0}\t{1}\t{2}\n",
-                            textNote.Text,
+                        var text = textNote.Text;
+                        //Revit TextNote.Text is terminated by a CR which needs to be stripped
+                        Char[] charsToTrim = { '\x000A', '\x000D', '\x0009', '\x0020' }; //LF, CR, tab, space
+                        text = text.Trim(charsToTrim);
+                        //TODO: skip common text such as "TYP" or "SIM"
+                        output.AppendFormat("{0}\t{1}\t{2}\r\n",
+                            text,
                             sheet.SheetNumber,
                             dbDoc.GetElement(viewId).Name);
+                        textNoteCount++;
                     }
                 }
             }
@@ -81,6 +88,7 @@ namespace DougKlassen.Revit.Perfect.Commands
             try
             {
                 File.WriteAllText(outputFilePath, output.ToString());
+                TaskDialog.Show("Text Notes Exported", textNoteCount + " text notes exported");
                 return Result.Succeeded;
             }
             catch
