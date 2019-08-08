@@ -36,7 +36,8 @@ namespace DougKlassen.Revit.Perfect.Commands
 							&& !p.IsReadOnly
 							&& String.IsNullOrWhiteSpace(p.AsString()))
 					{
-						p.Set(v.ViewName);
+                        Parameter n = v.LookupParameter("View Name");
+						p.Set(n.AsString());
 						setViewTitlesCounter++;
 					}
 				}
