@@ -26,6 +26,9 @@ namespace DougKlassen.Revit.Perfect.Commands
                         dbDoc.Settings.Categories.get_Item(BuiltInCategory.OST_Walls).Id
                     });
 
+            ElementClassFilter elementFilter = new ElementClassFilter(
+                typeof(Element));
+
 			IEnumerable<Element> elementsToFlag = new FilteredElementCollector(dbDoc).WherePasses(categoriesToFlag);
 
 			using (Transaction t = new Transaction(dbDoc, "Flag unit doors and walls"))

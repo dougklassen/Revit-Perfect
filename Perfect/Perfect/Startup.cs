@@ -15,8 +15,8 @@ namespace DougKlassen.Revit.Perfect
 		public static String AddInDirectory;
 		public static String AssemblyName;
 		public static String AssemblyPath;
-		public static readonly String imperialTemplateDirectory = @"C:\ProgramData\Autodesk\RVT 2014\Family Templates\English_I\";
-		public static readonly String addInResourcesDirectory = @"C:\2014-BCRA-RVT\addins\Resources\";
+		public static readonly String imperialTemplateDirectory = @"C:\ProgramData\Autodesk\RVT 2020\Family Templates\English_I\";
+		public static readonly String addInResourcesDirectory = @"C:\ProgramData\Autodesk\Revit\Addins\2020\Perfect";
 		public static readonly String ResourceNameSpace = @"DougKlassen.Revit.Perfect.Resources";
 	}
 
