@@ -26,6 +26,7 @@ namespace DougKlassen.Revit.Perfect.Commands
                         dbDoc.Settings.Categories.get_Item(BuiltInCategory.OST_Walls).Id
                     });
 
+            //TODO: throws exception: "The input type is not a subclass of element" 
             ElementClassFilter elementFilter = new ElementClassFilter(
                 typeof(Element));
 

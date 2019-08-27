@@ -26,6 +26,11 @@ namespace DougKlassen.Revit.Perfect
         BitmapImage largeIcon;
         BitmapImage smallIcon;
 
+        /// <summary>
+        /// Run on startup. Set up the ribbon UI
+        /// </summary>
+        /// <param name="application">A Reference to the Revit UI</param>
+        /// <returns>Whether the application sucessfully started up</returns>
 		Result IExternalApplication.OnStartup(UIControlledApplication application)
 		{
 			//initialize AssemblyName using reflection
@@ -54,7 +59,8 @@ namespace DougKlassen.Revit.Perfect
                 namingStandardsPulldownButtonData,
                 cleanUpToolsPullDownButtonData,
                 exportDataPullDownButttonData);
-            //set up Naming Standards pull down button
+
+            #region Naming Standards Pulldown
             PulldownButton nameStandardsPullDownButton = (PulldownButton)stackOne[0];
             addButtonToPulldown(
                 pulldown: nameStandardsPullDownButton,
@@ -71,72 +77,48 @@ namespace DougKlassen.Revit.Perfect
                 commandClass: "SetViewTitleCommand",
                 buttonText: "Set Empty View Titles",
                 buttonToolTip: "Set Title on Sheet view parameter for views that don't have it set yet");
-            //set up Clean Up pull down button
+            #endregion Naming Standards Pulldown
+
+            #region Clean Up Pull Down
             PulldownButton cleanUpPullDownButton = (PulldownButton)stackOne[1];
-            PushButtonData purgeLinePatternsCommandPushButtonData = new PushButtonData(
-                name: "PurgeLinePatternsCommandPushButtonData",
-                text: "Purge Line Patterns",
-                assemblyName: FileLocations.AssemblyPath,
-                className: "DougKlassen.Revit.Perfect.Commands.PurgeLinePatternsCommand")
-            {
-                LargeImage = largeIcon,
-                Image = smallIcon
-            };
-            var purgeLinePatternsButton = cleanUpPullDownButton.AddPushButton(purgeLinePatternsCommandPushButtonData);
-            purgeLinePatternsButton.ToolTip = "Purge line patterns using regular expression matches";
-            PushButtonData purgeRefPlanesCommandPushButtonData = new PushButtonData(
-                name: "PurgeRefPlanesCommandButton",
-                text: "Purge Reference Planes",
-                assemblyName: FileLocations.AssemblyPath,
-                className: "DougKlassen.Revit.Perfect.Commands.PurgeRefPlanesCommand")
-            {
-                LargeImage = largeIcon,
-                Image = smallIcon
-            };
-            cleanUpPullDownButton.AddPushButton(purgeRefPlanesCommandPushButtonData);
-            PushButtonData purgeViewsCommandPushButtonData = new PushButtonData(
-                name: "PurgeViewsCommandButton",
-                text: "Purge Views",
-                assemblyName: FileLocations.AssemblyPath,
-                className: "DougKlassen.Revit.Perfect.Commands.PurgeViewsCommand")
-            {
-                LargeImage = largeIcon,
-                Image = smallIcon
-            };
-            cleanUpPullDownButton.AddPushButton(purgeViewsCommandPushButtonData);
-            //set up Export pull down button
+            addButtonToPulldown(
+                pulldown: cleanUpPullDownButton,
+                commandClass: "PurgeLinePatternsCommand",
+                buttonText: "Purge Line Patterns",
+                buttonToolTip: "Purge line patterns using regular expression matches");
+            addButtonToPulldown(
+                pulldown: cleanUpPullDownButton,
+                commandClass: "PurgeRefPlanesCommand",
+                buttonText: "Purge Reference Planes",
+                buttonToolTip: "Purge unlabelled reference planes");
+            addButtonToPulldown(
+                pulldown: cleanUpPullDownButton,
+                commandClass: "PurgeViewsCommand",
+                buttonText: "Purge Views",
+                buttonToolTip: "Purge unnamed views");
+
+            #endregion Clean Up Pull Down
+
+            #region Export Pulldown
             PulldownButton exportPullDownButton = (PulldownButton)stackOne[2];
-            PushButtonData exportImportStylesCommandPushButtonData = new PushButtonData(
-                name: "ExportImportStylesCommandButton",
-                text: "Export CAD Import Styles",
-                assemblyName: FileLocations.AssemblyPath,
-                className: "DougKlassen.Revit.Perfect.Commands.ExportImportStylesCommand")
-            {
-                LargeImage = largeIcon,
-                Image = smallIcon
-            };
-            exportPullDownButton.AddPushButton(exportImportStylesCommandPushButtonData);
-            PushButtonData loadImportStylesCommandPushButtonData = new PushButtonData(
-                name: "LoadImportStylesCommandButton",
-                text: "Load CAD Import Styles",
-                assemblyName: FileLocations.AssemblyPath,
-                className: "DougKlassen.Revit.Perfect.Commands.LoadImportStylesCommand")
-            {
-                LargeImage = largeIcon,
-                Image = smallIcon
-            };
-            exportPullDownButton.AddPushButton(loadImportStylesCommandPushButtonData);
-            PushButtonData exportDetailTextCommandPushButtonData = new PushButtonData(
-                name: "ExportDetailTextCommandPushButtonData",
-                text: "Export Callout Text for Review",
-                assemblyName: FileLocations.AssemblyPath,
-                className: "DougKlassen.Revit.Perfect.Commands.ExportDetailTextCommand")
-            {
-                LargeImage = largeIcon,
-                Image = smallIcon
-            };
-            exportPullDownButton.AddPushButton(exportDetailTextCommandPushButtonData);
-            #endregion
+            addButtonToPulldown(
+                pulldown: exportPullDownButton,
+                commandClass: "ExportImportStylesCommand",
+                buttonText: "Export CAD Import Styles",
+                buttonToolTip: "Export CAD import styles");
+            addButtonToPulldown(
+                pulldown: exportPullDownButton,
+                commandClass: "LoadImportStylesCommand",
+                buttonText: "Load CAD Import Styles",
+                buttonToolTip: "Load CAD import styles");
+            addButtonToPulldown(
+                pulldown: exportPullDownButton,
+                commandClass: "ExportDetailTextCommand",
+                buttonText: "Export Callout Text for Review",
+                buttonToolTip: "Export callout text to a CSV file for review");
+            #endregion Export Pulldown
+
+            #endregion Create Column One
 
             #region Create Column Two
             PulldownButtonData geometryPullDownButtonData = new PulldownButtonData(
@@ -148,34 +130,28 @@ namespace DougKlassen.Revit.Perfect
 			IList<RibbonItem> stackTwo = PerfectRibbonPanel.AddStackedItems(
 				geometryPullDownButtonData,
 				elementPullDownButtonData);
-            //set up Geometry pulldown button
-			PulldownButton geometryPullDownButton = (PulldownButton)stackTwo[0];
-            PushButtonData unflipCommandPushButtonData = new PushButtonData(
-                name: "UnflipCommandPushButtonData",
-                text: "Unflip Windows",
-                assemblyName: FileLocations.AddInDirectory + FileLocations.AssemblyName + ".dll",
-                className: "DougKlassen.Revit.Perfect.Commands.UnflipCommand")
-            {
-                LargeImage = largeIcon,
-                Image = smallIcon,
-                AvailabilityClassName = "DougKlassen.Revit.Perfect.Commands.UnflipCommandAvailability"
-            };
-            geometryPullDownButton.AddPushButton(unflipCommandPushButtonData);
-            //set up Elements pull down button
-            PulldownButton elementPullDownButton = (PulldownButton)stackTwo[1];
-            PushButtonData flagUnitElementsCommandPushButtonData = new PushButtonData(
-                name: "FlagUnitElementsCommand",
-                text: "Flag Unit Elements",
-                assemblyName: FileLocations.AssemblyPath,
-                className: "DougKlassen.Revit.Perfect.Commands.FlagUnitElementsCommand")
-            {
-                LargeImage = largeIcon,
-                Image = smallIcon
-            };
-            elementPullDownButton.AddPushButton(flagUnitElementsCommandPushButtonData);
-            #endregion
 
-            #region add slide out panel
+            #region Geometry Pulldown
+            PulldownButton geometryPullDownButton = (PulldownButton)stackTwo[0];
+            addButtonToPulldown(
+                pulldown: geometryPullDownButton,
+                commandClass: "UnflipCommand",
+                buttonText: "Unflip Windows",
+                buttonToolTip: "Unflip windows that have been flipped on both axes");
+            #endregion Geometry Pulldown
+
+            #region Elements Pulldown
+            PulldownButton elementPullDownButton = (PulldownButton)stackTwo[1];
+            addButtonToPulldown(
+                pulldown: elementPullDownButton,
+                commandClass: "FlagUnitElementsCommand",
+                buttonText: "Flag Unit Elements",
+                buttonToolTip: "Flag elements that are part of a unit group");
+            #endregion Elements Pulldown
+
+            #endregion Create Column Two
+
+            #region Create slide out panel
             PerfectRibbonPanel.AddSlideOut();
             PushButtonData aboutCommandPushButtonData = new PushButtonData(
                 name: "AboutCommandButton",
@@ -194,7 +170,7 @@ namespace DougKlassen.Revit.Perfect
 		}
 
         /// <summary>
-        /// helper method to add a button to a pulldown
+        /// Helper method to add a button to a pulldown
         /// </summary>
         /// <param name="pulldown"></param>
         /// <param name="commandClass"></param>
@@ -202,7 +178,7 @@ namespace DougKlassen.Revit.Perfect
         /// <param name="buttonToolTip"></param>
         /// <param name="largeImage"></param>
         /// <param name="smallImage"></param>
-        /// <returns></returns>
+        /// <returns>A reference to the button that was created</returns>
         PushButton addButtonToPulldown(
             PulldownButton pulldown,
             String buttonText,
@@ -236,6 +212,11 @@ namespace DougKlassen.Revit.Perfect
             return button;
         }
 
+        /// <summary>
+        /// Run on shutdown
+        /// </summary>
+        /// <param name="application">A reference to the Revit UI</param>
+        /// <returns></returns>
 		Result IExternalApplication.OnShutdown(UIControlledApplication application)
 		{
 			return Result.Succeeded;
