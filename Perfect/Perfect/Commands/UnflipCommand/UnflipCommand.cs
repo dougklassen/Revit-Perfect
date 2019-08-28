@@ -27,6 +27,9 @@ namespace DougKlassen.Revit.Perfect.Commands
 				{
 					FamilyInstance inst = dbDoc.GetElement(id) as FamilyInstance;
 
+                    //skip if the element isn't a family instance (ie a built in family)
+                    if (null == inst) continue;
+
 					//Some FamilyInstances are flipped even though CanFlipHand is false. CanFlip hand can't be ignored to modify these instances
 					//In this case the attempt to flip will silently fail
 					if (inst.CanFlipHand)

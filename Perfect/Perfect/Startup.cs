@@ -137,7 +137,14 @@ namespace DougKlassen.Revit.Perfect
                 pulldown: geometryPullDownButton,
                 commandClass: "UnflipCommand",
                 buttonText: "Unflip Windows",
-                buttonToolTip: "Unflip windows that have been flipped on both axes");
+                buttonToolTip: "Unflip windows that have been flipped on both axes",
+                commandAvailability: "UnflipCommandAvailability");
+            addButtonToPulldown(
+                pulldown: geometryPullDownButton,
+                commandClass: "DisallowWallJoinsCommand",
+                buttonText: "Dissallow Wall Joins",
+                buttonToolTip: "Turn off wall joins for all selected walls",
+                commandAvailability: "DisallowWallJoinsCommandAvailability");
             #endregion Geometry Pulldown
 
             #region Elements Pulldown
@@ -178,12 +185,14 @@ namespace DougKlassen.Revit.Perfect
         /// <param name="buttonToolTip"></param>
         /// <param name="largeImage"></param>
         /// <param name="smallImage"></param>
+        /// <param name="commandAvailability"></param>
         /// <returns>A reference to the button that was created</returns>
         PushButton addButtonToPulldown(
             PulldownButton pulldown,
             String buttonText,
             String buttonToolTip,
             String commandClass,
+            String commandAvailability=null,
             BitmapImage largeImage=null,
             BitmapImage smallImage=null)
         {
@@ -208,6 +217,11 @@ namespace DougKlassen.Revit.Perfect
             };
             var button = pulldown.AddPushButton(buttonData);
             button.ToolTip = buttonToolTip;
+
+            if (null != commandAvailability)
+            {
+                button.AvailabilityClassName = FileLocations.CommandNameSpace + commandAvailability;
+            }
 
             return button;
         }
