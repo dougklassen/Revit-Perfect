@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
 
-namespace DougKlassen.Revit.Perfect.Commands.SplitWallByLevelCommand
+namespace DougKlassen.Revit.Perfect.Commands
 {
     [Autodesk.Revit.Attributes.Transaction(Autodesk.Revit.Attributes.TransactionMode.Manual)]
     class SplitWallByLevelCommand : IExternalCommand
@@ -25,9 +25,10 @@ namespace DougKlassen.Revit.Perfect.Commands.SplitWallByLevelCommand
                 return Result.Failed;
             }
 
-            Wall wall = dbDoc.GetElement(selection.First()) as Wall;
-            Double bottomElevation;
-            Double topElevation;
+            Wall wall = dbDoc.GetElement(selection.First()) as Wall; //the wall to be split
+            Double bottomElevation; //the bottom elevation of the wall
+            Double topElevation; //the top elevation of the wall
+            Double tolerance = 0.0001; //tolerance to use when choosing host levels
 
             //get the elevation at the bottom of the wall
             Level bottomLevel = dbDoc.GetElement(wall.get_Parameter(BuiltInParameter.WALL_BASE_CONSTRAINT).AsElementId()) as Level;
@@ -50,24 +51,48 @@ namespace DougKlassen.Revit.Perfect.Commands.SplitWallByLevelCommand
                 topElevation = bottomElevation + unconnectedHeight;
             }
 
-            //get all levels in the document, sorted by elevation
+            //get all levels in the document, sorted by elevation.
+            //Some of the elements of the category OST_Levels aren't of class Level so they're filtered out.
+            //TODO: use .OfClass(Level)?
             var levels = new FilteredElementCollector(dbDoc)
                     .OfCategory(BuiltInCategory.OST_Levels)
                     .Select(e => dbDoc.GetElement(e.Id) as Level)
+                    .Where(l => null != l)
                     .OrderBy(l => l.Elevation);
 
+            //generate a list of walls between the top and bottom of the wall
             List<Level> levelsBetween = new List<Level>();
+            foreach (var level in levels)
+            {
+                if (level.Elevation >= (bottomElevation - tolerance) &&
+                    level.Elevation <= (topElevation + tolerance))
+                {
+                    levelsBetween.Add(level);
+                }
+            }
 
-            using (Transaction t = new Transaction(dbDoc))
+            //check if the lowest section of the wall can be hosted on the level below, which is preferred
+            Boolean useLevelBelow = true;
+            if (levels.First().Elevation > bottomElevation)
+            {
+                useLevelBelow = false;
+            }
+
+            using (Transaction t = new Transaction(dbDoc, "Split wall by level"))
             {
                 t.Start();
 
-
+                String msg = String.Empty;
+                msg += String.Format("Bottom: {0}\nTop: {1}\n\n", bottomElevation, topElevation);
+                foreach (var l in levelsBetween)
+                {
+                    msg += String.Format("{0}: {1}\n", l.Name, l.Elevation);
+                }
+                TaskDialog.Show("Wall Split by Level", msg);
 
                 t.Commit();
             }
 
-            //TODO: account for situation where top and bottom constraints skip levels
             //TODO: let user select which levels will be used for splitting
 
             return Result.Succeeded;

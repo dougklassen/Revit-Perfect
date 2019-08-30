@@ -145,6 +145,11 @@ namespace DougKlassen.Revit.Perfect
                 buttonText: "Dissallow Wall Joins",
                 buttonToolTip: "Turn off wall joins for all selected walls",
                 commandAvailability: "DisallowWallJoinsCommandAvailability");
+            addButtonToPulldown(
+                pulldown: geometryPullDownButton,
+                commandClass: "SplitWallByLevelCommand",
+                buttonText: "Split Wall by Level",
+                buttonToolTip: "Split wall by intervening levels");
             #endregion Geometry Pulldown
 
             #region Elements Pulldown
