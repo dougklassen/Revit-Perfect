@@ -171,7 +171,8 @@ namespace DougKlassen.Revit.Perfect
                 pulldown: standardsPullDownButton,
                 commandClass: "StandardizeSchedulesCommand",
                 buttonText: "Standardize Schedule Formating",
-                buttonToolTip: "Implement schedule formatting standards for all schedules");
+                buttonToolTip: "Implement schedule formatting standards for export to Excel",
+                commandAvailability: "StandardizeSchedulesCommandAvailability");
             #endregion Standards Pulldown
 
             #endregion Create Column Two

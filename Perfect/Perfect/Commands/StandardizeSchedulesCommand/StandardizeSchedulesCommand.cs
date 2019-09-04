@@ -17,22 +17,17 @@ namespace DougKlassen.Revit.Perfect.Commands
         {
             var uiDoc = commandData.Application.ActiveUIDocument;
             var dbDoc = uiDoc.Document;
+            //the standards column heading formats used to label units. If headings don't match these, columns will be relabelled.
             Regex lengthRegex = new Regex(@"\(ft\)$");
             Regex volumeRegex = new Regex(@"\(CY\)$");
             Regex areaRegex = new Regex(@"\(SF(CA)?\)$");
 
-            var schedules = new FilteredElementCollector(dbDoc)
-                .OfClass(typeof(ViewSchedule))
-                .Cast<ViewSchedule>();
-
-            //var msg = String.Empty;
-            //msg += String.Format("Schedules Found: {0}\n", schedules.Count());
-            //foreach (var s in schedules)
-            //{
-            //    msg += String.Format("{0}\n", s.Name);
-            //}
-            //TaskDialog.Show("Schedules Found", msg);
-
+            //filter the selection for schedules only
+            var schedules = uiDoc.Selection
+                .GetElementIds()
+                .Select(id => dbDoc.GetElement(id) as ViewSchedule)
+                .Where(v => null != v);
+                
             using (Transaction t = new Transaction(dbDoc, "Standardize schedules"))
             {
                 t.Start();
@@ -52,30 +47,30 @@ namespace DougKlassen.Revit.Perfect.Commands
                                 break;
                             case UnitType.UT_Custom:
                                 break;
-                            case UnitType.UT_Length:
+                            case UnitType.UT_Length: //set length to display in decimal feet
                                 if (!lengthRegex.IsMatch(field.ColumnHeading))
                                 {
-                                    field.ColumnHeading = field.ColumnHeading + " (ft)";
+                                    field.ColumnHeading += " (ft)";
                                 }
                                 formatOptions.UseDefault = false;
                                 formatOptions.DisplayUnits = DisplayUnitType.DUT_DECIMAL_FEET;
                                 formatOptions.Accuracy = 0.01;
                                 normalizeFieldFormat();
                                 break;
-                            case UnitType.UT_Area:
+                            case UnitType.UT_Area: //set area to display in square feet
                                 if (!areaRegex.IsMatch(field.ColumnHeading))
                                 {
-                                    field.ColumnHeading = field.ColumnHeading + " (SF)";
+                                    field.ColumnHeading += " (SF)";
                                 }
                                 formatOptions.UseDefault = false;
                                 formatOptions.DisplayUnits = DisplayUnitType.DUT_SQUARE_FEET;
                                 formatOptions.Accuracy = 0.01;
                                 normalizeFieldFormat();
                                 break;
-                            case UnitType.UT_Volume:
+                            case UnitType.UT_Volume: //set volume to display in cubic yards
                                 if (!volumeRegex.IsMatch(field.ColumnHeading))
                                 {
-                                    field.ColumnHeading = field.ColumnHeading + " (CY)";
+                                    field.ColumnHeading += " (CY)";
                                 }
                                 formatOptions.UseDefault = false;
                                 formatOptions.DisplayUnits = DisplayUnitType.DUT_CUBIC_YARDS;
@@ -91,6 +86,7 @@ namespace DougKlassen.Revit.Perfect.Commands
                         }
                         field.SetFormatOptions(formatOptions);
 
+                        //standardize field formatting
                         void normalizeFieldFormat()
                         {
                             if (FormatOptions.CanHaveUnitSymbol(formatOptions.DisplayUnits))
@@ -123,6 +119,39 @@ namespace DougKlassen.Revit.Perfect.Commands
             }
 
             return Result.Succeeded;
+        }
+    }
+
+    //run the command only if at least one schedule is selected
+    class StandardizeSchedulesCommandAvailability : IExternalCommandAvailability
+    {
+        public bool IsCommandAvailable(UIApplication applicationData, CategorySet selectedCategories)
+        {
+            var uiDoc = applicationData.ActiveUIDocument;
+
+            if (null != uiDoc)
+            {
+                var dbDoc = uiDoc.Document;
+                if (0 != uiDoc.Selection.GetElementIds().Count)
+                {
+                    if (selectedCategories.Contains(Category.GetCategory(dbDoc, BuiltInCategory.OST_Schedules)))
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            else
+            {
+                return false;
+            }
         }
     }
 }
