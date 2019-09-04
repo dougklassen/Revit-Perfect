@@ -70,6 +70,7 @@
     <Compile Include="Commands\LoadImportStylesCommand\LoadImportStylesCommand.cs" />
     <Compile Include="Commands\PurgeViewsCommand\PurgeViewsCommand.cs" />
     <Compile Include="Commands\SplitWallByLevelCommand\SplitWallByLevelCommand.cs" />
+    <Compile Include="Commands\StandardizeSchedulesCommand\StandardizeSchedulesCommand.cs" />
     <Compile Include="Commands\UnflipCommand\UnflipCommand.cs" />
     <Compile Include="Commands\PurgeLinePatternsCommand\PurgeLinePatternsCommand.cs" />
     <Compile Include="Commands\PurgeRefPlanesCommand\PurgeRefPlanesCommand.cs" />

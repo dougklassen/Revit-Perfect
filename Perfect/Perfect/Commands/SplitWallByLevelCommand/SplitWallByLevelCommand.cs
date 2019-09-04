@@ -16,6 +16,16 @@ namespace DougKlassen.Revit.Perfect.Commands
         {
             var uiDoc = commandData.Application.ActiveUIDocument;
             var dbDoc = uiDoc.Document;
+            var create = dbDoc.Create;
+
+            //get all levels in the document, sorted by elevation.
+            //Some of the elements of the category OST_Levels aren't of class Level so they're filtered out.
+            //TODO: use .OfClass(Level)?
+            var levels = new FilteredElementCollector(dbDoc)
+                    .OfCategory(BuiltInCategory.OST_Levels)
+                    .Select(e => dbDoc.GetElement(e.Id) as Level)
+                    .Where(l => null != l)
+                    .OrderBy(l => l.Elevation);
 
             //cancel the command if the selection isn't of a single wall
             var selection = uiDoc.Selection.GetElementIds();
@@ -51,19 +61,15 @@ namespace DougKlassen.Revit.Perfect.Commands
                 topElevation = bottomElevation + unconnectedHeight;
             }
 
-            //get all levels in the document, sorted by elevation.
-            //Some of the elements of the category OST_Levels aren't of class Level so they're filtered out.
-            //TODO: use .OfClass(Level)?
-            var levels = new FilteredElementCollector(dbDoc)
-                    .OfCategory(BuiltInCategory.OST_Levels)
-                    .Select(e => dbDoc.GetElement(e.Id) as Level)
-                    .Where(l => null != l)
-                    .OrderBy(l => l.Elevation);
-
             //generate a list of walls between the top and bottom of the wall
             List<Level> levelsBetween = new List<Level>();
+            Level levelBelow = null; //the level directly below the base of the wall
             foreach (var level in levels)
             {
+                if (level.Elevation < bottomElevation - tolerance)
+                {
+                    levelBelow = level;
+                }
                 if (level.Elevation >= (bottomElevation - tolerance) &&
                     level.Elevation <= (topElevation + tolerance))
                 {
@@ -71,11 +77,14 @@ namespace DougKlassen.Revit.Perfect.Commands
                 }
             }
 
-            //check if the lowest section of the wall can be hosted on the level below, which is preferred
-            Boolean useLevelBelow = true;
-            if (levels.First().Elevation > bottomElevation)
+            //check whether it makes sense to split the wall
+            if (
+                (levelsBetween.Count == 0) || //no intervening levels
+                (levelsBetween.Count == 1 && levelBelow == null)) //or one intervening level but no level below to host the lower split
             {
-                useLevelBelow = false;
+                TaskDialog.Show("Wall Splitting Error", "Can't split wall, not enough intervening levels");
+
+                return Result.Failed;
             }
 
             using (Transaction t = new Transaction(dbDoc, "Split wall by level"))
@@ -90,10 +99,51 @@ namespace DougKlassen.Revit.Perfect.Commands
                 }
                 TaskDialog.Show("Wall Split by Level", msg);
 
+                //the index to levels tracking which level is currently being created
+                Int32 i = 0;
+
+                //create the lowest level of the wall
+                if (bottomElevation - levelsBetween[i].Elevation < tolerance) //if the bottom of the wall is at or above the lowest level
+                {
+
+                }
+                else //if the bottom of the wall is below the lowest level
+                {
+                    if (null != levelBelow) //if there is a level below, host on that level
+                    {
+
+                    }
+                    else //or host on the lowest intervening level with a negative offset
+                    {
+
+                    }
+                }
+
                 t.Commit();
+
+                //helper method to create each part of the split wall
+                void makeWall(Level tLevel, Level bLevel, Double tOffset, Double bOffset)
+                {
+                    var curve = (wall.Location as LocationCurve).Curve;
+                    //TODO: retrieve whether wall is structural
+                    var w = Wall.Create(dbDoc, curve, wall.WallType.Id, bLevel.Id, 10, bOffset, wall.Flipped, true);
+
+                    //list of parameter values to copy to new wall
+                    List<BuiltInParameter> paramsToMatch = new List<BuiltInParameter> {
+                        BuiltInParameter.WALL_KEY_REF_PARAM,            //location line
+                        BuiltInParameter.ALL_MODEL_INSTANCE_COMMENTS    //comments
+                    };
+                    foreach (var p in paramsToMatch)
+                    {
+                        var val = wall.get_Parameter(p).AsValueString();
+                        w.get_Parameter(p).SetValueString(val);
+                    }
+
+                    return;
+                }
             }
 
-            //TODO: let user select which levels will be used for splitting
+            //TODO: let user select which levels will be used for splitting. pre-select only levels designated as stories
 
             return Result.Succeeded;
         }

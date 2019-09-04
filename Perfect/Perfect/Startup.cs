@@ -127,9 +127,13 @@ namespace DougKlassen.Revit.Perfect
             PulldownButtonData elementPullDownButtonData = new PulldownButtonData(
                 name: "ElementPullDownButton",
                 text: "Element Properties");
-			IList<RibbonItem> stackTwo = PerfectRibbonPanel.AddStackedItems(
+            PulldownButtonData standardsPullDownButtonData = new PulldownButtonData(
+                name: "StandardsPullDownButton",
+                text: "Standards");
+            IList<RibbonItem> stackTwo = PerfectRibbonPanel.AddStackedItems(
 				geometryPullDownButtonData,
-				elementPullDownButtonData);
+				elementPullDownButtonData,
+                standardsPullDownButtonData);
 
             #region Geometry Pulldown
             PulldownButton geometryPullDownButton = (PulldownButton)stackTwo[0];
@@ -160,6 +164,15 @@ namespace DougKlassen.Revit.Perfect
                 buttonText: "Flag Unit Elements",
                 buttonToolTip: "Flag elements that are part of a unit group");
             #endregion Elements Pulldown
+
+            #region Standards Pulldown
+            PulldownButton standardsPullDownButton = (PulldownButton)stackTwo[2];
+            addButtonToPulldown(
+                pulldown: standardsPullDownButton,
+                commandClass: "StandardizeSchedulesCommand",
+                buttonText: "Standardize Schedule Formating",
+                buttonToolTip: "Implement schedule formatting standards for all schedules");
+            #endregion Standards Pulldown
 
             #endregion Create Column Two
 
