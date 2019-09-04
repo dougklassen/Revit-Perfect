@@ -19,7 +19,7 @@ namespace DougKlassen.Revit.Perfect.Commands
             var dbDoc = uiDoc.Document;
             Regex lengthRegex = new Regex(@"\(ft\)$");
             Regex volumeRegex = new Regex(@"\(CY\)$");
-            Regex areaRegex = new Regex(@"\(SF\)$");
+            Regex areaRegex = new Regex(@"\(SF(CA)?\)$");
 
             var schedules = new FilteredElementCollector(dbDoc)
                 .OfClass(typeof(ViewSchedule))
@@ -59,6 +59,7 @@ namespace DougKlassen.Revit.Perfect.Commands
                                 }
                                 formatOptions.UseDefault = false;
                                 formatOptions.DisplayUnits = DisplayUnitType.DUT_DECIMAL_FEET;
+                                formatOptions.Accuracy = 0.01;
                                 normalizeFieldFormat();
                                 break;
                             case UnitType.UT_Area:
@@ -68,6 +69,7 @@ namespace DougKlassen.Revit.Perfect.Commands
                                 }
                                 formatOptions.UseDefault = false;
                                 formatOptions.DisplayUnits = DisplayUnitType.DUT_SQUARE_FEET;
+                                formatOptions.Accuracy = 0.01;
                                 normalizeFieldFormat();
                                 break;
                             case UnitType.UT_Volume:
@@ -77,6 +79,7 @@ namespace DougKlassen.Revit.Perfect.Commands
                                 }
                                 formatOptions.UseDefault = false;
                                 formatOptions.DisplayUnits = DisplayUnitType.DUT_CUBIC_YARDS;
+                                formatOptions.Accuracy = 0.01;
                                 normalizeFieldFormat();
                                 break;
                             case UnitType.UT_Number:
