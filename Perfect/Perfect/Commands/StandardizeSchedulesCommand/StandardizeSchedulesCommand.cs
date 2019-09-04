@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Text.RegularExpressions;
 
 using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
@@ -16,18 +17,21 @@ namespace DougKlassen.Revit.Perfect.Commands
         {
             var uiDoc = commandData.Application.ActiveUIDocument;
             var dbDoc = uiDoc.Document;
+            Regex lengthRegex = new Regex(@"\(ft\)$");
+            Regex volumeRegex = new Regex(@"\(CY\)$");
+            Regex areaRegex = new Regex(@"\(SF\)$");
 
             var schedules = new FilteredElementCollector(dbDoc)
                 .OfClass(typeof(ViewSchedule))
                 .Cast<ViewSchedule>();
 
-            var msg = String.Empty;
-            msg += String.Format("Schedules Found: {0}\n", schedules.Count());
-            foreach (var s in schedules)
-            {
-                msg += String.Format("{0}\n", s.Name);
-            }
-            TaskDialog.Show("Schedules Found", msg);
+            //var msg = String.Empty;
+            //msg += String.Format("Schedules Found: {0}\n", schedules.Count());
+            //foreach (var s in schedules)
+            //{
+            //    msg += String.Format("{0}\n", s.Name);
+            //}
+            //TaskDialog.Show("Schedules Found", msg);
 
             using (Transaction t = new Transaction(dbDoc, "Standardize schedules"))
             {
@@ -49,16 +53,28 @@ namespace DougKlassen.Revit.Perfect.Commands
                             case UnitType.UT_Custom:
                                 break;
                             case UnitType.UT_Length:
+                                if (!lengthRegex.IsMatch(field.ColumnHeading))
+                                {
+                                    field.ColumnHeading = field.ColumnHeading + " (ft)";
+                                }
                                 formatOptions.UseDefault = false;
                                 formatOptions.DisplayUnits = DisplayUnitType.DUT_DECIMAL_FEET;
                                 normalizeFieldFormat();
                                 break;
                             case UnitType.UT_Area:
+                                if (!areaRegex.IsMatch(field.ColumnHeading))
+                                {
+                                    field.ColumnHeading = field.ColumnHeading + " (SF)";
+                                }
                                 formatOptions.UseDefault = false;
                                 formatOptions.DisplayUnits = DisplayUnitType.DUT_SQUARE_FEET;
                                 normalizeFieldFormat();
                                 break;
                             case UnitType.UT_Volume:
+                                if (!volumeRegex.IsMatch(field.ColumnHeading))
+                                {
+                                    field.ColumnHeading = field.ColumnHeading + " (CY)";
+                                }
                                 formatOptions.UseDefault = false;
                                 formatOptions.DisplayUnits = DisplayUnitType.DUT_CUBIC_YARDS;
                                 normalizeFieldFormat();
