@@ -54,7 +54,7 @@ namespace DougKlassen.Revit.Perfect.Commands
                                 }
                                 formatOptions.UseDefault = false;
                                 formatOptions.DisplayUnits = DisplayUnitType.DUT_DECIMAL_FEET;
-                                formatOptions.Accuracy = 0.01;
+                                formatOptions.Accuracy = 0.001;
                                 normalizeFieldFormat();
                                 break;
                             case UnitType.UT_Area: //set area to display in square feet
@@ -64,7 +64,7 @@ namespace DougKlassen.Revit.Perfect.Commands
                                 }
                                 formatOptions.UseDefault = false;
                                 formatOptions.DisplayUnits = DisplayUnitType.DUT_SQUARE_FEET;
-                                formatOptions.Accuracy = 0.01;
+                                formatOptions.Accuracy = 0.1;
                                 normalizeFieldFormat();
                                 break;
                             case UnitType.UT_Volume: //set volume to display in cubic yards
@@ -74,19 +74,23 @@ namespace DougKlassen.Revit.Perfect.Commands
                                 }
                                 formatOptions.UseDefault = false;
                                 formatOptions.DisplayUnits = DisplayUnitType.DUT_CUBIC_YARDS;
-                                formatOptions.Accuracy = 0.01;
+                                formatOptions.Accuracy = 0.1;
                                 normalizeFieldFormat();
                                 break;
                             case UnitType.UT_Number:
                                 break;
                             case UnitType.UT_Currency:
+                                formatOptions.UseDefault = false;
+                                formatOptions.DisplayUnits = DisplayUnitType.DUT_CURRENCY;
+                                formatOptions.Accuracy = 0.01;
+                                normalizeFieldFormat();
                                 break;
                             default:
                                 break;
                         }
                         field.SetFormatOptions(formatOptions);
 
-                        //standardize field formatting
+                        //standardize field formatting, closed over the for loop that steps through fields
                         void normalizeFieldFormat()
                         {
                             if (FormatOptions.CanHaveUnitSymbol(formatOptions.DisplayUnits))
