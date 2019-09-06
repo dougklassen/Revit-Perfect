@@ -18,16 +18,16 @@ namespace DougKlassen.Revit.Perfect.Commands
             var dbDoc = uiDoc.Document;
             var create = dbDoc.Create;
 
-            //get all levels in the document, sorted by elevation.
-            //Some of the elements of the category OST_Levels aren't of class Level so they're filtered out.
-            //TODO: use .OfClass(Level)?
+            /* get all levels in the document, sorted by elevation.
+            Some of the elements of the category OST_Levels aren't of class Level so they're filtered out.
+            TODO: use .OfClass(Level)? */
             var levels = new FilteredElementCollector(dbDoc)
-                    .OfCategory(BuiltInCategory.OST_Levels)
-                    .Select(e => dbDoc.GetElement(e.Id) as Level)
-                    .Where(l => null != l)
-                    .OrderBy(l => l.Elevation);
+                .OfCategory(BuiltInCategory.OST_Levels)
+                .Select(e => dbDoc.GetElement(e.Id) as Level)
+                .Where(l => null != l)
+                .OrderBy(l => l.Elevation);
 
-            //cancel the command if the selection isn't of a single wall
+            /* cancel the command if the selection isn't of a single wall */
             var selection = uiDoc.Selection.GetElementIds();
             if (1 != selection.Count() || !(dbDoc.GetElement(selection.First()) is Wall))
             {
@@ -35,115 +35,141 @@ namespace DougKlassen.Revit.Perfect.Commands
                 return Result.Failed;
             }
 
+            /* The parameters that will drive the creation of the new walls */
             Wall wall = dbDoc.GetElement(selection.First()) as Wall; //the wall to be split
-            Double bottomElevation; //the bottom elevation of the wall
-            Double topElevation; //the top elevation of the wall
+            Double overallBottomElevation; //the bottom elevation of the wall
+            Double overallTopElevation; //the top elevation of the wall
+            Level overallLevelAbove = null; //the level immediatly above the highest host level.
+                //This will be the top constraint of the wall unless no level is found above the highest host level, in which case it will be set to null
             Double tolerance = 0.0001; //tolerance to use when choosing host levels
+            List<Level> hostLevels = new List<Level>(); //The levels that will host the new individual walls
 
-            //get the elevation at the bottom of the wall
-            Level bottomLevel = dbDoc.GetElement(wall.get_Parameter(BuiltInParameter.WALL_BASE_CONSTRAINT).AsElementId()) as Level;
-            Double bottomOffset = wall.get_Parameter(BuiltInParameter.WALL_BASE_OFFSET).AsDouble();
-            bottomElevation = bottomLevel.Elevation + bottomOffset;
 
-            //get the elevation at the top of the wall
-            //get the top level constraint of the wall. It will be null if the wall is unconnected
-            Level topLevel = null;
+            /* get the elevation at the bottom of the wall */
+            overallBottomElevation =
+                (dbDoc.GetElement(wall.get_Parameter(BuiltInParameter.WALL_BASE_CONSTRAINT).AsElementId()) as Level).Elevation + //the elevation of the host level
+                + wall.get_Parameter(BuiltInParameter.WALL_BASE_OFFSET).AsDouble(); //plus the bottom offset of the wall
+
+            /* get the elevation at the top of the wall */
+            Level topLevel = null; //get the top level constraint of the wall. It will be null if the wall is unconnected
             var wallTopLevelID = wall.get_Parameter(BuiltInParameter.WALL_HEIGHT_TYPE).AsElementId();
             if(null != wallTopLevelID) //if the wall is constrained to a top level
             {
                 topLevel = dbDoc.GetElement(wallTopLevelID) as Level;
                 Double topOffset = wall.get_Parameter(BuiltInParameter.WALL_TOP_OFFSET).AsDouble();
-                topElevation = topLevel.Elevation + topOffset;
+                overallTopElevation = topLevel.Elevation + topOffset;
             }
             else //if the wall is unconnected, the topElevation is the bottomElevation + the unconnected height
             {
                 Double unconnectedHeight = wall.get_Parameter(BuiltInParameter.WALL_USER_HEIGHT_PARAM).AsDouble();
-                topElevation = bottomElevation + unconnectedHeight;
+                overallTopElevation = overallBottomElevation + unconnectedHeight;
             }
 
-            //generate a list of walls between the top and bottom of the wall
-            List<Level> levelsBetween = new List<Level>();
-            Level levelBelow = null; //the level directly below the base of the wall
-            foreach (var level in levels)
+            /* find the host levels */
+            Level bottomLevel = levels.First(); //start with the lowest level in the project, even if it's higher than the bottom of the wall
+            foreach (var level in levels) //work up through all levels lower than the bottom of the wall
             {
-                if (level.Elevation < bottomElevation - tolerance)
+                if (level.Elevation <= overallBottomElevation + tolerance) //update the bottom level if another level is found below the bottom of the wall
                 {
-                    levelBelow = level;
+                    bottomLevel = level;
                 }
-                if (level.Elevation >= (bottomElevation - tolerance) &&
-                    level.Elevation <= (topElevation + tolerance))
+                else //stop looking once the bottom level is found
                 {
-                    levelsBetween.Add(level);
+                    break;
                 }
             }
-
-            //check whether it makes sense to split the wall
-            if (
-                (levelsBetween.Count == 0) || //no intervening levels
-                (levelsBetween.Count == 1 && levelBelow == null)) //or one intervening level but no level below to host the lower split
+            hostLevels.Add(bottomLevel); //set the first host level to the bottom level that was found
+            foreach (var level in levels) //find the remaining host levels
             {
-                TaskDialog.Show("Wall Splitting Error", "Can't split wall, not enough intervening levels");
-
-                return Result.Failed;
+                if (level != bottomLevel && //exclude the bottom level if it has already been added
+                    level.Elevation >= (bottomLevel.Elevation - tolerance) && //level must at or higher than the bottom level already established
+                    level.Elevation <= (overallTopElevation + tolerance)) //level must be at or lower than the top of the wall
+                {
+                    hostLevels.Add(level);
+                }
+                else if (level.Elevation > (overallTopElevation + tolerance)) //if the level is above the top of the wall, stop adding more levels
+                {
+                    overallLevelAbove = level;
+                    break;
+                }
             }
+            if ( //if the top host level found coincides with the top of the wall, remove it from the list of host levels. It will be a top constraint instead
+                hostLevels.Last().Elevation >= (overallTopElevation - tolerance) &&
+                hostLevels.Last().Elevation <= (overallTopElevation + tolerance))
+            {
+                overallLevelAbove = hostLevels.Last(); //overwrite the value of the levelAbove with this level, which exactly matches the top of the wall
+                hostLevels.Remove(hostLevels.Last());
+            }
+
+            //TODO: let user select which levels will be used for splitting. pre-select only levels designated as stories
 
             using (Transaction t = new Transaction(dbDoc, "Split wall by level"))
             {
                 t.Start();
 
                 String msg = String.Empty;
-                msg += String.Format("Bottom: {0}\nTop: {1}\n\n", bottomElevation, topElevation);
-                foreach (var l in levelsBetween)
+                msg += String.Format("Bottom: {0}\nTop: {1}\n\n", overallBottomElevation, overallTopElevation);
+                /*iterate through the host levels*/
+                for (int i = 0; i < hostLevels.Count(); i++)
                 {
-                    msg += String.Format("{0}: {1}\n", l.Name, l.Elevation);
+                    Level newHostLvl = hostLevels[i];
+                    Level newTopLvl = null; //the top constraint, null indicates the top will be unconnected
+                    Double newBottomOffset = 0;
+                    Double newTopOffset = 0;
+                    /* determine the top constraint of the wall */
+                    if (i < (hostLevels.Count() - 1)) //if there is a host level above, use that as top constraint
+                    {
+                        newTopLvl = hostLevels[i + 1];
+                    }
+                    else if (null != overallLevelAbove) //if there is a level above, use that as top constraint
+                    {
+                        newTopLvl = overallLevelAbove;
+                    }
+                    if (1 == hostLevels.Count) //if there is only one level
+                    {
+                        msg += "Single Level - ";
+                        msg += String.Format("\t{0}: {1}\n", newHostLvl.Name, newHostLvl.Elevation);
+                        msg += String.Format("\tBottom offset: {0}\n", newTopOffset);
+                    }
+                    else if (newHostLvl == hostLevels.First()) //if this is the bottom level of the wall
+                    {
+                        msg += "Bottom Level - ";
+                        msg += String.Format("\t{0}: {1}\n", newHostLvl.Name, newHostLvl.Elevation);
+
+                    }
+                    else if (hostLevels[i] == hostLevels.Last()) //if this is the top level of the wall
+                    {
+                        msg += "Top Level - ";
+                        msg += String.Format("\t{0}: {1}\n", newHostLvl.Name, newHostLvl.Elevation);
+                    }
+                    else //if this is a level between the top and bottom of the wall
+                    {
+                        msg += "Middle Level - ";
+                        msg += String.Format("\t{0}: {1}\n", newHostLvl.Name, newHostLvl.Elevation);
+                    }
                 }
                 TaskDialog.Show("Wall Split by Level", msg);
 
-                //the index to levels tracking which level is currently being created
-                Int32 i = 0;
-
-                //create the lowest level of the wall
-                if (bottomElevation - levelsBetween[i].Elevation < tolerance) //if the bottom of the wall is at or above the lowest level
-                {
-
-                }
-                else //if the bottom of the wall is below the lowest level
-                {
-                    if (null != levelBelow) //if there is a level below, host on that level
-                    {
-
-                    }
-                    else //or host on the lowest intervening level with a negative offset
-                    {
-
-                    }
-                }
-
                 t.Commit();
 
-                //helper method to create each part of the split wall
+                /* helper method to create each part of the split wall */
                 void makeWall(Level tLevel, Level bLevel, Double tOffset, Double bOffset)
                 {
                     var curve = (wall.Location as LocationCurve).Curve;
                     //TODO: retrieve whether wall is structural
                     var w = Wall.Create(dbDoc, curve, wall.WallType.Id, bLevel.Id, 10, bOffset, wall.Flipped, true);
-
-                    //list of parameter values to copy to new wall
-                    List<BuiltInParameter> paramsToMatch = new List<BuiltInParameter> {
+                    List<BuiltInParameter> paramsToMatch = new List<BuiltInParameter> { //list of parameter values to copy to new wall
                         BuiltInParameter.WALL_KEY_REF_PARAM,            //location line
                         BuiltInParameter.ALL_MODEL_INSTANCE_COMMENTS    //comments
                     };
-                    foreach (var p in paramsToMatch)
+                    foreach (var p in paramsToMatch) //step through each parameter and copy its value to the new wall
                     {
                         var val = wall.get_Parameter(p).AsValueString();
                         w.get_Parameter(p).SetValueString(val);
                     }
-
                     return;
                 }
             }
-
-            //TODO: let user select which levels will be used for splitting. pre-select only levels designated as stories
 
             return Result.Succeeded;
         }
