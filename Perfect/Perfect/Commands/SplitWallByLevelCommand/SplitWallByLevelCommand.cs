@@ -135,31 +135,69 @@ namespace DougKlassen.Revit.Perfect.Commands
                     /* determine if this is a single level, the bottom level, the top level, or a middle level */
                     if (1 == hostLevels.Count) //if there is only one level
                     {
-                        msg += "Single Level - ";
-                        msg += String.Format("\t{0}: {1}\n", newHostLvl.Name, newHostLvl.Elevation);
-                        msg += String.Format("\tBottom offset: {0}\n", newTopOffset);
+                        msg += String.Format("Single Level-{0}: {1}\n", newHostLvl.Name, newHostLvl.Elevation);
+                        /* set the bottom of the wall */
+                        //confirm whether the wall bottom is outside of tolerance and requires an offset
+                        if (!((newHostLvl.Elevation >= overallBottomElevation - tolerance) && (newHostLvl.Elevation <= overallBottomElevation + tolerance)))
+                        {
+                            newBottomOffset = overallBottomElevation - newHostLvl.Elevation;
+                        }
+                        msg += String.Format("+Bottom offset: {0}\n", newBottomOffset);
+                        /* set the top of the wall */
+                        if (newTopLvl != null) //if a valid top constraint was found
+                        {
+                            //confirm whether the wall top is outside of tolerance and requires an offset
+                            if (!((newTopLvl.Elevation >= overallTopElevation - tolerance) && (newTopLvl.Elevation <= overallTopElevation + tolerance)))
+                            {
+                                newTopOffset = overallTopElevation - newTopLvl.Elevation;
+                            }
+                            msg += String.Format("+Top constraint: {0}\n+Top offset: {1}\n", newTopLvl.Name, newTopOffset);
+                        }
+                        else //the wall will be unconnected and newTopOffset will be the unconnected height
+                        {
+                            newTopOffset = overallTopElevation - newHostLvl.Elevation;
+                            msg += String.Format("+Unconnected height: {0}", newTopOffset);
+                        }
                     }
                     else if (newHostLvl == hostLevels.First()) //if this is the bottom level of the wall
                     {
-                        msg += "Bottom Level - ";
-                        msg += String.Format("\t{0}: {1}\n", newHostLvl.Name, newHostLvl.Elevation);
+                        //confirm whether the wall bottom is outside of tolerance and requires an offset
+                        if (!((newHostLvl.Elevation >= overallBottomElevation - tolerance) && (newHostLvl.Elevation <= overallBottomElevation + tolerance)))
+                        {
+                            newBottomOffset = overallBottomElevation - newHostLvl.Elevation;
+                        }
+                        msg += String.Format("Bottom Level-{0}: {1}\n", newHostLvl.Name, newHostLvl.Elevation);
+                        msg += String.Format("+Bottom offset: {0}\n", newBottomOffset);
                     }
                     else if (hostLevels[i].Id == hostLevels.Last().Id) //if this is the top level of the wall
                     {
-                        msg += "Top Level - ";
-                        msg += String.Format("\t{0}: {1}\n", newHostLvl.Name, newHostLvl.Elevation);
+                        msg += String.Format("Top Level-{0}: {1}\n", newHostLvl.Name, newHostLvl.Elevation);
+                        /* set the top of the wall */
+                        if (newTopLvl != null) //if a valid top constraint was found
+                        {
+                            //confirm whether the wall top is outside of tolerance and requires an offset
+                            if (!((newTopLvl.Elevation >= overallTopElevation - tolerance) && (newTopLvl.Elevation <= overallTopElevation + tolerance)))
+                            {
+                                newTopOffset = overallTopElevation - newTopLvl.Elevation;
+                            }
+                            msg += String.Format("+Top constraint: {0}\n+Top offset: {1}\n", newTopLvl.Name, newTopOffset);
+                        }
+                        else //the wall will be unconnected and newTopOffset will be the unconnected height
+                        {
+                            newTopOffset = overallTopElevation - newHostLvl.Elevation;
+                            msg += String.Format("+Unconnected height: {0}", newTopOffset);
+                        }
                     }
                     else //if this is a level between the top and bottom of the wall
                     {
-                        msg += "Middle Level - ";
-                        msg += String.Format("\t{0}: {1}\n", newHostLvl.Name, newHostLvl.Elevation);
+                        msg += String.Format("Middle Level-{0}: {1}\n", newHostLvl.Name, newHostLvl.Elevation);
                     }
                 }
                 TaskDialog.Show("Wall Split by Level", msg);
 
                 t.Commit();
 
-                /* helper method to create each part of the split wall */
+                /* helper method to create each part of the split wall. If tLevel is null, the wall is unconnected and tOffset is used as the unconnected height */
                 void makeWall(Level tLevel, Level bLevel, Double tOffset, Double bOffset)
                 {
                     var curve = (wall.Location as LocationCurve).Curve;
