@@ -19,8 +19,8 @@ namespace DougKlassen.Revit.Perfect.Commands
             var create = dbDoc.Create;
 
             /* get all levels in the document, sorted by elevation.
-            Some of the elements of the category OST_Levels aren't of class Level so they're filtered out.
-            TODO: use .OfClass(Level)? */
+            Some of the elements of the category OST_Levels aren't of class Level so they're filtered out. */
+            // TODO: use .OfClass(Level)?
             var levels = new FilteredElementCollector(dbDoc)
                 .OfCategory(BuiltInCategory.OST_Levels)
                 .Select(e => dbDoc.GetElement(e.Id) as Level)
@@ -43,7 +43,7 @@ namespace DougKlassen.Revit.Perfect.Commands
                 //This will be the top constraint of the wall unless no level is found above the highest host level, in which case it will be set to null
             Double tolerance = 0.0001; //tolerance to use when choosing host levels
             List<Level> hostLevels = new List<Level>(); //The levels that will host the new individual walls
-
+            String msg = String.Empty; //diagnostic string
 
             /* get the elevation at the bottom of the wall */
             overallBottomElevation =
@@ -66,6 +66,7 @@ namespace DougKlassen.Revit.Perfect.Commands
             }
 
             /* find the host levels */
+            /* find the bottom level */
             Level bottomLevel = levels.First(); //start with the lowest level in the project, even if it's higher than the bottom of the wall
             foreach (var level in levels) //work up through all levels lower than the bottom of the wall
             {
@@ -79,10 +80,14 @@ namespace DougKlassen.Revit.Perfect.Commands
                 }
             }
             hostLevels.Add(bottomLevel); //set the first host level to the bottom level that was found
-            foreach (var level in levels) //find the remaining host levels
+            /* find the remaining host levels */
+            foreach (var level in levels)
             {
-                if (level != bottomLevel && //exclude the bottom level if it has already been added
-                    level.Elevation >= (bottomLevel.Elevation - tolerance) && //level must at or higher than the bottom level already established
+                if (level.Id == bottomLevel.Id) //exclude the bottom level if it has already been added
+                {
+                    continue;
+                }
+                else if (level.Elevation >= (bottomLevel.Elevation - tolerance) && //level must at or higher than the bottom level already established
                     level.Elevation <= (overallTopElevation + tolerance)) //level must be at or lower than the top of the wall
                 {
                     hostLevels.Add(level);
@@ -93,6 +98,7 @@ namespace DougKlassen.Revit.Perfect.Commands
                     break;
                 }
             }
+
             if ( //if the top host level found coincides with the top of the wall, remove it from the list of host levels. It will be a top constraint instead
                 hostLevels.Last().Elevation >= (overallTopElevation - tolerance) &&
                 hostLevels.Last().Elevation <= (overallTopElevation + tolerance))
@@ -107,8 +113,8 @@ namespace DougKlassen.Revit.Perfect.Commands
             {
                 t.Start();
 
-                String msg = String.Empty;
-                msg += String.Format("Bottom: {0}\nTop: {1}\n\n", overallBottomElevation, overallTopElevation);
+                msg += String.Format("Wall Bottom: {0}\nWall Top: {1}\n", overallBottomElevation, overallTopElevation);
+                msg += String.Format("Levels found: {0}\n\n", hostLevels.Count());
                 /*iterate through the host levels*/
                 for (int i = 0; i < hostLevels.Count(); i++)
                 {
@@ -125,6 +131,8 @@ namespace DougKlassen.Revit.Perfect.Commands
                     {
                         newTopLvl = overallLevelAbove;
                     }
+
+                    /* determine if this is a single level, the bottom level, the top level, or a middle level */
                     if (1 == hostLevels.Count) //if there is only one level
                     {
                         msg += "Single Level - ";
@@ -135,9 +143,8 @@ namespace DougKlassen.Revit.Perfect.Commands
                     {
                         msg += "Bottom Level - ";
                         msg += String.Format("\t{0}: {1}\n", newHostLvl.Name, newHostLvl.Elevation);
-
                     }
-                    else if (hostLevels[i] == hostLevels.Last()) //if this is the top level of the wall
+                    else if (hostLevels[i].Id == hostLevels.Last().Id) //if this is the top level of the wall
                     {
                         msg += "Top Level - ";
                         msg += String.Format("\t{0}: {1}\n", newHostLvl.Name, newHostLvl.Elevation);
