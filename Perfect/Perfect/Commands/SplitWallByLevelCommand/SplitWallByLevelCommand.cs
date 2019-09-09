@@ -36,7 +36,7 @@ namespace DougKlassen.Revit.Perfect.Commands
             }
 
             /* The parameters that will drive the creation of the new walls */
-            Wall wall = dbDoc.GetElement(selection.First()) as Wall; //the wall to be split
+            Wall sourceWall = dbDoc.GetElement(selection.First()) as Wall; //the wall to be split
             Double overallBottomElevation; //the bottom elevation of the wall
             Double overallTopElevation; //the top elevation of the wall
             Level overallLevelAbove = null; //the level immediatly above the highest host level.
@@ -47,21 +47,21 @@ namespace DougKlassen.Revit.Perfect.Commands
 
             /* get the elevation at the bottom of the wall */
             overallBottomElevation =
-                (dbDoc.GetElement(wall.get_Parameter(BuiltInParameter.WALL_BASE_CONSTRAINT).AsElementId()) as Level).Elevation + //the elevation of the host level
-                + wall.get_Parameter(BuiltInParameter.WALL_BASE_OFFSET).AsDouble(); //plus the bottom offset of the wall
+                (dbDoc.GetElement(sourceWall.get_Parameter(BuiltInParameter.WALL_BASE_CONSTRAINT).AsElementId()) as Level).Elevation + //the elevation of the host level
+                + sourceWall.get_Parameter(BuiltInParameter.WALL_BASE_OFFSET).AsDouble(); //plus the bottom offset of the wall
 
             /* get the elevation at the top of the wall */
             Level topLevel = null; //get the top level constraint of the wall. It will be null if the wall is unconnected
-            var wallTopLevelID = wall.get_Parameter(BuiltInParameter.WALL_HEIGHT_TYPE).AsElementId();
+            var wallTopLevelID = sourceWall.get_Parameter(BuiltInParameter.WALL_HEIGHT_TYPE).AsElementId();
             if(null != wallTopLevelID) //if the wall is constrained to a top level
             {
                 topLevel = dbDoc.GetElement(wallTopLevelID) as Level;
-                Double topOffset = wall.get_Parameter(BuiltInParameter.WALL_TOP_OFFSET).AsDouble();
+                Double topOffset = sourceWall.get_Parameter(BuiltInParameter.WALL_TOP_OFFSET).AsDouble();
                 overallTopElevation = topLevel.Elevation + topOffset;
             }
             else //if the wall is unconnected, the topElevation is the bottomElevation + the unconnected height
             {
-                Double unconnectedHeight = wall.get_Parameter(BuiltInParameter.WALL_USER_HEIGHT_PARAM).AsDouble();
+                Double unconnectedHeight = sourceWall.get_Parameter(BuiltInParameter.WALL_USER_HEIGHT_PARAM).AsDouble();
                 overallTopElevation = overallBottomElevation + unconnectedHeight;
             }
 
@@ -133,6 +133,7 @@ namespace DougKlassen.Revit.Perfect.Commands
                     }
 
                     /* determine if this is a single level, the bottom level, the top level, or a middle level */
+                    /* single level wall */
                     if (1 == hostLevels.Count) //if there is only one level
                     {
                         msg += String.Format("Single Level-{0}: {1}\n", newHostLvl.Name, newHostLvl.Elevation);
@@ -159,6 +160,7 @@ namespace DougKlassen.Revit.Perfect.Commands
                             msg += String.Format("+Unconnected height: {0}", newTopOffset);
                         }
                     }
+                    /* bottom level wall */
                     else if (newHostLvl == hostLevels.First()) //if this is the bottom level of the wall
                     {
                         //confirm whether the wall bottom is outside of tolerance and requires an offset
@@ -169,6 +171,7 @@ namespace DougKlassen.Revit.Perfect.Commands
                         msg += String.Format("Bottom Level-{0}: {1}\n", newHostLvl.Name, newHostLvl.Elevation);
                         msg += String.Format("+Bottom offset: {0}\n", newBottomOffset);
                     }
+                    /* top level wall */
                     else if (hostLevels[i].Id == hostLevels.Last().Id) //if this is the top level of the wall
                     {
                         msg += String.Format("Top Level-{0}: {1}\n", newHostLvl.Name, newHostLvl.Elevation);
@@ -188,32 +191,43 @@ namespace DougKlassen.Revit.Perfect.Commands
                             msg += String.Format("+Unconnected height: {0}", newTopOffset);
                         }
                     }
+                    /* middle level wall */
                     else //if this is a level between the top and bottom of the wall
                     {
                         msg += String.Format("Middle Level-{0}: {1}\n", newHostLvl.Name, newHostLvl.Elevation);
                     }
-                }
-                TaskDialog.Show("Wall Split by Level", msg);
 
-                t.Commit();
-
-                /* helper method to create each part of the split wall. If tLevel is null, the wall is unconnected and tOffset is used as the unconnected height */
-                void makeWall(Level tLevel, Level bLevel, Double tOffset, Double bOffset)
-                {
-                    var curve = (wall.Location as LocationCurve).Curve;
-                    //TODO: retrieve whether wall is structural
-                    var w = Wall.Create(dbDoc, curve, wall.WallType.Id, bLevel.Id, 10, bOffset, wall.Flipped, true);
+                    /* create the new wall */
+                    var curve = (sourceWall.Location as LocationCurve).Curve;
+                    var w = Wall.Create(dbDoc, curve, sourceWall.WallType.Id, newHostLvl.Id, 10, newBottomOffset, sourceWall.Flipped, true);
+                    if (!(newTopLvl == null)) //if the wall is constrained to a top level
+                    {
+                        w.get_Parameter(BuiltInParameter.WALL_HEIGHT_TYPE).Set(newTopLvl.Id); //set the top constraint of the wall
+                        w.get_Parameter(BuiltInParameter.WALL_TOP_OFFSET).Set(newTopOffset); //set the top offset
+                    }
+                    else //if the wall is unconnected
+                    {
+                        w.get_Parameter(BuiltInParameter.WALL_HEIGHT_TYPE).SetValueString("Unconnected"); //set the top constraint of the wall
+                        w.get_Parameter(BuiltInParameter.WALL_USER_HEIGHT_PARAM).Set(newTopOffset); //set the unconnected height of the wall
+                    }
+                    w.StructuralUsage = sourceWall.StructuralUsage; //copy structural usage
+                    //TODO: room bounding
+                    /* step through and copy parameter values to the new wall */
                     List<BuiltInParameter> paramsToMatch = new List<BuiltInParameter> { //list of parameter values to copy to new wall
-                        BuiltInParameter.WALL_KEY_REF_PARAM,            //location line
-                        BuiltInParameter.ALL_MODEL_INSTANCE_COMMENTS    //comments
+                        BuiltInParameter.ALL_MODEL_INSTANCE_COMMENTS, //comments
+                        BuiltInParameter.WALL_KEY_REF_PARAM //location line
                     };
                     foreach (var p in paramsToMatch) //step through each parameter and copy its value to the new wall
                     {
-                        var val = wall.get_Parameter(p).AsValueString();
+                        var val = sourceWall.get_Parameter(p).AsValueString();
                         w.get_Parameter(p).SetValueString(val);
                     }
-                    return;
                 }
+                TaskDialog.Show("Wall Split by Level", msg);
+                dbDoc.Delete(sourceWall.Id); //delete the original wall
+
+                t.Commit();
+
             }
 
             return Result.Succeeded;
