@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
 
+using DougKlassen.Revit.Perfect.Interface;
+
 namespace DougKlassen.Revit.Perfect.Commands
 {
     [Autodesk.Revit.Attributes.Transaction(Autodesk.Revit.Attributes.TransactionMode.Manual)]
@@ -107,7 +109,9 @@ namespace DougKlassen.Revit.Perfect.Commands
                 hostLevels.Remove(hostLevels.Last());
             }
 
-            //TODO: let user select which levels will be used for splitting. pre-select only levels designated as stories
+            /* let user select which levels will be used for splitting. pre-select only levels designated as stories */
+            SelectElementsWindow levelPickerWindow = new SelectElementsWindow(dbDoc, hostLevels.Cast<Element>().ToList());
+            Boolean? result = levelPickerWindow.ShowDialog();
 
             using (Transaction t = new Transaction(dbDoc, "Split wall by level"))
             {

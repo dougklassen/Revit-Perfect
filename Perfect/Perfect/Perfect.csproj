@@ -70,6 +70,9 @@
     <Compile Include="Commands\LoadImportStylesCommand\LoadImportStylesCommand.cs" />
     <Compile Include="Commands\PurgeViewsCommand\PurgeViewsCommand.cs" />
     <Compile Include="Commands\SplitWallByLevelCommand\SplitWallByLevelCommand.cs" />
+    <Compile Include="Interface\SelectElementsWindow.xaml.cs">
+      <DependentUpon>SelectElementsWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Commands\StandardizeSchedulesCommand\StandardizeSchedulesCommand.cs" />
     <Compile Include="Commands\UnflipCommand\UnflipCommand.cs" />
     <Compile Include="Commands\PurgeLinePatternsCommand\PurgeLinePatternsCommand.cs" />
@@ -107,6 +110,10 @@
     <EmbeddedResource Include="Resources\iconLarge.png" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Interface\SelectElementsWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Interface\PurgeElementsWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
