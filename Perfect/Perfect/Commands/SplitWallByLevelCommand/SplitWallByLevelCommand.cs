@@ -55,7 +55,8 @@ namespace DougKlassen.Revit.Perfect.Commands
             /* get the elevation at the top of the wall */
             Level topLevel = null; //get the top level constraint of the wall. It will be null if the wall is unconnected
             var wallTopLevelID = sourceWall.get_Parameter(BuiltInParameter.WALL_HEIGHT_TYPE).AsElementId();
-            if(null != wallTopLevelID) //if the wall is constrained to a top level
+            if(sourceWall.get_Parameter(BuiltInParameter.WALL_HEIGHT_TYPE).AsValueString() != "Unconnected")
+                //if the wall is constrained to a top level
             {
                 topLevel = dbDoc.GetElement(wallTopLevelID) as Level;
                 Double topOffset = sourceWall.get_Parameter(BuiltInParameter.WALL_TOP_OFFSET).AsDouble();
@@ -227,7 +228,7 @@ namespace DougKlassen.Revit.Perfect.Commands
                         w.get_Parameter(p).SetValueString(val);
                     }
                 }
-                TaskDialog.Show("Wall Split by Level", msg);
+                //TaskDialog.Show("Wall Split by Level", msg);
                 dbDoc.Delete(sourceWall.Id); //delete the original wall
 
                 t.Commit();
