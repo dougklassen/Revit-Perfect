@@ -111,13 +111,17 @@ namespace DougKlassen.Revit.Perfect.Commands
             }
 
             /* let user select which levels will be used for splitting. */
-            //TODO: pre -select only levels designated as stories
+            //TODO: pre-select only levels designated as stories
             //TODO: sort list in reverse by level elevation then sort result by level elevation
-            SelectElementsWindow levelPickerWindow = new SelectElementsWindow(dbDoc, hostLevels.Cast<Element>().ToList());
+            hostLevels.Reverse(); //put in ascending order
+            SelectElementsWindow levelPickerWindow = new SelectElementsWindow(dbDoc,hostLevels.Cast<Element>().ToList());
             Boolean result = (Boolean)levelPickerWindow.ShowDialog();
             if (result)
             {
-                hostLevels = levelPickerWindow.ElementsToChoose.Cast<Level>().ToList();
+                hostLevels = levelPickerWindow.ElementsToChoose
+                    .Cast<Level>()
+                    .OrderBy(l => l.Elevation)
+                    .ToList();
 
                 if (0 == hostLevels.Count())
                 {

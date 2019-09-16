@@ -24,6 +24,7 @@ namespace DougKlassen.Revit.Perfect.Interface
         public SelectElementsWindow(Document dbDoc, List<Element> elements)
         {
             ElementsToChoose = elements;
+
             InitializeComponent();
         }
 
