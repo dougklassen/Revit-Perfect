@@ -21,26 +21,30 @@ namespace DougKlassen.Revit.Perfect.Interface
     /// </summary>
     public partial class SelectElementsWindow : Window
     {
-        List<Element> chosenElements;
-
-        private SelectElementsWindow()
+        public SelectElementsWindow(Document dbDoc, List<Element> elements)
         {
+            ElementsToChoose = elements;
             InitializeComponent();
         }
 
-        public SelectElementsWindow(Document dbDoc, List<Element> elementsToChose) : this()
+        public List<Element> ElementsToChoose
         {
-            List<CheckBox> elementCheckBoxes = new List<CheckBox>();
+            get;
+            set;
+        }
 
-            foreach (var element in elementsToChose)
-            {
-                CheckBox cb = new CheckBox();
-                cb.Content = element;
-                cb.IsChecked = true;
-                elementCheckBoxes.Add(cb);
-            }
+        private void CancelButton_Click(object sender, RoutedEventArgs e)
+        {
+            this.DialogResult = false;
+            this.Close();
+        }
 
-            elementsListBox.ItemsSource = elementCheckBoxes;
+        private void OkButton_Click(object sender, RoutedEventArgs e)
+        {
+            ElementsToChoose = elementsListBox.SelectedItems.Cast<Element>().ToList();
+
+            this.DialogResult = true;
+            this.Close();
         }
     }
 }

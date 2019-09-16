@@ -110,9 +110,25 @@ namespace DougKlassen.Revit.Perfect.Commands
                 hostLevels.Remove(hostLevels.Last());
             }
 
-            /* let user select which levels will be used for splitting. pre-select only levels designated as stories */
+            /* let user select which levels will be used for splitting. */
+            //TODO: pre -select only levels designated as stories
+            //TODO: sort list in reverse by level elevation then sort result by level elevation
             SelectElementsWindow levelPickerWindow = new SelectElementsWindow(dbDoc, hostLevels.Cast<Element>().ToList());
-            Boolean? result = levelPickerWindow.ShowDialog();
+            Boolean result = (Boolean)levelPickerWindow.ShowDialog();
+            if (result)
+            {
+                hostLevels = levelPickerWindow.ElementsToChoose.Cast<Level>().ToList();
+
+                if (0 == hostLevels.Count())
+                {
+                    TaskDialog.Show("Invalid Selection", "You must choose at least one level");
+                    return Result.Failed;
+                }
+            }
+            else
+            {
+                return Result.Cancelled;
+            }
 
             using (Transaction t = new Transaction(dbDoc, "Split wall by level"))
             {
@@ -137,7 +153,7 @@ namespace DougKlassen.Revit.Perfect.Commands
                         newTopLvl = overallLevelAbove;
                     }
 
-                    /* determine if this is a single level, the bottom level, the top level, or a middle level */
+                    /* determine if this is a single level, the bottom level, the top level, or a middle level */                    /* no levels selected */
                     /* single level wall */
                     if (1 == hostLevels.Count) //if there is only one level
                     {

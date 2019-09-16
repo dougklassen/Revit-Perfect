@@ -5,11 +5,18 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DougKlassen.Revit.Perfect.Interface"
         mc:Ignorable="d"
-        Title="Select Elements" Height="450" Width="400">
-    <Grid>
-        <ListBox x:Name="elementsListBox" Margin="30,30,30,65"/>
-        <Button x:Name="cancelButton" Content="Cancel" Margin="0,0,30,22" HorizontalAlignment="Right" Width="75" VerticalAlignment="Bottom"/>
-        <Button x:Name="okButton" Content="OK" Margin="0,0,129,22" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="75" />
-
-    </Grid>
+        x:Name="selectElementsWindow" Title="Select Elements" Height="450" Width="400">
+    <DockPanel>
+        <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,0,0,20">
+            <Button x:Name="cancelButton" Content="Cancel" Margin="0,0,20,0" HorizontalAlignment="Right" Width="75" VerticalAlignment="Bottom" RenderTransformOrigin="0.504,0.5" Click="CancelButton_Click"/>
+            <Button x:Name="okButton" Content="OK" Margin="0,0,20,0" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="75" Click="OkButton_Click" />
+        </StackPanel>
+        <ListBox x:Name="elementsListBox" Margin="20" SelectionMode="Multiple" ItemsSource="{Binding ElementName=selectElementsWindow, Path=ElementsToChoose}">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <CheckBox Content="{Binding Name}" IsChecked="{Binding RelativeSource={RelativeSource AncestorType={x:Type ListBoxItem}}, Path=IsSelected}"/>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+    </DockPanel>
 </Window>
