@@ -21,11 +21,16 @@ namespace DougKlassen.Revit.Perfect.Interface
     /// </summary>
     public partial class SelectElementsWindow : Window
     {
-        public SelectElementsWindow(Document dbDoc, List<Element> elements)
+        public SelectElementsWindow(List<Element> elements, Boolean selectAll)
         {
             ElementsToChoose = elements;
 
             InitializeComponent();
+
+            if (selectAll)
+            {
+                elementsListBox.SelectAll();
+            }
         }
 
         public List<Element> ElementsToChoose
