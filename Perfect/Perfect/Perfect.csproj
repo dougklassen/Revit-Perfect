@@ -10,9 +10,8 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>DougKlassen.Revit.Perfect</RootNamespace>
     <AssemblyName>Perfect</AssemblyName>
-    <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <!--The following line is added so that Visual Studio Express will allow new WPF windows to be added-->
+    <!--The following line is added so that Visual Studio will allow new WPF windows to be added-->
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <TargetFrameworkProfile />
   </PropertyGroup>
@@ -37,6 +36,7 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>-->
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Rvt2018|AnyCPU'">
+    <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\Rvt2018\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
@@ -46,8 +46,9 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Rvt2019|AnyCPU'">
+    <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
     <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\Rvt2020\</OutputPath>
+    <OutputPath>bin\Rvt2019\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <DebugType>full</DebugType>
     <PlatformTarget>x64</PlatformTarget>
@@ -55,6 +56,7 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Rvt2020|AnyCPU'">
+    <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\Rvt2020\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
@@ -140,6 +142,7 @@
   <ItemGroup>
     <Content Include="Resources\Perfect.addin">
       <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
   <ItemGroup>
@@ -165,13 +168,22 @@
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Rvt2018|AnyCPU'">
-    <PostBuildEvent>xcopy "$(ProjectDir)""$(OutDir)"* "C:\ProgramData\Autodesk\Revit\Addins\2018\Perfect" /s /y /i</PostBuildEvent>
+    <PostBuildEvent>xcopy "$(ProjectDir)$(OutDir)Perfect.dll" "C:\ProgramData\Autodesk\Revit\Addins\2018\Perfect\" /s /y /i
+xcopy "$(ProjectDir)$(OutDir)Perfect.pdb" "C:\ProgramData\Autodesk\Revit\Addins\2018\Perfect\" /s /y /i
+xcopy "$(ProjectDir)$(OutDir)Resources\Perfect.addin" "C:\ProgramData\Autodesk\Revit\Addins\2018\" /s /y /i
+    </PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Rvt2019|AnyCPU'">
-    <PostBuildEvent>xcopy "$(ProjectDir)""$(OutDir)"* "C:\ProgramData\Autodesk\Revit\Addins\2019\Perfect" /s /y /i</PostBuildEvent>
+    <PostBuildEvent>xcopy "$(ProjectDir)$(OutDir)Perfect.dll" "C:\ProgramData\Autodesk\Revit\Addins\2019\Perfect\" /s /y /i
+xcopy "$(ProjectDir)$(OutDir)Perfect.pdb" "C:\ProgramData\Autodesk\Revit\Addins\2019\Perfect\" /s /y /i
+xcopy "$(ProjectDir)$(OutDir)Resources\Perfect.addin" "C:\ProgramData\Autodesk\Revit\Addins\2019\" /s /y /i
+    </PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Rvt2020|AnyCPU'">
-    <PostBuildEvent>xcopy "$(ProjectDir)""$(OutDir)"* "C:\ProgramData\Autodesk\Revit\Addins\2020\Perfect" /s /y /i</PostBuildEvent>
+    <PostBuildEvent>xcopy "$(ProjectDir)$(OutDir)Perfect.dll" "C:\ProgramData\Autodesk\Revit\Addins\2020\Perfect\" /s /y /i
+xcopy "$(ProjectDir)$(OutDir)Perfect.pdb" "C:\ProgramData\Autodesk\Revit\Addins\2020\Perfect\" /s /y /i
+xcopy "$(ProjectDir)$(OutDir)Resources\Perfect.addin" "C:\ProgramData\Autodesk\Revit\Addins\2020\" /s /y /i
+    </PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
