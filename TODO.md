@@ -1,15 +1,17 @@
 # Commands to add
 
++ Hide all views callouts based on matching sheet numers (specify number of digits)
++ Rework view naming to prefix with arbitrary portion of sheet number
++ Create, manage, and apply view specific override templates
 + Purge imported view specific CAD files from a selected view
-+ Hide all views callouts to views not on the same sheet
 + Export project parameters for review
 + Import and export survey points
 + Enumerate and manage in place families, including voids
 + Bake column top and base attachments
 + Unhide all elements hidden in view
 + Automatically create filters based on selected parameter
-+ Split walls by level
 
 # Completed
 
 + ~~Dissallow join on all selected walls~~
++ ~~Split walls by level~~

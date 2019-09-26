@@ -163,6 +163,11 @@ namespace DougKlassen.Revit.Perfect
                 commandClass: "FlagUnitElementsCommand",
                 buttonText: "Flag Unit Elements",
                 buttonToolTip: "Flag elements that are part of a unit group");
+            addButtonToPulldown(
+                pulldown: elementPullDownButton,
+                commandClass: "ViewCalloutVisibilityCommand",
+                buttonText: "View Callout Visibility",
+                buttonToolTip: "Manage view callout visibility");
             #endregion Elements Pulldown
 
             #region Standards Pulldown
@@ -181,7 +186,7 @@ namespace DougKlassen.Revit.Perfect
             PerfectRibbonPanel.AddSlideOut();
             PushButtonData aboutCommandPushButtonData = new PushButtonData(
                 name: "AboutCommandButton",
-                text: "About Perfect",
+                text: "About",
                 assemblyName: FileLocations.AssemblyPath,
                 className: "DougKlassen.Revit.Perfect.Commands.AboutCommand")
             {
