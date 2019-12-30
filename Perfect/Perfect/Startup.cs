@@ -45,7 +45,7 @@ namespace DougKlassen.Revit.Perfect
 
 			RibbonPanel PerfectRibbonPanel = application.CreateRibbonPanel("Perfect Standards");
 
-            #region Create Column One
+            #region Create Column One-Naming, Clean up, Export
             PulldownButtonData namingStandardsPulldownButtonData = new PulldownButtonData(
                 name: "AuditNamesToolsPulldown",
                 text: "Name Auditing");
@@ -116,11 +116,16 @@ namespace DougKlassen.Revit.Perfect
                 commandClass: "ExportDetailTextCommand",
                 buttonText: "Export Callout Text for Review",
                 buttonToolTip: "Export callout text to a CSV file for review");
+            addButtonToPulldown(
+                pulldown: exportPullDownButton,
+                commandClass: "ExportParametersCommand",
+                buttonText: "Export Parameter Data",
+                buttonToolTip: "Export Parameter Data for Model");
             #endregion Export Pulldown
 
-            #endregion Create Column One
+            #endregion Create Column One-Naming, Clean up, Export
 
-            #region Create Column Two
+            #region Create Column Two-Geometry, Elements, Standards
             PulldownButtonData geometryPullDownButtonData = new PulldownButtonData(
                 name: "GeometryPullDownButton",
                 text: "Fix Geometry");
@@ -163,11 +168,6 @@ namespace DougKlassen.Revit.Perfect
                 commandClass: "FlagUnitElementsCommand",
                 buttonText: "Flag Unit Elements",
                 buttonToolTip: "Flag elements that are part of a unit group");
-            addButtonToPulldown(
-                pulldown: elementPullDownButton,
-                commandClass: "ViewCalloutVisibilityCommand",
-                buttonText: "View Callout Visibility",
-                buttonToolTip: "Manage view callout visibility");
             #endregion Elements Pulldown
 
             #region Standards Pulldown
@@ -180,9 +180,9 @@ namespace DougKlassen.Revit.Perfect
                 commandAvailability: "StandardizeSchedulesCommandAvailability");
             #endregion Standards Pulldown
 
-            #endregion Create Column Two
+            #endregion Create Column Two-Geometry, Elements, Standards
 
-            #region Create slide out panel
+            #region Create slide out panel-About
             PerfectRibbonPanel.AddSlideOut();
             PushButtonData aboutCommandPushButtonData = new PushButtonData(
                 name: "AboutCommandButton",
@@ -195,7 +195,7 @@ namespace DougKlassen.Revit.Perfect
                 AvailabilityClassName = "DougKlassen.Revit.Perfect.Commands.AboutCommandAvailability"
             };
             PerfectRibbonPanel.AddItem(aboutCommandPushButtonData);
-            #endregion
+            #endregion Create slide out panel-About
 
             return Result.Succeeded;
 		}

@@ -15,57 +15,50 @@
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <TargetFrameworkProfile />
   </PropertyGroup>
-  <!--<PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
-    <PlatformTarget>x64</PlatformTarget>
+  <!--begin Build Configurations-->
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Rvt2014|AnyCPU'">
+    <VersionNumber>2014</VersionNumber>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
-  </PropertyGroup>-->
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Rvt2015|AnyCPU'">
+    <VersionNumber>2015</VersionNumber>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Rvt2016|AnyCPU'">
+    <VersionNumber>2016</VersionNumber>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Rvt2017|AnyCPU'">
+    <VersionNumber>2017</VersionNumber>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Rvt2018|AnyCPU'">
+    <VersionNumber>2018</VersionNumber>
     <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\Rvt2018\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <DebugType>full</DebugType>
-    <PlatformTarget>x64</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Rvt2019|AnyCPU'">
+    <VersionNumber>2019</VersionNumber>
     <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\Rvt2019\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <DebugType>full</DebugType>
-    <PlatformTarget>x64</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Rvt2020|AnyCPU'">
-    <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
+    <VersionNumber>2020</VersionNumber>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+  </PropertyGroup>
+  <!--common settings-->
+  <PropertyGroup>
+    <OutputPath>bin\$(Configuration)</OutputPath>
     <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\Rvt2020\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <DebugType>full</DebugType>
     <PlatformTarget>x64</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
+  <!--end Build Configurations-->
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="RevitAPI" Condition="'$(Configuration)' == 'Rvt2018'">
@@ -111,11 +104,11 @@
     <Compile Include="Commands\DisallowWallJoins\DisallowWallJoinsCommand.cs" />
     <Compile Include="Commands\ExportDetailText\ExportDetailTextCommand.cs" />
     <Compile Include="Commands\ExportImportStyles\ExportImportStylesCommand.cs" />
+    <Compile Include="Commands\ExportParameters\ExportParametersCommand.cs" />
     <Compile Include="Commands\FlagUnitElements\FlagUnitElementsCommand.cs" />
     <Compile Include="Commands\LoadImportStyles\LoadImportStylesCommand.cs" />
     <Compile Include="Commands\PurgeViews\PurgeViewsCommand.cs" />
     <Compile Include="Commands\SplitWallByLevel\SplitWallByLevelCommand.cs" />
-    <Compile Include="Commands\ViewCalloutVisibility\ViewCalloutVisibilityCommand.cs" />
     <Compile Include="Interface\ViewCalloutVisibilityWindow.xaml.cs">
       <DependentUpon>ViewCalloutVisibilityWindow.xaml</DependentUpon>
     </Compile>
@@ -133,13 +126,16 @@
     <Compile Include="Commands\RenameFamilies\RenameFamiliesCommand.cs" />
     <Compile Include="Helpers.cs" />
     <Compile Include="Models\ObjectStylesModel.cs" />
+    <Compile Include="Models\ParameterModel.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="Repositories\IObjectStylesRepo.cs" />
+    <Compile Include="Repositories\IParameterCatalogRepo.cs" />
     <Compile Include="Repositories\ObjectStylesJsonRepo.cs" />
+    <Compile Include="Repositories\ParameterCatalogJsonRepo.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -173,31 +169,16 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Rvt2018|AnyCPU'">
-    <PostBuildEvent>xcopy "$(ProjectDir)$(OutDir)Perfect.dll" "C:\ProgramData\Autodesk\Revit\Addins\2018\Perfect\" /s /y /i
-xcopy "$(ProjectDir)$(OutDir)Perfect.pdb" "C:\ProgramData\Autodesk\Revit\Addins\2018\Perfect\" /s /y /i
-xcopy "$(ProjectDir)$(OutDir)Resources\Perfect.addin" "C:\ProgramData\Autodesk\Revit\Addins\2018\" /s /y /i
-    </PostBuildEvent>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Rvt2019|AnyCPU'">
-    <PostBuildEvent>xcopy "$(ProjectDir)$(OutDir)Perfect.dll" "C:\ProgramData\Autodesk\Revit\Addins\2019\Perfect\" /s /y /i
-xcopy "$(ProjectDir)$(OutDir)Perfect.pdb" "C:\ProgramData\Autodesk\Revit\Addins\2019\Perfect\" /s /y /i
-xcopy "$(ProjectDir)$(OutDir)Resources\Perfect.addin" "C:\ProgramData\Autodesk\Revit\Addins\2019\" /s /y /i
-    </PostBuildEvent>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Rvt2020|AnyCPU'">
-    <PostBuildEvent>xcopy "$(ProjectDir)$(OutDir)Perfect.dll" "C:\ProgramData\Autodesk\Revit\Addins\2020\Perfect\" /s /y /i
-xcopy "$(ProjectDir)$(OutDir)Perfect.pdb" "C:\ProgramData\Autodesk\Revit\Addins\2020\Perfect\" /s /y /i
-xcopy "$(ProjectDir)$(OutDir)Resources\Perfect.addin" "C:\ProgramData\Autodesk\Revit\Addins\2020\" /s /y /i
-    </PostBuildEvent>
-  </PropertyGroup>
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
+  <!--<Target Name="BeforeBuild">
+  </Target>-->
+  <!--These post-build commands will copy the .addin manifest to the version's addin folder and the addin .dll to a named subfolder referenced by the addin-->
   <Target Name="AfterBuild">
+    <Exec Command="xcopy &quot;$(ProjectDir)$(OutDir)$*.pdb&quot; &quot;C:\ProgramData\Autodesk\Revit\Addins\$(VersionNumber)\$(AssemblyName)\&quot; /s /y /i" />
+    <Exec Command="xcopy &quot;$(ProjectDir)$(OutDir)*.dll&quot; &quot;C:\ProgramData\Autodesk\Revit\Addins\$(VersionNumber)\$(AssemblyName)\&quot; /s /y /i" />
+    <Exec Command="xcopy &quot;$(ProjectDir)$(OutDir)Resources\$(AssemblyName).addin&quot; &quot;C:\ProgramData\Autodesk\Revit\Addins\$(VersionNumber)\&quot; /s /y /i" />
   </Target>
-  -->
 </Project>

@@ -12,6 +12,9 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
+using Autodesk.Revit.DB;
+using Autodesk.Revit.UI;
+
 namespace DougKlassen.Revit.Perfect.Interface
 {
     /// <summary>
@@ -19,9 +22,24 @@ namespace DougKlassen.Revit.Perfect.Interface
     /// </summary>
     public partial class ViewCalloutVisibilityWindow : Window
     {
-        public ViewCalloutVisibilityWindow()
+        public ViewCalloutVisibilityWindow(List<List<View>> views, Int32 charCount)
         {
+            ViewsToProcess = views;
+            CharsToMatch = charCount;
+
             InitializeComponent();
+        }
+
+        public List<List<View>> ViewsToProcess
+        {
+            get;
+            set;
+        }
+
+        public Int32 CharsToMatch
+        {
+            get;
+            set;
         }
 
         private void OkButton_Click(object sender, RoutedEventArgs e)
