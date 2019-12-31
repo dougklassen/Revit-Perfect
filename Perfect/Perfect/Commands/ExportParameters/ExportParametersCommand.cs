@@ -6,20 +6,15 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using System.Windows.Forms;
-using Binding = Autodesk.Revit.DB.Binding;
 
 namespace DougKlassen.Revit.Perfect.Commands
 {
     [Autodesk.Revit.Attributes.Transaction(Autodesk.Revit.Attributes.TransactionMode.ReadOnly)]
     class ExportParametersCommand : IExternalCommand
     {
-        IEnumerable<ParameterModel> modelParams = new List<ParameterModel>();
-
         public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
         {
             Document dbDoc = commandData.Application.ActiveUIDocument.Document;
-            List<ParameterModel> paramData = new List<ParameterModel>();
-            BindingMap map = dbDoc.ParameterBindings;
 
             IEnumerable<ParameterElement> userParams =
                 new FilteredElementCollector(dbDoc)
@@ -27,16 +22,22 @@ namespace DougKlassen.Revit.Perfect.Commands
                 .ToElements()
                 .Cast<ParameterElement>();
 
+            List<ParameterModel> paramData = new List<ParameterModel>();
+            BindingMap map = dbDoc.ParameterBindings;
+
             foreach (ParameterElement param in userParams)
             {
-                ParameterModel m = new ParameterModel(param, map);
-
-                paramData.Add(m);
+                paramData.Add(new ParameterModel(param, map));
             }
 
-            //TODO: BuiltInParameters
+            IEnumerable<Element> allElements = Helpers.GetAllElements(dbDoc);
+            foreach (BuiltInParameter builtIn in Enum.GetValues(typeof(BuiltInParameter)))
+            {
+                paramData.Add(ParameterModel.GetBuiltInParameter(builtIn, map, allElements));
+
+            }
+
             //TODO: autoincrement file name
-            //TODO: cross reference with schedules
             //TODO: cross reference with categories
 
             SaveFileDialog saveDialog = new SaveFileDialog()

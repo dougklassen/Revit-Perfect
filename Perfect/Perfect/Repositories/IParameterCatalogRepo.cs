@@ -5,7 +5,7 @@ namespace DougKlassen.Revit.Perfect.Repositories
 {
     interface IParameterCatalogRepo
     {
-        IEnumerable<ParameterModel> GetParameterCatalog();
+        IEnumerable<ParameterModel> LoadParameterCatalog();
         void WriteParameterCatalog(IEnumerable<ParameterModel> catalog);
     }
 }

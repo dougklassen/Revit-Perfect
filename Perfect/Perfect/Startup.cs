@@ -120,7 +120,12 @@ namespace DougKlassen.Revit.Perfect
                 pulldown: exportPullDownButton,
                 commandClass: "ExportParametersCommand",
                 buttonText: "Export Parameter Data",
-                buttonToolTip: "Export Parameter Data for Model");
+                buttonToolTip: "Export a catalog of parameters in the project in JSON format");
+            addButtonToPulldown(
+                pulldown: exportPullDownButton,
+                commandClass: "ExportSchedulesCommand",
+                buttonText: "Export Schedule Data",
+                buttonToolTip: "Export a catalog of schedules in the project in JSON format");
             #endregion Export Pulldown
 
             #endregion Create Column One-Naming, Clean up, Export

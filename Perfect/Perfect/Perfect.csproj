@@ -105,6 +105,7 @@
     <Compile Include="Commands\ExportDetailText\ExportDetailTextCommand.cs" />
     <Compile Include="Commands\ExportImportStyles\ExportImportStylesCommand.cs" />
     <Compile Include="Commands\ExportParameters\ExportParametersCommand.cs" />
+    <Compile Include="Commands\ExportSchedules\ExportSchedulesCommand.cs" />
     <Compile Include="Commands\FlagUnitElements\FlagUnitElementsCommand.cs" />
     <Compile Include="Commands\LoadImportStyles\LoadImportStylesCommand.cs" />
     <Compile Include="Commands\PurgeViews\PurgeViewsCommand.cs" />
@@ -127,6 +128,7 @@
     <Compile Include="Helpers.cs" />
     <Compile Include="Models\ObjectStylesModel.cs" />
     <Compile Include="Models\ParameterModel.cs" />
+    <Compile Include="Models\ScheduleModel.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -134,8 +136,10 @@
     </Compile>
     <Compile Include="Repositories\IObjectStylesRepo.cs" />
     <Compile Include="Repositories\IParameterCatalogRepo.cs" />
+    <Compile Include="Repositories\IScheduleCatalogRepo.cs" />
     <Compile Include="Repositories\ObjectStylesJsonRepo.cs" />
     <Compile Include="Repositories\ParameterCatalogJsonRepo.cs" />
+    <Compile Include="Repositories\ScheduleCatalogJsonRepo.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -177,7 +181,7 @@
   </Target>-->
   <!--These post-build commands will copy the .addin manifest to the version's addin folder and the addin .dll to a named subfolder referenced by the addin-->
   <Target Name="AfterBuild">
-    <Exec Command="xcopy &quot;$(ProjectDir)$(OutDir)$*.pdb&quot; &quot;C:\ProgramData\Autodesk\Revit\Addins\$(VersionNumber)\$(AssemblyName)\&quot; /s /y /i" />
+    <Exec Command="xcopy &quot;$(ProjectDir)$(OutDir)*.pdb&quot; &quot;C:\ProgramData\Autodesk\Revit\Addins\$(VersionNumber)\$(AssemblyName)\&quot; /s /y /i" />
     <Exec Command="xcopy &quot;$(ProjectDir)$(OutDir)*.dll&quot; &quot;C:\ProgramData\Autodesk\Revit\Addins\$(VersionNumber)\$(AssemblyName)\&quot; /s /y /i" />
     <Exec Command="xcopy &quot;$(ProjectDir)$(OutDir)Resources\$(AssemblyName).addin&quot; &quot;C:\ProgramData\Autodesk\Revit\Addins\$(VersionNumber)\&quot; /s /y /i" />
   </Target>

@@ -17,7 +17,7 @@ namespace DougKlassen.Revit.Perfect.Repositories
             jsonRepoFilePath = filePath;
         }
 
-        public IEnumerable<ParameterModel> GetParameterCatalog()
+        public IEnumerable<ParameterModel> LoadParameterCatalog()
         {
             throw new NotImplementedException();
         }
