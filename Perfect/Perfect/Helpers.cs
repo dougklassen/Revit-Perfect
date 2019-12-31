@@ -1,16 +1,50 @@
-﻿using System;
+﻿using Autodesk.Revit.DB;
+using Autodesk.Revit.UI;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-
-using Autodesk.Revit.DB;
-using Autodesk.Revit.UI;
 
 namespace DougKlassen.Revit.Perfect
 {
     public static class Helpers
     {
+        public static IEnumerable<Element> GetAllElements(this Document dbDoc)
+        {
+            IEnumerable<Element> allElements = new List<Element>();
+
+            ElementFilter allElementsFilter = new LogicalOrFilter(new ElementIsElementTypeFilter(false), new ElementIsElementTypeFilter(true));
+            allElements = new FilteredElementCollector(dbDoc).WherePasses(allElementsFilter);
+
+            return allElements;
+        }
+
+        public static IEnumerable<Definition> GetAllDefinitions(this Document dbDoc)
+        {
+            string msg = string.Empty;
+            IEnumerable<Definition> allDefinitions = new List<Definition>();
+
+            IEnumerable<Element> allElements = dbDoc.GetAllElements();
+
+            foreach (Element e in allElements)
+            {
+                List<Definition> defs = new List<Definition>();
+                foreach (Parameter p in e.Parameters)
+                {
+                    defs.Add(p.Definition);
+                }
+
+                allDefinitions = allDefinitions.Union(defs);
+            }
+
+            return allDefinitions;
+        }
+
+        public static void Msg(String msg)
+        {
+            TaskDialog.Show("Diagnostic Message", msg);
+        }
+
         /// <summary>
         /// Method to generate a unique view name by appending or incrementing a number
         /// </summary>

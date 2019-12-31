@@ -3,6 +3,7 @@ using Autodesk.Revit.UI;
 using DougKlassen.Revit.Perfect.Models;
 using DougKlassen.Revit.Perfect.Repositories;
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Windows.Forms;
 using Binding = Autodesk.Revit.DB.Binding;
@@ -18,17 +19,29 @@ namespace DougKlassen.Revit.Perfect.Commands
         {
             Document dbDoc = commandData.Application.ActiveUIDocument.Document;
             List<ParameterModel> paramData = new List<ParameterModel>();
-
             BindingMap map = dbDoc.ParameterBindings;
 
-            foreach (Binding binding in map)
+            IEnumerable<ParameterElement> userParams =
+                new FilteredElementCollector(dbDoc)
+                .OfClass(typeof(ParameterElement))
+                .ToElements()
+                .Cast<ParameterElement>();
+
+            foreach (ParameterElement param in userParams)
             {
-                paramData.Add(new ParameterModel(binding));
+                ParameterModel m = new ParameterModel(param, map);
+
+                paramData.Add(m);
             }
+
+            //TODO: BuiltInParameters
+            //TODO: autoincrement file name
+            //TODO: cross reference with schedules
+            //TODO: cross reference with categories
 
             SaveFileDialog saveDialog = new SaveFileDialog()
             {
-                FileName = "params.json",
+                FileName = dbDoc.Title + " parameters.json",
                 Filter = "JSON file|*.json",
                 Title = "Save Parameters Catalog"
             };
