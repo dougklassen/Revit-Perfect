@@ -102,6 +102,7 @@
     <Compile Include="Commands\About\AboutCommand.cs" />
     <Compile Include="Commands\AuditViewNames\AuditViewNamesCommand.cs" />
     <Compile Include="Commands\DisallowWallJoins\DisallowWallJoinsCommand.cs" />
+    <Compile Include="Commands\ExportCategories\ExportCategoriesCommand.cs" />
     <Compile Include="Commands\ExportDetailText\ExportDetailTextCommand.cs" />
     <Compile Include="Commands\ExportImportStyles\ExportImportStylesCommand.cs" />
     <Compile Include="Commands\ExportParameters\ExportParametersCommand.cs" />
@@ -126,6 +127,7 @@
     </Compile>
     <Compile Include="Commands\RenameFamilies\RenameFamiliesCommand.cs" />
     <Compile Include="Helpers.cs" />
+    <Compile Include="Models\CategoryModel.cs" />
     <Compile Include="Models\ObjectStylesModel.cs" />
     <Compile Include="Models\ParameterModel.cs" />
     <Compile Include="Models\ScheduleModel.cs" />
@@ -134,6 +136,8 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Repositories\CatalogCategoryJsonRepo.cs" />
+    <Compile Include="Repositories\ICategoryCatalogRepo.cs" />
     <Compile Include="Repositories\IObjectStylesRepo.cs" />
     <Compile Include="Repositories\IParameterCatalogRepo.cs" />
     <Compile Include="Repositories\IScheduleCatalogRepo.cs" />

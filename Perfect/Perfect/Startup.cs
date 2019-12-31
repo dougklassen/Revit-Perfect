@@ -126,6 +126,11 @@ namespace DougKlassen.Revit.Perfect
                 commandClass: "ExportSchedulesCommand",
                 buttonText: "Export Schedule Data",
                 buttonToolTip: "Export a catalog of schedules in the project in JSON format");
+            addButtonToPulldown(
+                pulldown: exportPullDownButton,
+                commandClass: "ExportCategoriesCommand",
+                buttonText: "Export Category Data",
+                buttonToolTip: "Export a catalog of categories in the project in JSON format");
             #endregion Export Pulldown
 
             #endregion Create Column One-Naming, Clean up, Export
