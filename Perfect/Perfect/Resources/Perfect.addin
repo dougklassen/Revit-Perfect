@@ -8,4 +8,12 @@
     <VendorId>TSRA</VendorId>
     <VendorDescription>Doug Klassen</VendorDescription>
   </AddIn>
+  <AddIn Type="Application">
+    <Name>Snoop</Name>
+    <Assembly>.\Perfect\Snoop.dll</Assembly>
+    <AddInId>36080e7e-ed62-4917-8eaa-769172112524</AddInId>
+    <FullClassName>DougKlassen.Revit.Snoop.StartUpApp</FullClassName>
+    <VendorId>TSRA</VendorId>
+    <VendorDescription>Doug Klassen</VendorDescription>
+  </AddIn>
 </RevitAddIns>
