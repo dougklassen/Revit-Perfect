@@ -103,6 +103,7 @@
     <Compile Include="Commands\ExportDetailText\ExportDetailTextCommand.cs" />
     <Compile Include="Commands\ExportImportStyles\ExportImportStylesCommand.cs" />
     <Compile Include="Commands\ExportParameters\ExportParametersCommand.cs" />
+    <Compile Include="Commands\ExportProjectData\ExportProjectDataCommand.cs" />
     <Compile Include="Commands\ExportSchedules\ExportSchedulesCommand.cs" />
     <Compile Include="Commands\FlagUnitElements\FlagUnitElementsCommand.cs" />
     <Compile Include="Commands\LoadImportStyles\LoadImportStylesCommand.cs" />

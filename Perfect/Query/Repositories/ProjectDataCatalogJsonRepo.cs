@@ -6,7 +6,7 @@ using System.IO;
 
 namespace DougKlassen.Revit.Query.Repositories
 {
-    class ProjectDataCatalogJsonRepo : IProjectDataCatalogRepo
+    public class ProjectDataCatalogJsonRepo : IProjectDataCatalogRepo
     {
         private String jsonRepoFilePath;
 
@@ -15,12 +15,12 @@ namespace DougKlassen.Revit.Query.Repositories
             jsonRepoFilePath = filePath;
         }
 
-        public IEnumerable<ProjectDataModel> LoadProjectDataCatalog()
+        public ProjectDataModel LoadProjectDataCatalog()
         {
             throw new NotImplementedException();
         }
 
-        public void WriteProjectDataCatalog(IEnumerable<ProjectDataModel> catalog)
+        public void WriteProjectDataCatalog(ProjectDataModel catalog)
         {
             JsonSerializerSettings settings = new JsonSerializerSettings()
             {

@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Autodesk.Revit.DB;
+using System;
 
 namespace DougKlassen.Revit.Query.Models
 {
@@ -16,5 +13,16 @@ namespace DougKlassen.Revit.Query.Models
         public String FilePath { get; set; }
         public Int32? FileSize { get; set; }
         public Int32? ElementCount { get; set; }
+
+        public ProjectDataModel(Document dbDoc)
+        {
+            ProjectInfo info = dbDoc.ProjectInformation;
+            Name = info.Name;
+            Address = info.Address;
+            ProjectNumber = info.Number;
+            Status = info.Status;
+            ClientName = info.ClientName;
+            FilePath = dbDoc.PathName;
+        }
     }
 }
