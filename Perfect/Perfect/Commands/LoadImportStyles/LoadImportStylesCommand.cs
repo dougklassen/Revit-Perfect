@@ -1,15 +1,11 @@
-﻿using System;
+﻿using Autodesk.Revit.DB;
+using Autodesk.Revit.UI;
+using DougKlassen.Revit.Query.Models;
+using DougKlassen.Revit.Query.Repositories;
+using Microsoft.Win32;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-
-using Microsoft.Win32;
-
-using Autodesk.Revit.DB;
-using Autodesk.Revit.UI;
-
-using DougKlassen.Revit.Perfect.Models;
-using DougKlassen.Revit.Perfect.Repositories;
 
 namespace DougKlassen.Revit.Perfect.Commands
 {
@@ -38,7 +34,7 @@ namespace DougKlassen.Revit.Perfect.Commands
 
             try
             {
-                IObjectStylesRepo stylesRepo = new JsonFileObjectStyleRepo(dlg.FileName);
+                IObjectStylesRepo stylesRepo = new ObjectStylesJsonRepo(dlg.FileName);
                 importedStyles = stylesRepo.LoadObjectStyles();
             }
             catch (Exception)
@@ -68,7 +64,7 @@ namespace DougKlassen.Revit.Perfect.Commands
                             else
                             {
                                 sc.SetLineWeight(matchingStyle.ProjectionLineweight.Value, GraphicsStyleType.Projection);
-                                sc.LineColor = matchingStyle.LineColor;
+                                sc.LineColor = matchingStyle.LineColor.GetColor();
                             }
                         }
                     }

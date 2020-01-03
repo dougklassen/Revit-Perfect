@@ -56,9 +56,6 @@
   </PropertyGroup>
   <!--end Build Configurations-->
   <ItemGroup>
-    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="RevitAPI" Condition="'$(Configuration)' == 'Rvt2018'">
@@ -127,23 +124,11 @@
     </Compile>
     <Compile Include="Commands\RenameFamilies\RenameFamiliesCommand.cs" />
     <Compile Include="Helpers.cs" />
-    <Compile Include="Models\CategoryModel.cs" />
-    <Compile Include="Models\ObjectStylesModel.cs" />
-    <Compile Include="Models\ParameterModel.cs" />
-    <Compile Include="Models\ScheduleModel.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="Repositories\CatalogCategoryJsonRepo.cs" />
-    <Compile Include="Repositories\ICategoryCatalogRepo.cs" />
-    <Compile Include="Repositories\IObjectStylesRepo.cs" />
-    <Compile Include="Repositories\IParameterCatalogRepo.cs" />
-    <Compile Include="Repositories\IScheduleCatalogRepo.cs" />
-    <Compile Include="Repositories\ObjectStylesJsonRepo.cs" />
-    <Compile Include="Repositories\ParameterCatalogJsonRepo.cs" />
-    <Compile Include="Repositories\ScheduleCatalogJsonRepo.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -178,12 +163,13 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
+    <ProjectReference Include="..\Query\Query.csproj">
+      <Project>{40937e91-9780-479e-be0e-f5a77ecccace}</Project>
+      <Name>Query</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!--<Target Name="BeforeBuild">
-  </Target>-->
-  <!--These post-build commands will copy the .addin manifest to the version's addin folder and the addin .dll to a named subfolder referenced by the addin-->
+  <!--These post-build commands will copy the .addin manifest to Revit's addin folder and the addin .dll to a named subfolder referenced by the manifest-->
   <Target Name="AfterBuild">
     <Exec Command="xcopy &quot;$(ProjectDir)$(OutDir)*.pdb&quot; &quot;C:\ProgramData\Autodesk\Revit\Addins\$(VersionNumber)\$(AssemblyName)\&quot; /s /y /i" />
     <Exec Command="xcopy &quot;$(ProjectDir)$(OutDir)*.dll&quot; &quot;C:\ProgramData\Autodesk\Revit\Addins\$(VersionNumber)\$(AssemblyName)\&quot; /s /y /i" />

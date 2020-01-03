@@ -2,9 +2,9 @@
 using System;
 using System.Collections.Generic;
 
-namespace DougKlassen.Revit.Perfect.Models
+namespace DougKlassen.Revit.Query.Models
 {
-    class ScheduleModel
+    public class ScheduleModel
     {
         public String name;
         public Int32 id;

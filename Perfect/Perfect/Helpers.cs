@@ -80,5 +80,24 @@ namespace DougKlassen.Revit.Perfect
                 return newName + "(" + (hightestSuffix + 1) + ")";
             }
         }
+
+        public static String GetTimeStampFileName(String filePath)
+        {
+            Regex fileNameRegEx = new Regex(@"(.*)\.(.*)");
+            Match match = fileNameRegEx.Match(filePath);
+
+            return String.Format("{0}-{1}.{2}",
+                match.Groups[1],
+                GetTimeStamp(),
+                match.Groups[2]);
+        }
+
+        public static String GetTimeStamp()
+        {
+            DateTime now = DateTime.Now;
+            return String.Format("{0}-{1}",
+                now.ToString("yyyyMMdd"),
+                now.ToString("HHmmss"));
+        }
     }
 }

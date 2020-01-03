@@ -1,9 +1,9 @@
 ﻿using Autodesk.Revit.DB;
 using System;
 
-namespace DougKlassen.Revit.Perfect.Models
+namespace DougKlassen.Revit.Query.Models
 {
-    class CategoryModel
+    public class CategoryModel
     {
         public String name;
         public Int32 id;

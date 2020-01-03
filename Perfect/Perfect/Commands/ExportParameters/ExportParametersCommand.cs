@@ -1,7 +1,7 @@
 ﻿using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
-using DougKlassen.Revit.Perfect.Models;
-using DougKlassen.Revit.Perfect.Repositories;
+using DougKlassen.Revit.Query.Models;
+using DougKlassen.Revit.Query.Repositories;
 using System;
 using System.Linq;
 using System.Collections.Generic;
@@ -42,7 +42,7 @@ namespace DougKlassen.Revit.Perfect.Commands
 
             SaveFileDialog saveDialog = new SaveFileDialog()
             {
-                FileName = dbDoc.Title + " parameters.json",
+                FileName = dbDoc.Title + "-parameters-" + Helpers.GetTimeStamp() + ".json",
                 Filter = "JSON file|*.json",
                 Title = "Save Parameters Catalog"
             };

@@ -1,10 +1,9 @@
 ﻿using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
-using DougKlassen.Revit.Perfect.Models;
-using DougKlassen.Revit.Perfect.Repositories;
+using DougKlassen.Revit.Query.Models;
+using DougKlassen.Revit.Query.Repositories;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Windows.Forms;
 
 namespace DougKlassen.Revit.Perfect.Commands
@@ -25,7 +24,7 @@ namespace DougKlassen.Revit.Perfect.Commands
 
             SaveFileDialog saveDialog = new SaveFileDialog()
             {
-                FileName = dbDoc.Title + " categories.json",
+                FileName = dbDoc.Title + "-categories" + Helpers.GetTimeStamp() + ".json",
                 Filter = "JSON file|*.json",
                 Title = "Save Categories Catalog"
             };

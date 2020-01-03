@@ -1,9 +1,9 @@
-﻿using DougKlassen.Revit.Perfect.Models;
+﻿using DougKlassen.Revit.Query.Models;
 using System.Collections.Generic;
 
-namespace DougKlassen.Revit.Perfect.Repositories
+namespace DougKlassen.Revit.Query.Repositories
 {
-    interface ICategoryCatalogRepo
+    public interface ICategoryCatalogRepo
     {
         IEnumerable<CategoryModel> LoadCategoryCatalog();
         void WriteScheduleCatalog(IEnumerable<CategoryModel> catalog);

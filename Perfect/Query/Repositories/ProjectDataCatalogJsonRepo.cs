@@ -1,26 +1,26 @@
-﻿using DougKlassen.Revit.Perfect.Models;
+﻿using DougKlassen.Revit.Query.Models;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
 
-namespace DougKlassen.Revit.Perfect.Repositories
+namespace DougKlassen.Revit.Query.Repositories
 {
-    class ScheduleCatalogJsonRepo : IScheduleCatalogRepo
+    class ProjectDataCatalogJsonRepo : IProjectDataCatalogRepo
     {
         private String jsonRepoFilePath;
 
-        public ScheduleCatalogJsonRepo(String filePath)
+        public ProjectDataCatalogJsonRepo(String filePath)
         {
             jsonRepoFilePath = filePath;
         }
 
-        public IEnumerable<ScheduleModel> LoadScheduleCatalog()
+        public IEnumerable<ProjectDataModel> LoadProjectDataCatalog()
         {
             throw new NotImplementedException();
         }
 
-        public void WriteScheduleCatalog(IEnumerable<ScheduleModel> catalog)
+        public void WriteProjectDataCatalog(IEnumerable<ProjectDataModel> catalog)
         {
             JsonSerializerSettings settings = new JsonSerializerSettings()
             {

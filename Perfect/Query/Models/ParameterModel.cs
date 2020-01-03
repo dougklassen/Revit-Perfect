@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace DougKlassen.Revit.Perfect.Models
+namespace DougKlassen.Revit.Query.Models
 {
     public class ParameterModel
     {
@@ -20,7 +20,6 @@ namespace DougKlassen.Revit.Perfect.Models
         public String instanceOrType;
         public String sourceFamily;
         public List<Int32> categories;
-
 
         public ParameterModel(BuiltInParameter param)
         {

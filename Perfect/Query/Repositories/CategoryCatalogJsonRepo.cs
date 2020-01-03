@@ -1,12 +1,12 @@
-﻿using DougKlassen.Revit.Perfect.Models;
+﻿using DougKlassen.Revit.Query.Models;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
 
-namespace DougKlassen.Revit.Perfect.Repositories
+namespace DougKlassen.Revit.Query.Repositories
 {
-    class CategoryCatalogJsonRepo : ICategoryCatalogRepo
+    public class CategoryCatalogJsonRepo : ICategoryCatalogRepo
     {
         private String jsonRepoFilePath;
 

@@ -1,14 +1,12 @@
-﻿using DougKlassen.Revit.Perfect.Models;
+﻿using DougKlassen.Revit.Query.Models;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
 
-using Autodesk.Revit.UI;
-
-namespace DougKlassen.Revit.Perfect.Repositories
+namespace DougKlassen.Revit.Query.Repositories
 {
-    class ParameterCatalogJsonRepo : IParameterCatalogRepo
+    public class ParameterCatalogJsonRepo : IParameterCatalogRepo
     {
         private String jsonRepoFilePath;
 

@@ -1,16 +1,12 @@
-﻿using System;
+﻿using Autodesk.Revit.DB;
+using Autodesk.Revit.UI;
+using DougKlassen.Revit.Query.Models;
+using DougKlassen.Revit.Query.Repositories;
+using Microsoft.Win32;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-
-using Microsoft.Win32;
-
-using Autodesk.Revit.UI;
-using Autodesk.Revit.DB;
-
-using DougKlassen.Revit.Perfect.Models;
-using DougKlassen.Revit.Perfect.Repositories;
 
 namespace DougKlassen.Revit.Perfect.Commands
 {
@@ -43,7 +39,7 @@ namespace DougKlassen.Revit.Perfect.Commands
                         {
                             Name = sc.Name,
                             ProjectionLineweight = sc.GetLineWeight(GraphicsStyleType.Projection),
-                            LineColor = sc.LineColor,
+                            LineColor = new ColorModel(sc.LineColor),
                             Delete = false
                         });
                     }
@@ -58,7 +54,7 @@ namespace DougKlassen.Revit.Perfect.Commands
             SaveFileDialog dlg = new SaveFileDialog()
             {
                 InitialDirectory = FileLocations.AddInDirectory,
-                FileName = ((null == dbDoc.Title) ? "exported" : dbDoc.Title) + "-styles",
+                FileName = ((null == dbDoc.Title) ? "exported" : dbDoc.Title) + "-styles-" + Helpers.GetTimeStamp(),
                 DefaultExt = ".json",
                 Filter = "JSON files|*.json|Text Files|*.txt|All Files|*.*"
             };
@@ -71,7 +67,7 @@ namespace DougKlassen.Revit.Perfect.Commands
 
             try
             {
-                IObjectStylesRepo destinationRepo = new JsonFileObjectStyleRepo(dlg.FileName);
+                IObjectStylesRepo destinationRepo = new ObjectStylesJsonRepo(dlg.FileName);
                 destinationRepo.WriteObjectStyles(docObjectStyles);
             }
             catch (Exception)
