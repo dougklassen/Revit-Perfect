@@ -8,11 +8,11 @@ namespace DougKlassen.Revit.Query.Repositories
 {
     public class CategoryCatalogJsonRepo : ICategoryCatalogRepo
     {
-        private String jsonRepoFilePath;
+        private String filePath;
 
-        public CategoryCatalogJsonRepo(String filePath)
+        public CategoryCatalogJsonRepo(String jsonRepoFilePath)
         {
-            jsonRepoFilePath = filePath;
+            filePath = jsonRepoFilePath;
         }
 
         public IEnumerable<CategoryModel> LoadCategoryCatalog()
@@ -30,7 +30,7 @@ namespace DougKlassen.Revit.Query.Repositories
             String jsonData = JsonConvert.SerializeObject(catalog, settings);
             try
             {
-                File.WriteAllText(jsonRepoFilePath, jsonData);
+                File.WriteAllText(filePath, jsonData);
             }
             catch (Exception e)
             {

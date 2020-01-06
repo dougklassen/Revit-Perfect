@@ -5,23 +5,31 @@ using System.Reflection;
 
 using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
+using DougKlassen.Revit.Snoop;
+using DougKlassen.Revit.Snoop.Models;
+using DougKlassen.Revit.Snoop.Repositories;
 
 namespace DougKlassen.Revit.Snoop
 {
-    public static class FileLocations
-    {
-        //AddInDirectory is initialized at runtime
-        public static String AddInDirectory;
-    }
-
     public class StartUpApp : IExternalApplication
     {
+        FileLocations files = FileLocations.Instance;
+        SnoopConfig config;
+
         Result IExternalApplication.OnStartup(UIControlledApplication application)
         {
             //initialize AddInDirectory. The addin should be stored in a directory named after the assembly
-            FileLocations.AddInDirectory = application.ControlledApplication.AllUsersAddinsLocation + "\\Perfect\\";
+            files.HomeDirectoryPath = application.ControlledApplication.AllUsersAddinsLocation + "\\Perfect\\";
 
-            TaskDialog.Show("Snoop", "Snoop is running");
+            if (File.Exists(files.ConfigFilePath))
+            {
+                SnoopConfigJsonRepo configRepo = new SnoopConfigJsonRepo(files.ConfigFilePath);
+                TaskDialog.Show("Snoop", "Snoop is running");
+            }
+            else
+            {
+                TaskDialog.Show("Snoop", "No config file found");
+            }
 
             return Result.Succeeded;
         }

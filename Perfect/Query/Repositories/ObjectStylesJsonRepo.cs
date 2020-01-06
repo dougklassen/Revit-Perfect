@@ -8,16 +8,16 @@ namespace DougKlassen.Revit.Query.Repositories
 {
     public class ObjectStylesJsonRepo : IObjectStylesRepo
     {
-        private String jsonRepoFilePath;
+        private String filePath;
 
-        public ObjectStylesJsonRepo(String fileName)
+        public ObjectStylesJsonRepo(String jsonRepoFilePath)
         {
-            jsonRepoFilePath = fileName;
+            filePath = jsonRepoFilePath;
         }
 
         public IEnumerable<ObjectStylesModel> LoadObjectStyles()
         {
-            String jsonData = File.ReadAllText(jsonRepoFilePath);
+            String jsonData = File.ReadAllText(filePath);
             try
             {
                 List<ObjectStylesModel> objectStyles = (List<ObjectStylesModel>)JsonConvert.DeserializeObject(jsonData, typeof(List<ObjectStylesModel>));
@@ -39,7 +39,7 @@ namespace DougKlassen.Revit.Query.Repositories
             String jsonData = JsonConvert.SerializeObject(catalog, settings);
             try
             {
-                File.WriteAllText(jsonRepoFilePath, jsonData);
+                File.WriteAllText(filePath, jsonData);
             }
             catch (Exception e)
             {

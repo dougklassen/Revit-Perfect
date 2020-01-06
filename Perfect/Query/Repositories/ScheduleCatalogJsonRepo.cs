@@ -8,11 +8,11 @@ namespace DougKlassen.Revit.Query.Repositories
 {
     public class ScheduleCatalogJsonRepo : IScheduleCatalogRepo
     {
-        private String jsonRepoFilePath;
+        private String filePath;
 
-        public ScheduleCatalogJsonRepo(String filePath)
+        public ScheduleCatalogJsonRepo(String jsonRepoFilePath)
         {
-            jsonRepoFilePath = filePath;
+            filePath = jsonRepoFilePath;
         }
 
         public IEnumerable<ScheduleModel> LoadScheduleCatalog()
@@ -30,7 +30,7 @@ namespace DougKlassen.Revit.Query.Repositories
             String jsonData = JsonConvert.SerializeObject(catalog, settings);
             try
             {
-                File.WriteAllText(jsonRepoFilePath, jsonData);
+                File.WriteAllText(filePath, jsonData);
             }
             catch (Exception e)
             {

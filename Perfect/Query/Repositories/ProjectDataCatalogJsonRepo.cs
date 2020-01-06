@@ -8,11 +8,11 @@ namespace DougKlassen.Revit.Query.Repositories
 {
     public class ProjectDataCatalogJsonRepo : IProjectDataCatalogRepo
     {
-        private String jsonRepoFilePath;
+        private String filePath;
 
-        public ProjectDataCatalogJsonRepo(String filePath)
+        public ProjectDataCatalogJsonRepo(String jsonRepoFilePath)
         {
-            jsonRepoFilePath = filePath;
+            filePath = jsonRepoFilePath;
         }
 
         public ProjectDataModel LoadProjectDataCatalog()
@@ -30,7 +30,7 @@ namespace DougKlassen.Revit.Query.Repositories
             String jsonData = JsonConvert.SerializeObject(catalog, settings);
             try
             {
-                File.WriteAllText(jsonRepoFilePath, jsonData);
+                File.WriteAllText(filePath, jsonData);
             }
             catch (Exception e)
             {

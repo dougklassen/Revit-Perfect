@@ -126,7 +126,16 @@ namespace DougKlassen.Revit.Query.Models
             }
         }
 
-        //bruteforce method for retrieving built-in parameter data
+        /// <summary>
+        /// Retrieve data for a built in parameter. This is a very slow brute force method requiring iterating over
+        /// all elements in the project. For much faster but incomplete data retrival,
+        /// use the ParameterModel(BuiltInParameter param) constructor. This method will only complete data for parameters
+        /// that are in use by at least one element in the model, so larger projects are more likely to return a full result.
+        /// </summary>
+        /// <param name="param">The built in parameter to export data for</param>
+        /// <param name="map">A binding map from the Document</param>
+        /// <param name="allElements">All elements in the project</param>
+        /// <returns>Encapsulated data for the parameter</returns>
         public static ParameterModel GetBuiltInParameter(BuiltInParameter param, BindingMap map, IEnumerable<Element> allElements)
         {
             //attempt to find an element that has this parameter
