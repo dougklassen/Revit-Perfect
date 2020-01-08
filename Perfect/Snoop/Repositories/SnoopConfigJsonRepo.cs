@@ -43,8 +43,6 @@ namespace DougKlassen.Revit.Snoop.Repositories
             {
                 throw new Exception("Couldn't write config file", e);
             }
-
-            throw new NotImplementedException();
         }
     }
 }
