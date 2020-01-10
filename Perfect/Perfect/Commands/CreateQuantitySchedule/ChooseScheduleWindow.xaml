@@ -1,0 +1,26 @@
+﻿<Window x:Name="chooseScheduleWindow" x:Class="DougKlassen.Revit.Perfect.Commands.ChooseScheduleWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:DougKlassen.Revit.Perfect.Commands"
+        mc:Ignorable="d"
+        Title="Choose a Schedule to Create" Height="450" Width="800"
+        DataContext="{Binding ElementName=chooseScheduleWindow, Path=templates}">
+    <DockPanel>
+        <ScrollViewer DockPanel.Dock="Top" Height="80">
+            <TextBlock x:Name="messageTextBlock" />
+        </ScrollViewer>
+        <Grid DockPanel.Dock="Bottom" Height="40">
+            <Button x:Name="createButton" Content="Create" Height="25" Width="75" HorizontalAlignment="Right" Margin="0,0,120,0"/>
+            <Button x:Name="cancelButton" Content="Cancel" Height="25" Width="75" HorizontalAlignment="Right" Margin="0,0,20,0" Click="cancelButton_Click"/>
+        </Grid>
+        <ListView x:Name="selectTemplateListView" ItemsSource="{Binding Path=Values}" SelectionMode="Multiple">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <CheckBox Content="{Binding FilterParameterValue}" />
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+    </DockPanel>
+</Window>

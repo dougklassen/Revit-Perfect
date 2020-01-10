@@ -56,32 +56,33 @@
   </PropertyGroup>
   <!--end Build Configurations-->
   <ItemGroup>
+    <Reference Include="ICSharpCode.SharpZipLib, Version=1.0.0.999, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharpZipLib.1.0.0\lib\net45\ICSharpCode.SharpZipLib.dll</HintPath>
+    </Reference>
+    <Reference Include="NPOI, Version=2.4.1.0, Culture=neutral, PublicKeyToken=0df73ec7942b34e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\NPOI.2.4.1\lib\net45\NPOI.dll</HintPath>
+    </Reference>
+    <Reference Include="NPOI.OOXML, Version=2.4.1.0, Culture=neutral, PublicKeyToken=0df73ec7942b34e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\NPOI.2.4.1\lib\net45\NPOI.OOXML.dll</HintPath>
+    </Reference>
+    <Reference Include="NPOI.OpenXml4Net, Version=2.4.1.0, Culture=neutral, PublicKeyToken=0df73ec7942b34e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\NPOI.2.4.1\lib\net45\NPOI.OpenXml4Net.dll</HintPath>
+    </Reference>
+    <Reference Include="NPOI.OpenXmlFormats, Version=2.4.1.0, Culture=neutral, PublicKeyToken=0df73ec7942b34e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\NPOI.2.4.1\lib\net45\NPOI.OpenXmlFormats.dll</HintPath>
+    </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
-    <Reference Include="RevitAPI" Condition="'$(Configuration)' == 'Rvt2018'">
-      <HintPath>..\..\..\..\..\..\..\Program Files\Autodesk\Revit 2018\RevitAPI.dll</HintPath>
+    <!--begin Revit API references-->
+    <Reference Include="RevitAPI">
+      <HintPath>..\..\..\..\..\..\..\Program Files\Autodesk\Revit $(VersionNumber)\RevitAPI.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="RevitAPI" Condition="'$(Configuration)' == 'Rvt2019'">
-      <HintPath>..\..\..\..\..\..\..\Program Files\Autodesk\Revit 2019\RevitAPI.dll</HintPath>
+    <Reference Include="RevitAPIUI">
+      <HintPath>..\..\..\..\..\..\..\Program Files\Autodesk\Revit $(VersionNumber)\RevitAPIUI.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="RevitAPI" Condition="'$(Configuration)' == 'Rvt2020'">
-      <HintPath>..\..\..\..\..\..\..\Program Files\Autodesk\Revit 2020\RevitAPI.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="RevitAPIUI" Condition="'$(Configuration)' == 'Rvt2018'">
-      <HintPath>..\..\..\..\..\..\..\Program Files\Autodesk\Revit 2018\RevitAPIUI.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="RevitAPIUI" Condition="'$(Configuration)' == 'Rvt2019'">
-      <HintPath>..\..\..\..\..\..\..\Program Files\Autodesk\Revit 2019\RevitAPIUI.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="RevitAPIUI" Condition="'$(Configuration)' == 'Rvt2020'">
-      <HintPath>..\..\..\..\..\..\..\Program Files\Autodesk\Revit 2020\RevitAPIUI.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
+    <!--end Revit API references-->
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
@@ -98,6 +99,13 @@
   <ItemGroup>
     <Compile Include="Commands\About\AboutCommand.cs" />
     <Compile Include="Commands\AuditViewNames\AuditViewNamesCommand.cs" />
+    <Compile Include="Commands\CreateQuantitySchedule\IQuantityScheduleTemplateRepo.cs" />
+    <Compile Include="Commands\CreateQuantitySchedule\QuantityScheduleTemplate.cs" />
+    <Compile Include="Commands\CreateQuantitySchedule\QuantityScheduleTemplateExcelRepo.cs" />
+    <Compile Include="Commands\CreateQuantitySchedule\CreateQuantityScheduleCommand.cs" />
+    <Compile Include="Commands\CreateQuantitySchedule\ChooseScheduleWindow.xaml.cs">
+      <DependentUpon>ChooseScheduleWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Commands\DisallowWallJoins\DisallowWallJoinsCommand.cs" />
     <Compile Include="Commands\ExportCategories\ExportCategoriesCommand.cs" />
     <Compile Include="Commands\ExportDetailText\ExportDetailTextCommand.cs" />
@@ -150,6 +158,10 @@
     <EmbeddedResource Include="Resources\iconLarge.png" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Commands\CreateQuantitySchedule\ChooseScheduleWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Interface\ViewCalloutVisibilityWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -168,6 +180,10 @@
       <Project>{40937e91-9780-479e-be0e-f5a77ecccace}</Project>
       <Name>Query</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!--These post-build commands will copy the .addin manifest to Revit's addin folder and the addin .dll to a named subfolder referenced by the manifest-->

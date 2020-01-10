@@ -92,6 +92,10 @@ namespace DougKlassen.Revit.Perfect
                 match.Groups[2]);
         }
 
+        /// <summary>
+        /// Generates a timestamp string in the format "yyyyMMdd-HHmmss"
+        /// </summary>
+        /// <returns>A timestamp string in the format "yyyyMMdd-HHmmss"</returns>
         public static String GetTimeStamp()
         {
             DateTime now = DateTime.Now;

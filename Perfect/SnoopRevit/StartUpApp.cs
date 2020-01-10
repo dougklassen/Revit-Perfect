@@ -24,7 +24,16 @@ namespace DougKlassen.Revit.Snoop
             if (File.Exists(files.ConfigFilePath))
             {
                 SnoopConfigJsonRepo configRepo = new SnoopConfigJsonRepo(files.ConfigFilePath);
-                TaskDialog.Show("Snoop", "Snoop is running");
+                try
+                {
+                    config = configRepo.LoadConfig();
+                }
+                catch (Exception)
+                {
+                    TaskDialog.Show("Snoop", "Couldn't parse config file");
+                    return Result.Failed;
+                }
+                TaskDialog.Show("Snoop", "Config file " + config.ConfigFilePath + " loaded");
             }
             else
             {

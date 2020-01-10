@@ -193,6 +193,11 @@ namespace DougKlassen.Revit.Perfect
                 buttonText: "Standardize Schedule Formating",
                 buttonToolTip: "Implement schedule formatting standards for export to Excel",
                 commandAvailability: "StandardizeSchedulesCommandAvailability");
+            addButtonToPulldown(
+                pulldown: standardsPullDownButton,
+                commandClass: "CreateQuantityScheduleCommand",
+                buttonText: "Create a Quantity Schedule",
+                buttonToolTip: "Create a standardized quantity schedule using a configuration template");
             #endregion Standards Pulldown
 
             #endregion Create Column Two-Geometry, Elements, Standards
