@@ -6,8 +6,8 @@ namespace DougKlassen.Revit.Snoop.Models
 {
     public class SnoopConfig
     {
-        private readonly String configFileName = "SnoopConfig.json";
-        private readonly String taskFileName = "SnoopTask.json";
+        public static readonly String configFileName = "SnoopConfig.json";
+        public static readonly String taskFileName = "SnoopTask.json";
 
         public String HomeDirectoryPath { get; set; }
         public String ConfigFilePath { get; set; }
@@ -40,6 +40,20 @@ namespace DougKlassen.Revit.Snoop.Models
                     RevitFilePaths.Add(i.ToString(), revitPath);
                 }
             }
+        }
+        public String GetDescription()
+        {
+            String msg = String.Empty;
+            msg += "Home Directory Path: " + HomeDirectoryPath;
+            msg += "\nFile Path: " + ConfigFilePath;
+            msg += "\nCurrent Task Path: " + CurrentTaskFilePath;
+            msg += "\nRevit Installations:";
+            foreach (String install in RevitFilePaths.Keys)
+            {
+                msg += String.Format("\n\t{0}: {1}", install, RevitFilePaths[install]);
+            }
+
+            return msg;
         }
     }
 }

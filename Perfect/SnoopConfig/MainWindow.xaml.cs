@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,8 +13,10 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using DougKlassen.Revit.Snoop.Models;
+using DougKlassen.Revit.Snoop.Repositories;
 
-namespace SnoopConfig
+namespace DougKlassen.Revit.SnoopConfigurator
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -22,7 +25,22 @@ namespace SnoopConfig
     {
         public MainWindow()
         {
+            String configFilePath = Directory.GetCurrentDirectory() + SnoopConfig.configFileName;
+
+            try
+            {
+                SnoopConfigJsonRepo repo = new SnoopConfigJsonRepo(configFilePath);
+                Config = repo.LoadConfig();
+
+            }
+            catch (Exception)
+            {
+                Config = new SnoopConfig();
+                Config.SetDefaultValues(Directory.GetCurrentDirectory());
+            }
             InitializeComponent();
         }
+
+        SnoopConfig Config { get; set; }
     }
 }
