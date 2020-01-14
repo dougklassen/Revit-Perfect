@@ -19,18 +19,36 @@ namespace DougKlassen.Revit.Perfect.Commands
     /// </summary>
     public partial class ChooseScheduleWindow : Window
     {
-        public Dictionary<String, QuantityScheduleTemplate> templates;
+        public List<QuantityScheduleTemplate> Templates { get; set; }
 
-        public ChooseScheduleWindow(Dictionary<String, QuantityScheduleTemplate> templateSource)
+        public ChooseScheduleWindow(List<QuantityScheduleTemplate> templateSource)
         {
-            templates = templateSource;
+            Templates = templateSource;
             InitializeComponent();
+        }
+        private void createButton_Click(object sender, RoutedEventArgs e)
+        {
+            this.DialogResult = true;
+            this.Close();
         }
 
         private void cancelButton_Click(object sender, RoutedEventArgs e)
         {
             this.DialogResult = false;
             this.Close();
+        }
+
+        private void selectTemplateListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            QuantityScheduleTemplate selectedTemplate = (QuantityScheduleTemplate)selectTemplateListView.SelectedItem;
+            if (selectedTemplate != null)
+            {
+                descriptionTextBlock.Text = ((QuantityScheduleTemplate)selectTemplateListView.SelectedItem).GetDescription();
+            }
+            else
+            {
+                descriptionTextBlock.Text = String.Empty;
+            }
         }
     }
 }

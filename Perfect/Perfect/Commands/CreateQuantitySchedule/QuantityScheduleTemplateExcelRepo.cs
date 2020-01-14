@@ -45,9 +45,9 @@ namespace DougKlassen.Revit.Perfect.Commands
             calculationColumnName = repoCalculationColumn;
         }
 
-        public Dictionary<String, QuantityScheduleTemplate> LoadTemplates()
+        public List<QuantityScheduleTemplate> LoadTemplates()
         {
-            Dictionary<String, QuantityScheduleTemplate> templates = new Dictionary<String, QuantityScheduleTemplate>();
+            List<QuantityScheduleTemplate> templates = new List<QuantityScheduleTemplate>();
             Dictionary<Int32, String> parseErrors = new Dictionary<Int32, String>();
 
             IWorkbook workBook;
@@ -134,7 +134,7 @@ namespace DougKlassen.Revit.Perfect.Commands
                                 //skip instances where no fields are defined
                                 if (currentTemplate.Fields.Count > 0)
                                 {
-                                    templates.Add(currentTemplate.FilterParameterValue, currentTemplate);  
+                                    templates.Add(currentTemplate);  
                                 }
                             }
                         }
@@ -231,7 +231,7 @@ namespace DougKlassen.Revit.Perfect.Commands
             }
         }
 
-        public void WriteTemplates(Dictionary<String, QuantityScheduleTemplate> templates)
+        public void WriteTemplates(List<QuantityScheduleTemplate> templates)
         {
             throw new NotImplementedException();
         }

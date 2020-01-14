@@ -21,6 +21,11 @@ namespace DougKlassen.Revit.Perfect.Commands
 
         public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
         {
+            Document dbDoc = commandData.Application.ActiveUIDocument.Document;
+
+            String errorFilePath = FileLocations.AddInDirectory + "error" + Helpers.GetTimeStamp() + ".txt";
+            String errorMessage = String.Empty;
+
             OpenFileDialog openDialog = new OpenFileDialog()
             {
                 Filter = "Excel file|*.xlsx",
@@ -42,16 +47,13 @@ namespace DougKlassen.Revit.Perfect.Commands
                 builtInParamColumnName,
                 calculationColumnName);
 
-            Dictionary<String, QuantityScheduleTemplate> templates;
+            List<QuantityScheduleTemplate> templates;
             try
             {
                 templates = repo.LoadTemplates();
             }
             catch (Exception e)
             {
-                String errorFilePath = FileLocations.AddInDirectory + "error" + Helpers.GetTimeStamp() + ".txt";
-                String errorMessage = String.Empty;
-
                 errorMessage += "Data:\n";
                 foreach (DictionaryEntry de in e.Data)
                 {
@@ -71,15 +73,42 @@ namespace DougKlassen.Revit.Perfect.Commands
             ChooseScheduleWindow window = new ChooseScheduleWindow(templates);
             String msg = String.Empty;
             msg += String.Format("{0} templates found in file\n", templates.Count);
-            foreach (QuantityScheduleTemplate template in templates.Values)
+            foreach (QuantityScheduleTemplate template in templates)
             {
-                msg += String.Format("  {0}-{1}: {2} fields\n", template.FilterParameterValue, template.FilterParameterValueLabel, template.Fields.Count);
+                msg += "  " + template.GetDescription() + "\n";
             }
             window.messageTextBlock.Text = msg;
             Boolean? chooseScheduleResult = window.ShowDialog();
             if (!chooseScheduleResult.Value)
             {
                 return Result.Cancelled;
+            }
+
+            List<String> errors = new List<String>();
+            List<QuantityScheduleTemplate> templatesToAdd = new List<QuantityScheduleTemplate>();
+            foreach (QuantityScheduleTemplate t in window.selectTemplateListView.SelectedItems)
+            {
+                templatesToAdd.Add(t);
+            }
+            foreach (QuantityScheduleTemplate template in templatesToAdd)
+            {
+                errors.AddRange(Helpers.CreateTemplate(dbDoc, template));
+            }
+
+            if (errors.Count > 0)
+            {
+                errorMessage += "Schedule Creation Errors: \n";
+                foreach (String error in errors)
+                {
+                    errorMessage += "  " + error + "\n";
+                }
+                File.WriteAllText(errorFilePath, errorMessage);
+
+                TaskDialog.Show(
+                    "Couldn't Create Quantity Schedule",
+                    "Error creating schedule\nSee error file " + errorFilePath);
+
+                return Result.Failed;
             }
 
             return Result.Succeeded;

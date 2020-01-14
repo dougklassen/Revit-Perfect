@@ -9,7 +9,7 @@ namespace DougKlassen.Revit.Perfect.Commands
     /// </summary>
     public interface IQuantityScheduleTemplateRepo
     {
-        Dictionary<String, QuantityScheduleTemplate> LoadTemplates();
-        void WriteTemplates(Dictionary<String, QuantityScheduleTemplate> templates);
+        List<QuantityScheduleTemplate> LoadTemplates();
+        void WriteTemplates(List<QuantityScheduleTemplate> templates);
     }
 }

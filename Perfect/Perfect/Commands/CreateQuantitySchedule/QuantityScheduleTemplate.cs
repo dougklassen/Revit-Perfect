@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Autodesk.Revit.DB;
 
 namespace DougKlassen.Revit.Perfect.Commands
 {
@@ -35,6 +36,22 @@ namespace DougKlassen.Revit.Perfect.Commands
         public QuantityScheduleTemplate()
         {
             Fields = new List<QuantityScheduleField>();
+        }
+
+        public String GetDescription()
+        {
+            String catLabel;
+            try
+            {
+                BuiltInCategory cat = (BuiltInCategory)Enum.Parse(typeof(BuiltInCategory), ElementCategory);
+                catLabel = LabelUtils.GetLabelFor(cat);
+            }
+            catch (Exception)
+            {
+                catLabel = ElementCategory;
+            }
+            String desc = String.Format("{0}: {1} ({2}) - {3} fields", FilterParameterValue, FilterParameterValueLabel, catLabel, Fields.Count);
+            return desc;
         }
     }
 

@@ -34,7 +34,6 @@ namespace DougKlassen.Revit.Perfect.Commands
             foreach (BuiltInParameter builtIn in Enum.GetValues(typeof(BuiltInParameter)))
             {
                 paramData.Add(ParameterModel.GetBuiltInParameter(builtIn, map, allElements));
-
             }
 
             //TODO: autoincrement file name
