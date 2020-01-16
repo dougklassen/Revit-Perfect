@@ -26,6 +26,23 @@ namespace DougKlassen.Revit.Perfect.Commands
             Templates = templateSource;
             InitializeComponent();
         }
+
+        public IEnumerable<QuantityScheduleTemplate> GetCheckedTemplates()
+        {
+            List<QuantityScheduleTemplate> checkedTemplates = new List<QuantityScheduleTemplate>();
+
+            foreach (ListViewItem item in selectTemplateListView.ItemsSource)
+            {
+                CheckBox check = item.TemplatedParent as CheckBox;
+                if(check != null && check.IsChecked.Value)
+                {
+                    checkedTemplates.Add(item.DataContext as QuantityScheduleTemplate);
+                }
+            }
+
+            return checkedTemplates;
+        }
+
         private void createButton_Click(object sender, RoutedEventArgs e)
         {
             this.DialogResult = true;
