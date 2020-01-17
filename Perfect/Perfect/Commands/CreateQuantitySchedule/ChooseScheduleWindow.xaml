@@ -16,12 +16,12 @@
             <Button x:Name="createButton" Content="Create" Height="25" Width="75" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,120,10" Click="createButton_Click"/>
             <Button x:Name="cancelButton" Content="Cancel" Height="25" Width="75" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,20,10" Click="cancelButton_Click"/>
         </Grid>
-        <ListView x:Name="selectTemplateListView" ItemsSource="{Binding}" SelectionMode="Multiple" SelectionChanged="selectTemplateListView_SelectionChanged">
-            <ListView.ItemTemplate>
+        <ListBox x:Name="selectTemplateListBox" ItemsSource="{Binding}" SelectionMode="Multiple" SelectionChanged="selectTemplateListView_SelectionChanged">
+            <ListBox.ItemTemplate>
                 <DataTemplate>
-                    <CheckBox Content="{Binding FilterParameterValue}" />
+                    <CheckBox Content="{Binding Path=Template.FilterParameterValue}" IsChecked="{Binding Path=IsSelected}" />
                 </DataTemplate>
-            </ListView.ItemTemplate>
-        </ListView>
+            </ListBox.ItemTemplate>
+        </ListBox>
     </DockPanel>
 </Window>

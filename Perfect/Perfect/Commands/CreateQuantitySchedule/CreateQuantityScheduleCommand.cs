@@ -85,11 +85,7 @@ namespace DougKlassen.Revit.Perfect.Commands
             }
 
             List<String> errors = new List<String>();
-            List<QuantityScheduleTemplate> templatesToAdd = new List<QuantityScheduleTemplate>();
-            foreach (QuantityScheduleTemplate t in window.selectTemplateListView.SelectedItems)
-            {
-                templatesToAdd.Add(t);
-            }
+            IEnumerable<QuantityScheduleTemplate> templatesToAdd = window.GetCheckedTemplates();
             foreach (QuantityScheduleTemplate template in templatesToAdd)
             {
                 errors.AddRange(Helpers.CreateTemplate(dbDoc, template));
