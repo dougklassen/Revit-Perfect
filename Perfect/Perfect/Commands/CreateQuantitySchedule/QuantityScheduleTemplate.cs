@@ -38,6 +38,10 @@ namespace DougKlassen.Revit.Perfect.Commands
             Fields = new List<QuantityScheduleField>();
         }
 
+        /// <summary>
+        /// Get description for schedule including its filter parameter and how many fields it contains
+        /// </summary>
+        /// <returns>A schedule description</returns>
         public String GetDescription()
         {
             String catLabel;

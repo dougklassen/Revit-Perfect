@@ -11,7 +11,7 @@ namespace DougKlassen.Revit.Perfect.Commands
     [Autodesk.Revit.Attributes.Transaction(Autodesk.Revit.Attributes.TransactionMode.Manual)]
     class CreateQuantityScheduleCommand : IExternalCommand
     {
-        private String filterParamColumnName = "TPhase";
+        private String filterParamColumnName = "tphase";
         private String labelColumnName = "Description";
         private String unitsColumnName = "Units";
         private String elementCategoryColumnName = "Category";
@@ -28,7 +28,7 @@ namespace DougKlassen.Revit.Perfect.Commands
 
             OpenFileDialog openDialog = new OpenFileDialog()
             {
-                Filter = "Excel file|*.xlsx",
+                Filter = "Excel file|*.xlsx;*.xlsm",
                 Title = "Schedule Template File"
             };
             DialogResult result = openDialog.ShowDialog();
@@ -73,10 +73,6 @@ namespace DougKlassen.Revit.Perfect.Commands
             ChooseScheduleWindow window = new ChooseScheduleWindow(templates);
             String msg = String.Empty;
             msg += String.Format("{0} templates found in file\n", templates.Count);
-            foreach (QuantityScheduleTemplate template in templates)
-            {
-                msg += "  " + template.GetDescription() + "\n";
-            }
             window.messageTextBlock.Text = msg;
             Boolean? chooseScheduleResult = window.ShowDialog();
             if (!chooseScheduleResult.Value)

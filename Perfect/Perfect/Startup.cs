@@ -140,20 +140,20 @@ namespace DougKlassen.Revit.Perfect
 
             #endregion Create Column One-Naming, Clean up, Export
 
-            #region Create Column Two-Geometry, Elements, Standards
+            #region Create Column Two-Geometry, Elements, Schedules
             PulldownButtonData geometryPullDownButtonData = new PulldownButtonData(
                 name: "GeometryPullDownButton",
                 text: "Fix Geometry");
             PulldownButtonData elementPullDownButtonData = new PulldownButtonData(
                 name: "ElementPullDownButton",
                 text: "Element Properties");
-            PulldownButtonData standardsPullDownButtonData = new PulldownButtonData(
-                name: "StandardsPullDownButton",
-                text: "Standards");
+            PulldownButtonData schedulesPullDownButtonData = new PulldownButtonData(
+                name: "SchdeulesPullDownButton",
+                text: "Schedules");
             IList<RibbonItem> stackTwo = PerfectRibbonPanel.AddStackedItems(
 				geometryPullDownButtonData,
 				elementPullDownButtonData,
-                standardsPullDownButtonData);
+                schedulesPullDownButtonData);
 
             #region Geometry Pulldown
             PulldownButton geometryPullDownButton = (PulldownButton)stackTwo[0];
@@ -185,22 +185,22 @@ namespace DougKlassen.Revit.Perfect
                 buttonToolTip: "Flag elements that are part of a unit group");
             #endregion Elements Pulldown
 
-            #region Standards Pulldown
-            PulldownButton standardsPullDownButton = (PulldownButton)stackTwo[2];
+            #region Schedules Pulldown
+            PulldownButton schedulesPullDOwnButton = (PulldownButton)stackTwo[2];
             addButtonToPulldown(
-                pulldown: standardsPullDownButton,
+                pulldown: schedulesPullDOwnButton,
                 commandClass: "StandardizeSchedulesCommand",
                 buttonText: "Standardize Schedule Formating",
                 buttonToolTip: "Implement schedule formatting standards for export to Excel",
                 commandAvailability: "StandardizeSchedulesCommandAvailability");
             addButtonToPulldown(
-                pulldown: standardsPullDownButton,
+                pulldown: schedulesPullDOwnButton,
                 commandClass: "CreateQuantityScheduleCommand",
                 buttonText: "Create a Quantity Schedule",
                 buttonToolTip: "Create a standardized quantity schedule using a configuration template");
-            #endregion Standards Pulldown
+            #endregion Schedules Pulldown
 
-            #endregion Create Column Two-Geometry, Elements, Standards
+            #endregion Create Column Two-Geometry, Elements, Schedules
 
             #region Create slide out panel-About
             PerfectRibbonPanel.AddSlideOut();

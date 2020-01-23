@@ -19,6 +19,12 @@ namespace DougKlassen.Revit.Perfect.Commands
             get;
             set;
         }
+
+        public String Description
+        {
+            get;
+            set;
+        }
     }
 
     /// <summary>
@@ -40,6 +46,7 @@ namespace DougKlassen.Revit.Perfect.Commands
                 TemplateSelection ts = new TemplateSelection();
                 ts.IsSelected = false;
                 ts.Template = t;
+                ts.Description = t.GetDescription();
                 Templates.Add(ts);
             }
 

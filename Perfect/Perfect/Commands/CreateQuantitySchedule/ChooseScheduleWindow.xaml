@@ -19,7 +19,7 @@
         <ListBox x:Name="selectTemplateListBox" ItemsSource="{Binding}" SelectionMode="Multiple" SelectionChanged="selectTemplateListView_SelectionChanged">
             <ListBox.ItemTemplate>
                 <DataTemplate>
-                    <CheckBox Content="{Binding Path=Template.FilterParameterValue}" IsChecked="{Binding Path=IsSelected}" />
+                    <CheckBox Content="{Binding Path=Description}" IsChecked="{Binding Path=IsSelected}" />
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
