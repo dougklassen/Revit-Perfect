@@ -1,26 +1,26 @@
-﻿using DougKlassen.Revit.Query.Models;
+﻿using DougKlassen.Revit.Snoop.Models;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
 
-namespace DougKlassen.Revit.Query.Repositories
+namespace DougKlassen.Revit.Snoop.Repositories
 {
-    public class CategoryCatalogJsonRepo : ICategoryCatalogRepo
+    public class ProjectDataCatalogJsonRepo : IProjectDataCatalogRepo
     {
         private String filePath;
 
-        public CategoryCatalogJsonRepo(String jsonRepoFilePath)
+        public ProjectDataCatalogJsonRepo(String jsonRepoFilePath)
         {
             filePath = jsonRepoFilePath;
         }
 
-        public IEnumerable<CategoryModel> LoadCategoryCatalog()
+        public ProjectDataModel LoadProjectDataCatalog()
         {
             throw new NotImplementedException();
         }
 
-        public void WriteScheduleCatalog(IEnumerable<CategoryModel> catalog)
+        public void WriteProjectDataCatalog(ProjectDataModel catalog)
         {
             JsonSerializerSettings settings = new JsonSerializerSettings()
             {

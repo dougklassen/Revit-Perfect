@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace DougKlassen.Revit.Query.Models
+namespace DougKlassen.Revit.Snoop.Models
 {
     public class ObjectStylesModel
     {

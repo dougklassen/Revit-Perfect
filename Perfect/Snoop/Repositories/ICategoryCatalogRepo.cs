@@ -1,7 +1,7 @@
-﻿using DougKlassen.Revit.Query.Models;
+﻿using DougKlassen.Revit.Snoop.Models;
 using System.Collections.Generic;
 
-namespace DougKlassen.Revit.Query.Repositories
+namespace DougKlassen.Revit.Snoop.Repositories
 {
     public interface ICategoryCatalogRepo
     {

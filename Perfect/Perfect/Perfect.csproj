@@ -176,14 +176,14 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Query\Query.csproj">
-      <Project>{40937e91-9780-479e-be0e-f5a77ecccace}</Project>
-      <Name>Query</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Snoop\SnoopLib.csproj">
+      <Project>{b68cf59c-9350-45a5-9e7f-9f7544423172}</Project>
+      <Name>SnoopLib</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!--These post-build commands will copy the .addin manifest to Revit's addin folder and the addin .dll to a named subfolder referenced by the manifest-->

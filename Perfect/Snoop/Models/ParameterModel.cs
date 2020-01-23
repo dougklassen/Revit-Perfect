@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace DougKlassen.Revit.Query.Models
+namespace DougKlassen.Revit.Snoop.Models
 {
     public class ParameterModel
     {

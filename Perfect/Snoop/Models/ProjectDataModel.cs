@@ -1,7 +1,7 @@
 ﻿using Autodesk.Revit.DB;
 using System;
 
-namespace DougKlassen.Revit.Query.Models
+namespace DougKlassen.Revit.Snoop.Models
 {
     public class ProjectDataModel
     {

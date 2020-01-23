@@ -1,7 +1,7 @@
 ﻿using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
-using DougKlassen.Revit.Query.Models;
-using DougKlassen.Revit.Query.Repositories;
+using DougKlassen.Revit.Snoop.Models;
+using DougKlassen.Revit.Snoop.Repositories;
 using Microsoft.Win32;
 using System;
 using System.Collections.Generic;

@@ -77,10 +77,26 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="FileLocations.cs" />
+    <Compile Include="Models\CategoryModel.cs" />
+    <Compile Include="Models\ColorModel.cs" />
+    <Compile Include="Models\ObjectStylesModel.cs" />
+    <Compile Include="Models\ParameterModel.cs" />
+    <Compile Include="Models\ProjectDataModel.cs" />
+    <Compile Include="Models\ScheduleModel.cs" />
     <Compile Include="Models\SnoopTask.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Models\SnoopConfig.cs" />
+    <Compile Include="Repositories\CategoryCatalogJsonRepo.cs" />
+    <Compile Include="Repositories\ICategoryCatalogRepo.cs" />
+    <Compile Include="Repositories\IObjectStylesRepo.cs" />
+    <Compile Include="Repositories\IParameterCatalogRepo.cs" />
+    <Compile Include="Repositories\IProjectDataRepo.cs" />
+    <Compile Include="Repositories\IScheduleCatalogRepo.cs" />
     <Compile Include="Repositories\ISnoopConfigRepo.cs" />
+    <Compile Include="Repositories\ObjectStylesJsonRepo.cs" />
+    <Compile Include="Repositories\ParameterCatalogJsonRepo.cs" />
+    <Compile Include="Repositories\ProjectDataCatalogJsonRepo.cs" />
+    <Compile Include="Repositories\ScheduleCatalogJsonRepo.cs" />
     <Compile Include="Repositories\SnoopConfigJsonRepo.cs" />
   </ItemGroup>
   <ItemGroup />
