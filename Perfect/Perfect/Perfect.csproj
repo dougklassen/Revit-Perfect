@@ -1,7 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <!--Keep this line updated with the latest configuration-->
+    <Configuration Condition=" '$(Configuration)' == '' ">Rvt2020</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
@@ -15,7 +16,7 @@
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <TargetFrameworkProfile />
   </PropertyGroup>
-  <!--begin Build Configurations-->
+  <!--Build Configurations-->
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Rvt2014|AnyCPU'">
     <VersionNumber>2014</VersionNumber>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
@@ -44,7 +45,7 @@
     <VersionNumber>2020</VersionNumber>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
   </PropertyGroup>
-  <!--common settings-->
+  <!--Common Settings-->
   <PropertyGroup>
     <OutputPath>bin\$(Configuration)</OutputPath>
     <DebugSymbols>true</DebugSymbols>
@@ -73,7 +74,7 @@
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
-    <!--begin Revit API references-->
+    <!--Revit API References-->
     <Reference Include="RevitAPI">
       <HintPath>..\..\..\..\..\..\..\Program Files\Autodesk\Revit $(VersionNumber)\RevitAPI.dll</HintPath>
       <Private>False</Private>
@@ -82,7 +83,7 @@
       <HintPath>..\..\..\..\..\..\..\Program Files\Autodesk\Revit $(VersionNumber)\RevitAPIUI.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <!--end Revit API references-->
+    <!--end Revit API References-->
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
