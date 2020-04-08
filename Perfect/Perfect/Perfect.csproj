@@ -100,6 +100,11 @@
   <ItemGroup>
     <Compile Include="Commands\About\AboutCommand.cs" />
     <Compile Include="Commands\AuditViewNames\AuditViewNamesCommand.cs" />
+    <Compile Include="Commands\CommentAdd\AddCommentWindow.xaml.cs">
+      <DependentUpon>AddCommentWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Commands\CommentAdd\CommentAddCommand.cs" />
+    <Compile Include="Commands\CommentRemove\CommentRemoveCommand.cs" />
     <Compile Include="Commands\CreateQuantitySchedule\IQuantityScheduleTemplateRepo.cs" />
     <Compile Include="Commands\CreateQuantitySchedule\QuantityScheduleTemplate.cs" />
     <Compile Include="Commands\CreateQuantitySchedule\QuantityScheduleTemplateExcelRepo.cs" />
@@ -159,6 +164,10 @@
     <EmbeddedResource Include="Resources\iconLarge.png" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Commands\CommentAdd\AddCommentWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Commands\CreateQuantitySchedule\ChooseScheduleWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -186,6 +195,7 @@
       <Name>SnoopLib</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!--These post-build commands will copy the .addin manifest to Revit's addin folder and the addin .dll to a named subfolder referenced by the manifest-->
   <Target Name="AfterBuild">

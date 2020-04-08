@@ -1,0 +1,19 @@
+﻿<Window x:Name="addCommentWindow" x:Class="DougKlassen.Revit.Perfect.Interface.AddCommentWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:DougKlassen.Revit.Perfect.Interface"
+        mc:Ignorable="d"
+        Title="Add Comments" Height="190" Width="400" ResizeMode="NoResize">
+    <DockPanel>
+        <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,0,0,20">
+            <Button x:Name="cancelButton" Content="Cancel" Margin="0,0,20,0" HorizontalAlignment="Right" Width="75" VerticalAlignment="Bottom" RenderTransformOrigin="0.504,0.5" Click="CancelButton_Click"/>
+            <Button x:Name="okButton" Content="OK" Margin="0,0,20,0" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="75" Click="OkButton_Click" />
+        </StackPanel>
+        <TextBlock DockPanel.Dock="Top" Margin="15,15,15,0" TextWrapping="Wrap">
+            Specify words to add to the comment of selected elements, separated by spaces. Words will be ignored if they are already present:
+        </TextBlock>
+        <TextBox x:Name="commentTextBox" TextWrapping="Wrap" Text="{Binding ElementName=addCommentWindow, Path=CommentsToAdd}" VerticalAlignment="Top" Margin="15,15,15,0"/>
+    </DockPanel>
+</Window>

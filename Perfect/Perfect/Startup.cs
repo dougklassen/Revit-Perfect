@@ -183,6 +183,16 @@ namespace DougKlassen.Revit.Perfect
                 commandClass: "FlagUnitElementsCommand",
                 buttonText: "Flag Unit Elements",
                 buttonToolTip: "Flag elements that are part of a unit group");
+            addButtonToPulldown(
+                pulldown: elementPullDownButton,
+                commandClass: "CommentAddCommand",
+                buttonText: "Add Comment",
+                buttonToolTip: "Add space delimited tags to the commment parameter of selected elements");
+            addButtonToPulldown(
+                pulldown: elementPullDownButton,
+                commandClass: "CommentRemoveCommand",
+                buttonText: "Remove Comment",
+                buttonToolTip: "Remove space delimited tags from the commment parameter of selected elements");
             #endregion Elements Pulldown
 
             #region Schedules Pulldown
