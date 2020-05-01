@@ -4,7 +4,6 @@ using System.Windows.Media.Imaging;
 using System.Reflection;
 using System.Collections.Generic;
 
-using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
 
 namespace DougKlassen.Revit.Perfect
@@ -26,6 +25,7 @@ namespace DougKlassen.Revit.Perfect
         BitmapImage largeIcon;
         BitmapImage smallIcon;
 
+
         /// <summary>
         /// Run on startup. Set up the ribbon UI
         /// </summary>
@@ -43,7 +43,17 @@ namespace DougKlassen.Revit.Perfect
 			largeIcon = GetEmbeddedImageResource("iconLarge.png");
 			smallIcon = GetEmbeddedImageResource("iconSmall.png");
 
-			RibbonPanel PerfectRibbonPanel = application.CreateRibbonPanel("Perfect Standards");
+            //Set up tab and panel
+            String tabName = "DK";
+            try //an exception will be thrown if the tab already exists
+            {
+                application.CreateRibbonTab(tabName);
+            }
+            catch (Autodesk.Revit.Exceptions.ArgumentException e)
+            {
+                //ignore
+            }
+            RibbonPanel PerfectRibbonPanel = application.CreateRibbonPanel(tabName, "Perfect Standards");
 
             #region Create Column One-Naming, Clean up, Export
             PulldownButtonData namingStandardsPulldownButtonData = new PulldownButtonData(
