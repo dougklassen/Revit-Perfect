@@ -58,7 +58,7 @@ namespace DougKlassen.Revit.Perfect.Commands
                 foreach (ElementId id in selectedElements)
                 {
                     Element elem = dbDoc.GetElement(id);
-                    var commentParams = elem.GetParameters("Comments");
+                    IList<Parameter> commentParams = elem.GetParameters("Comments");
 
                     //only process elements that have comments
                     if (commentParams.Count < 1)
