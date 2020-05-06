@@ -1,10 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text.RegularExpressions;
-
+﻿using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
-using Autodesk.Revit.DB;
+using DougKlassen.Revit.Perfect.Interface;
+using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace DougKlassen.Revit.Perfect.Commands
 {
@@ -51,14 +51,29 @@ namespace DougKlassen.Revit.Perfect.Commands
                 activeComments.UnionWith(currentComments);
             }
 
-            String msg = "Found Comments: ";
-            foreach (var str in activeComments)
-            {
-                msg += str + delimiter;
-            }
-            TaskDialog.Show("Comments Present", msg);
+            //String msg = "Found Comments: ";
+            //foreach (var str in activeComments)
+            //{
+            //    msg += str + delimiter;
+            //}
+            //TaskDialog.Show("Comments Present", msg);
 
-            return Result.Succeeded;
+            SelectObjectsWindow window = new SelectObjectsWindow(
+                activeComments,
+                false,
+                "Select Comments",
+                "Select comments to be removed from elements");
+
+            Boolean result = (Boolean) window.ShowDialog();
+
+            if (!result)
+            {
+                return Result.Cancelled;
+            }
+            else
+            {
+                return Result.Succeeded;
+            }
         }
     }
 }

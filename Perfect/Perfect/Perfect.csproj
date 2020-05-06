@@ -123,6 +123,9 @@
     <Compile Include="Commands\LoadImportStyles\LoadImportStylesCommand.cs" />
     <Compile Include="Commands\PurgeViews\PurgeViewsCommand.cs" />
     <Compile Include="Commands\SplitWallByLevel\SplitWallByLevelCommand.cs" />
+    <Compile Include="Interface\SelectObjectsWindow.xaml.cs">
+      <DependentUpon>SelectObjectsWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Interface\ViewCalloutVisibilityWindow.xaml.cs">
       <DependentUpon>ViewCalloutVisibilityWindow.xaml</DependentUpon>
     </Compile>
@@ -169,6 +172,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Commands\CreateQuantitySchedule\ChooseScheduleWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Interface\SelectObjectsWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
