@@ -15,12 +15,13 @@ namespace DougKlassen.Revit.Perfect.Commands
         {
             //use this regex to split comment strings into separate values
             Regex splitRegex = new Regex(@"\s+");
-            //use this string to delimit separate values in a comment string
-            String delimiter = " ";
+            //use this as a delimeter when adding a separation between tags
+            String delimeter = " ";
 
             UIDocument uiDoc = commandData.Application.ActiveUIDocument;
             Document dbDoc = commandData.Application.ActiveUIDocument.Document;
 
+#region Gather comments
             var selectedElements = uiDoc.Selection.GetElementIds();
 
             if (selectedElements.Count < 1)
@@ -44,20 +45,21 @@ namespace DougKlassen.Revit.Perfect.Commands
                 }
 
                 Parameter commentParam = commentParams.First();
-                String commentString = commentParams.First().AsString() ?? String.Empty;
+                String commentString = commentParams.First().AsString();
+
+                //skip elements with an empty Comments parameter
+                if (String.IsNullOrWhiteSpace(commentString))
+                {
+                    continue;
+                }
 
                 //add the comments of the current element to the list
                 HashSet<String> currentComments = new HashSet<String>(splitRegex.Split(commentString));
                 activeComments.UnionWith(currentComments);
             }
+#endregion Gather comments
 
-            //String msg = "Found Comments: ";
-            //foreach (var str in activeComments)
-            //{
-            //    msg += str + delimiter;
-            //}
-            //TaskDialog.Show("Comments Present", msg);
-
+#region Select comments to delete
             SelectObjectsWindow window = new SelectObjectsWindow(
                 activeComments,
                 false,
@@ -65,15 +67,60 @@ namespace DougKlassen.Revit.Perfect.Commands
                 "Select comments to be removed from elements");
 
             Boolean result = (Boolean) window.ShowDialog();
+#endregion Select commments to delete
 
+#region Delete selected comments
             if (!result)
             {
                 return Result.Cancelled;
             }
             else
             {
+                using (Transaction t = new Transaction(dbDoc, "Remove comments"))
+                {
+                    t.Start();
+
+                    IEnumerable<String> commentsToRemove = window.SelectedObjects.Cast<String>();
+
+                    //step through all selected elements and remove marked comments
+                    foreach (ElementId id in selectedElements)
+                    {
+                        Element elem = dbDoc.GetElement(id);
+                        IList<Parameter> commentParams = elem.GetParameters("Comments");
+
+                        //skip elements without a Comments parameter
+                        if (commentParams.Count < 1)
+                        {
+                            continue;
+                        }
+
+                        Parameter commentParam = commentParams.First();
+                        String commentString = commentParams.First().AsString();
+
+                        //skip elements with an empty Comments parameter
+                        if (String.IsNullOrWhiteSpace(commentString))
+                        {
+                            continue;
+                        }
+
+                        //replace all instances of the specified comments and surrounding whitespace with the delimeter
+                        foreach (String removedComment in commentsToRemove)
+                        {
+                            Regex removalRegEx = new Regex(@"(?:^|\s+)" + removedComment + @"\s*(?:$|\s)");
+                            commentString = removalRegEx.Replace(commentString, delimeter);
+                        }
+
+                        commentString = commentString.Trim();
+                        commentParam.Set(commentString);
+                    }
+
+                    t.Commit();
+                }
+
                 return Result.Succeeded;
             }
+#endregion Delete selected comments
+
         }
     }
 }
