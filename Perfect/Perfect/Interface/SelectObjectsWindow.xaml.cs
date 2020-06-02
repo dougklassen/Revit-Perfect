@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows;
+using System.Windows.Controls;
+//using System.Windows.Forms;
 using System.Windows.Interop;
+using System.Windows.Media;
 
 namespace DougKlassen.Revit.Perfect.Interface
 {
@@ -138,6 +141,56 @@ namespace DougKlassen.Revit.Perfect.Interface
         {
             DialogResult = true;
             Close();
+        }
+
+        private void allButton_Click(object sender, RoutedEventArgs e)
+        {
+            foreach (var item in tagListBox.Items)
+            {
+                CheckBox checkBox = GetCheckboxControl(item);
+                checkBox.IsChecked = true;
+            }
+        }
+
+        private void noneButton_Click(object sender, RoutedEventArgs e)
+        {
+            foreach (var item in tagListBox.Items)
+            {
+                CheckBox checkBox = GetCheckboxControl(item);
+                checkBox.IsChecked = false;
+            }
+        }
+
+        private CheckBox GetCheckboxControl(Object sourceObject)
+        {
+            CheckBox checkBox;
+            DependencyObject listItem = tagListBox.ItemContainerGenerator.ContainerFromItem(sourceObject);
+            ContentPresenter presenter = FindVisualChild<ContentPresenter>(listItem);
+            DataTemplate template = presenter.ContentTemplate;
+            checkBox = template.FindName("selectCheckBox", presenter) as CheckBox;
+            return checkBox;
+        }
+
+        private childItem FindVisualChild<childItem>(DependencyObject parent)
+            where childItem : DependencyObject
+        {
+            for (int i = 0; i < VisualTreeHelper.GetChildrenCount(parent); i++)
+            {
+                DependencyObject child = VisualTreeHelper.GetChild(parent, i);
+                if (child != null && child is childItem)
+                {
+                    return child as childItem;
+                }
+                else
+                {
+                    childItem childOfChild = FindVisualChild<childItem>(child);
+                    if (childOfChild != null)
+                    {
+                        return childOfChild;
+                    }
+                }
+            }
+            return null;
         }
     }
 }

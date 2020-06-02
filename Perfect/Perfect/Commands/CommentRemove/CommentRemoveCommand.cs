@@ -21,7 +21,7 @@ namespace DougKlassen.Revit.Perfect.Commands
             UIDocument uiDoc = commandData.Application.ActiveUIDocument;
             Document dbDoc = commandData.Application.ActiveUIDocument.Document;
 
-#region Gather comments
+#region Gather comment values from elements
             var selectedElements = uiDoc.Selection.GetElementIds();
 
             if (selectedElements.Count < 1)
@@ -57,7 +57,7 @@ namespace DougKlassen.Revit.Perfect.Commands
                 HashSet<String> currentComments = new HashSet<String>(splitRegex.Split(commentString));
                 activeComments.UnionWith(currentComments);
             }
-#endregion Gather comments
+#endregion Gather comment values from elements
 
 #region Select comments to delete
             SelectObjectsWindow window = new SelectObjectsWindow(

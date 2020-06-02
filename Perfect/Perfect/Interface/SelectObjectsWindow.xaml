@@ -9,8 +9,8 @@
     <DockPanel>
         <TextBlock x:Name="instructionsTextBlock" DockPanel.Dock="Top" Text="{Binding Instructions, ElementName=selectObjectsWindow}" Margin="20,20,20,0"/>
         <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,0,0,20">
-            <Button x:Name="noneButton" Content="Select None" Margin="0,0,20,0"  Width="70" />
-            <Button x:Name="allButton" Content="Select All" Margin="0,0,20,0" Width="70" />
+            <Button x:Name="noneButton" Content="Select None" Margin="0,0,20,0"  Width="70" Click="noneButton_Click" />
+            <Button x:Name="allButton" Content="Select All" Margin="0,0,20,0" Width="70" Click="allButton_Click" />
             <Button x:Name="cancelButton" Content="Cancel" Margin="0,0,20,0" Width="70" Click="CancelButton_Click"/>
             <Button x:Name="okButton" Content="OK" Margin="0,0,20,0" Width="70" Click="OkButton_Click" />
         </StackPanel>
@@ -18,7 +18,7 @@
             <ListBox x:Name="tagListBox" ItemsSource="{Binding ObjectList, ElementName=selectObjectsWindow}">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
-                        <CheckBox Content="{Binding Path=Description}" IsChecked="{Binding Path=IsSelected}" />
+                        <CheckBox Name="selectCheckBox" Content="{Binding Path=Description}" IsChecked="{Binding Path=IsSelected}" />
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>
