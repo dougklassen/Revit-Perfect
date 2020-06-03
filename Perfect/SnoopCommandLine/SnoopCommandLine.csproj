@@ -2,8 +2,9 @@
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
+    <!--Keep this line updated with the latest configuration-->
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <Platform Condition=" '$(Platform)' == '' ">Rvt2021</Platform>
     <ProjectGuid>{6845860C-D690-4246-9926-CA317BB36EC9}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <RootNamespace>DougKlassen.Revit.Snoop</RootNamespace>
@@ -11,9 +12,10 @@
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-    <Deterministic>true</Deterministic>
+    <Deterministic>false</Deterministic>
     <TargetFrameworkProfile />
   </PropertyGroup>
+  <!--Build Configurations-->
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Rvt2014|AnyCPU'">
     <VersionNumber>2014</VersionNumber>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
@@ -42,7 +44,11 @@
     <VersionNumber>2020</VersionNumber>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
   </PropertyGroup>
-  <!--common settings-->
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Rvt2021|AnyCPU'">
+    <VersionNumber>2021</VersionNumber>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+  </PropertyGroup>
+  <!--Common settings-->
   <PropertyGroup>
     <OutputPath>bin\$(Configuration)</OutputPath>
     <DebugSymbols>true</DebugSymbols>
@@ -52,6 +58,18 @@
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Rvt2021|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Rvt2021\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
+  <!--end Build Configurations-->
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -76,6 +94,7 @@
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!--These post build commands will copy the .exe file to the addin folder-->
   <Target Name="AfterBuild">
     <Exec Command="xcopy &quot;$(ProjectDir)$(OutDir)$(AssemblyName).pdb&quot; &quot;C:\ProgramData\Autodesk\Revit\Addins\$(VersionNumber)\Perfect\&quot; /s /y /i" />
     <Exec Command="xcopy &quot;$(ProjectDir)$(OutDir)$(AssemblyName).exe&quot; &quot;C:\ProgramData\Autodesk\Revit\Addins\$(VersionNumber)\Perfect\&quot; /s /y /i" />

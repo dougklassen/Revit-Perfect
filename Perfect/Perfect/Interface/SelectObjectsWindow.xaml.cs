@@ -2,17 +2,21 @@
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
-//using System.Windows.Forms;
-using System.Windows.Interop;
 using System.Windows.Media;
 
 namespace DougKlassen.Revit.Perfect.Interface
 {
     /// <summary>
-    /// Wrapper class for a tag that tracks whether it is selected
+    /// Wrapper class for an object that tracks whether it is selected by the user and provides
+    /// properties to be bound to the controls of the SelectObjectsWindow
     /// </summary>
     public class ObjectSelection : IComparable
     {
+        /// <summary>
+        /// Create an instance of ObjectSelection
+        /// </summary>
+        /// <param name="obj">The object to be encapsulated</param>
+        /// <param name="objectSelected">Whether the object has been selected</param>
         public ObjectSelection(Object obj, Boolean objectSelected)
         {
             Value = obj;
@@ -20,7 +24,7 @@ namespace DougKlassen.Revit.Perfect.Interface
         }
 
         /// <summary>
-        /// Whether the object is selected
+        /// Whether the object is selected, to be bound to the IsChecked property of the Checkbox
         /// </summary>
         public Boolean IsSelected { get; set; }
 
@@ -30,7 +34,7 @@ namespace DougKlassen.Revit.Perfect.Interface
         public Object Value { get; set; }
 
         /// <summary>
-        /// An encapsulation of Object.ToString()
+        /// An encapsulation of Object.ToString() for use in binding as the text of the Checkbox
         /// </summary>
         public String Description
         {
@@ -40,6 +44,11 @@ namespace DougKlassen.Revit.Perfect.Interface
             }
         }
 
+        /// <summary>
+        /// Use ToString() as the basis of CompareTo()
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns>The value of the ToString() comparison</returns>
         public int CompareTo(object obj)
         {
             return Description.CompareTo(obj.ToString());
@@ -97,6 +106,9 @@ namespace DougKlassen.Revit.Perfect.Interface
             InitializeComponent();
         }
 
+        /// <summary>
+        /// The object that the user has been prompted to select from
+        /// </summary>
         public List<ObjectSelection> ObjectList
         {
             get;
@@ -104,7 +116,7 @@ namespace DougKlassen.Revit.Perfect.Interface
         }
 
         /// <summary>
-        /// All the tags that are currently selected in the window
+        /// All the tags that are currently selected in the window by the user by checking their CheckBox
         /// </summary>
         public List<Object> SelectedObjects
         {
@@ -154,13 +166,18 @@ namespace DougKlassen.Revit.Perfect.Interface
 
         private void noneButton_Click(object sender, RoutedEventArgs e)
         {
-            foreach (var item in tagListBox.Items)
+            foreach (Object item in tagListBox.Items)
             {
                 CheckBox checkBox = GetCheckboxControl(item);
                 checkBox.IsChecked = false;
             }
         }
 
+        /// <summary>
+        /// Access the CheckBox defined by the DataTemplate of the list Item
+        /// </summary>
+        /// <param name="sourceObject">A list Item contraining a CheckBox created by a DataTemplate</param>
+        /// <returns>The CheckBox control</returns>
         private CheckBox GetCheckboxControl(Object sourceObject)
         {
             CheckBox checkBox;
@@ -171,6 +188,12 @@ namespace DougKlassen.Revit.Perfect.Interface
             return checkBox;
         }
 
+        /// <summary>
+        /// Find a child of an element of the specified type
+        /// </summary>
+        /// <typeparam name="childItem">The type of the child to look for</typeparam>
+        /// <param name="parent">The parent element to search</param>
+        /// <returns>The specified child of the parent element</returns>
         private childItem FindVisualChild<childItem>(DependencyObject parent)
             where childItem : DependencyObject
         {

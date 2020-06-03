@@ -2,7 +2,8 @@
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <!--Keep this line updated with the latest configuration-->
+    <Configuration Condition=" '$(Configuration)' == '' ">Rvt2021</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{5A281D54-B00A-4874-822A-4AD7C5E011BB}</ProjectGuid>
     <OutputType>WinExe</OutputType>
@@ -10,11 +11,13 @@
     <AssemblyName>SnoopConfigurator</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <!--The following line is added so that Visual Studio will allow new WPF windows to be added-->
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WarningLevel>4</WarningLevel>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-    <Deterministic>true</Deterministic>
+    <Deterministic>false</Deterministic>
   </PropertyGroup>
+  <!--Build Configurations-->
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Rvt2014|AnyCPU'">
     <VersionNumber>2014</VersionNumber>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
@@ -43,7 +46,11 @@
     <VersionNumber>2020</VersionNumber>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
   </PropertyGroup>
-  <!--common settings-->
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Rvt2021|AnyCPU'">
+    <VersionNumber>2021</VersionNumber>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+  </PropertyGroup>
+  <!--Common Settings-->
   <PropertyGroup>
     <OutputPath>bin\$(Configuration)</OutputPath>
     <DebugSymbols>true</DebugSymbols>
@@ -53,6 +60,18 @@
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Rvt2021|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Rvt2021\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
+  <!--end Build Configurations-->
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -120,6 +139,7 @@
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!--These post build commands will copy the .exe file to the Revit addin folder-->
   <Target Name="AfterBuild">
     <Exec Command="xcopy &quot;$(ProjectDir)$(OutDir)$(AssemblyName).pdb&quot; &quot;C:\ProgramData\Autodesk\Revit\Addins\$(VersionNumber)\Perfect\&quot; /s /y /i" />
     <Exec Command="xcopy &quot;$(ProjectDir)$(OutDir)$(AssemblyName).exe&quot; &quot;C:\ProgramData\Autodesk\Revit\Addins\$(VersionNumber)\Perfect\&quot; /s /y /i" />

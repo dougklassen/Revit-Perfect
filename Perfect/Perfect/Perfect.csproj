@@ -2,7 +2,7 @@
 <Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <!--Keep this line updated with the latest configuration-->
-    <Configuration Condition=" '$(Configuration)' == '' ">Rvt2020</Configuration>
+    <Configuration Condition=" '$(Configuration)' == '' ">Rvt2021</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
@@ -45,6 +45,10 @@
     <VersionNumber>2020</VersionNumber>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Rvt2021|AnyCPU'">
+    <VersionNumber>2021</VersionNumber>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+  </PropertyGroup>
   <!--Common Settings-->
   <PropertyGroup>
     <OutputPath>bin\$(Configuration)</OutputPath>
@@ -52,6 +56,16 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <DebugType>full</DebugType>
     <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Rvt2021|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Rvt2021\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
@@ -74,7 +88,7 @@
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
-    <!--Revit API References-->
+    <!--begin Revit API References-->
     <Reference Include="RevitAPI">
       <HintPath>..\..\..\..\..\..\..\Program Files\Autodesk\Revit $(VersionNumber)\RevitAPI.dll</HintPath>
       <Private>False</Private>
@@ -204,7 +218,7 @@
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!--These post-build commands will copy the .addin manifest to Revit's addin folder and the addin .dll to a named subfolder referenced by the manifest-->
+  <!--These post build commands will copy the .addin manifest to Revit's addin folder and the addin .dll to a named subfolder referenced by the manifest-->
   <Target Name="AfterBuild">
     <Exec Command="xcopy &quot;$(ProjectDir)$(OutDir)*.pdb&quot; &quot;C:\ProgramData\Autodesk\Revit\Addins\$(VersionNumber)\$(AssemblyName)\&quot; /s /y /i" />
     <Exec Command="xcopy &quot;$(ProjectDir)$(OutDir)*.dll&quot; &quot;C:\ProgramData\Autodesk\Revit\Addins\$(VersionNumber)\$(AssemblyName)\&quot; /s /y /i" />
