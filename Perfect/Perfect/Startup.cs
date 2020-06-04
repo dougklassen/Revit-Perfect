@@ -1,14 +1,14 @@
-﻿using System;
-using System.IO;
-using System.Windows.Media.Imaging;
-using System.Reflection;
-using System.Collections.Generic;
-
+﻿using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Reflection;
+using System.Windows.Media.Imaging;
 
 namespace DougKlassen.Revit.Perfect
 {
-	public static class FileLocations
+    public static class FileLocations
 	{
 		//AddInDirectory is initialized at runtime
 		public static String AddInDirectory;
@@ -55,7 +55,7 @@ namespace DougKlassen.Revit.Perfect
             }
             RibbonPanel PerfectRibbonPanel = application.CreateRibbonPanel(tabName, "Perfect Standards");
 
-            #region Create Column One-Naming, Clean up, Export
+#region Create Column One-Naming, Clean up, Export
             PulldownButtonData namingStandardsPulldownButtonData = new PulldownButtonData(
                 name: "AuditNamesToolsPulldown",
                 text: "Name Auditing");
@@ -70,7 +70,7 @@ namespace DougKlassen.Revit.Perfect
                 cleanUpToolsPullDownButtonData,
                 exportDataPullDownButttonData);
 
-            #region Naming Standards Pulldown
+    #region Naming Standards Pulldown
             PulldownButton nameStandardsPullDownButton = (PulldownButton)stackOne[0];
             addButtonToPulldown(
                 pulldown: nameStandardsPullDownButton,
@@ -87,9 +87,9 @@ namespace DougKlassen.Revit.Perfect
                 commandClass: "SetViewTitleCommand",
                 buttonText: "Set Empty View Titles",
                 buttonToolTip: "Set Title on Sheet view parameter for views that don't have it set yet");
-            #endregion Naming Standards Pulldown
+    #endregion Naming Standards Pulldown
 
-            #region Clean Up Pull Down
+    #region Clean Up Pull Down
             PulldownButton cleanUpPullDownButton = (PulldownButton)stackOne[1];
             addButtonToPulldown(
                 pulldown: cleanUpPullDownButton,
@@ -106,10 +106,9 @@ namespace DougKlassen.Revit.Perfect
                 commandClass: "PurgeViewsCommand",
                 buttonText: "Purge Views",
                 buttonToolTip: "Purge unnamed views");
+    #endregion Clean Up Pull Down
 
-            #endregion Clean Up Pull Down
-
-            #region Export Pulldown
+    #region Export Pulldown
             PulldownButton exportPullDownButton = (PulldownButton)stackOne[2];
             addButtonToPulldown(
                 pulldown: exportPullDownButton,
@@ -146,11 +145,11 @@ namespace DougKlassen.Revit.Perfect
                 commandClass: "ExportProjectDataCommand",
                 buttonText: "Export Project Data",
                 buttonToolTip: "Export a catalog of data about the current project");
-            #endregion Export Pulldown
+    #endregion Export Pulldown
 
-            #endregion Create Column One-Naming, Clean up, Export
+#endregion Create Column One-Naming, Clean up, Export
 
-            #region Create Column Two-Geometry, Elements, Schedules
+#region Create Column Two-Geometry, Elements, Schedules
             PulldownButtonData geometryPullDownButtonData = new PulldownButtonData(
                 name: "GeometryPullDownButton",
                 text: "Fix Geometry");
@@ -165,7 +164,7 @@ namespace DougKlassen.Revit.Perfect
 				elementPullDownButtonData,
                 schedulesPullDownButtonData);
 
-            #region Geometry Pulldown
+    #region Geometry Pulldown
             PulldownButton geometryPullDownButton = (PulldownButton)stackTwo[0];
             addButtonToPulldown(
                 pulldown: geometryPullDownButton,
@@ -184,9 +183,9 @@ namespace DougKlassen.Revit.Perfect
                 commandClass: "SplitWallByLevelCommand",
                 buttonText: "Split Wall by Level",
                 buttonToolTip: "Split wall by intervening levels");
-            #endregion Geometry Pulldown
+    #endregion Geometry Pulldown
 
-            #region Elements Pulldown
+    #region Elements Pulldown
             PulldownButton elementPullDownButton = (PulldownButton)stackTwo[1];
             addButtonToPulldown(
                 pulldown: elementPullDownButton,
@@ -203,9 +202,9 @@ namespace DougKlassen.Revit.Perfect
                 commandClass: "CommentRemoveCommand",
                 buttonText: "Remove Comment",
                 buttonToolTip: "Remove space delimited tags from the commment parameter of selected elements");
-            #endregion Elements Pulldown
+    #endregion Elements Pulldown
 
-            #region Schedules Pulldown
+    #region Schedules Pulldown
             PulldownButton schedulesPullDOwnButton = (PulldownButton)stackTwo[2];
             addButtonToPulldown(
                 pulldown: schedulesPullDOwnButton,
@@ -218,11 +217,11 @@ namespace DougKlassen.Revit.Perfect
                 commandClass: "CreateQuantityScheduleCommand",
                 buttonText: "Create a Quantity Schedule",
                 buttonToolTip: "Create a standardized quantity schedule using a configuration template");
-            #endregion Schedules Pulldown
+    #endregion Schedules Pulldown
 
-            #endregion Create Column Two-Geometry, Elements, Schedules
+#endregion Create Column Two-Geometry, Elements, Schedules
 
-            #region Create slide out panel-About
+#region Create slide out panel-About
             PerfectRibbonPanel.AddSlideOut();
             PushButtonData aboutCommandPushButtonData = new PushButtonData(
                 name: "AboutCommandButton",
@@ -232,13 +231,74 @@ namespace DougKlassen.Revit.Perfect
             {
                 LargeImage = largeIcon,
                 Image = smallIcon,
-                AvailabilityClassName = "DougKlassen.Revit.Perfect.Commands.AboutCommandAvailability"
+                AvailabilityClassName = "DougKlassen.Revit.Perfect.Commands.AlwaysAvailableCommandAvailability"
             };
             PerfectRibbonPanel.AddItem(aboutCommandPushButtonData);
-            #endregion Create slide out panel-About
+#endregion Create slide out panel-About
+
+#region Viz Reset Panel
+            RibbonPanel ResetRibbonPanel = application.CreateRibbonPanel(tabName, "Reset View Overrides");
+
+            PushButtonData resetHiddenCommandPushButtonData = new PushButtonData(
+                 "resetHiddenCommandButton", //name of the button
+                 "Reset Hidden", //text on the button
+                 FileLocations.AddInDirectory + FileLocations.AssemblyName + ".dll",
+                 "DougKlassen.Revit.Perfect.Commands.ResetHiddenCommand");
+            resetHiddenCommandPushButtonData.LargeImage = largeIcon;
+            resetHiddenCommandPushButtonData.ToolTip = "Unhide all elements hidden in the current view";
+
+            PushButtonData resetGraphicsCommandPushButtonData = new PushButtonData(
+                "resetGraphicsCommandButton", //name of the button
+                "Reset Graphics", //text on the button
+                FileLocations.AddInDirectory + FileLocations.AssemblyName + ".dll",
+                "DougKlassen.Revit.Perfect.Commands.ResetGraphicsCommand");
+            resetGraphicsCommandPushButtonData.LargeImage = largeIcon;
+            resetGraphicsCommandPushButtonData.ToolTip = "Reset all visibility graphics overrides in the current view";
+
+            ResetRibbonPanel.AddItem(resetHiddenCommandPushButtonData);
+            ResetRibbonPanel.AddItem(resetGraphicsCommandPushButtonData);
+#endregion Viz Reset Panel
+
+#region Viz Apply Styles Panel
+            RibbonPanel ApplyStylesPanel = application.CreateRibbonPanel(tabName, "Apply Override Styles");
+
+            PushButtonData pickupStyleCommandPushButtonData = new PushButtonData(
+                 "pickupStyleCommandButton", //name of the button
+                 "Style Eyedropper", //text on the button
+                 FileLocations.AddInDirectory + FileLocations.AssemblyName + ".dll",
+                 "DougKlassen.Revit.Perfect.Commands.PickupStyleCommand");
+            pickupStyleCommandPushButtonData.LargeImage = largeIcon;
+            pickupStyleCommandPushButtonData.ToolTip = "Choose an override style to apply to other elements";
+            pickupStyleCommandPushButtonData.AvailabilityClassName = "DougKlassen.Revit.Perfect.Commands.OverrideableViewCommandAvailability";
+            ApplyStylesPanel.AddItem(pickupStyleCommandPushButtonData);
+
+            PushButtonData applyStyleCommandPushButtonData = new PushButtonData(
+                 "applyStyleCommandButton", //name of the button
+                 "Apply Style", //text on the button
+                 FileLocations.AddInDirectory + FileLocations.AssemblyName + ".dll",
+                 "DougKlassen.Revit.Perfect.Commands.ApplyStyleCommand");
+            applyStyleCommandPushButtonData.LargeImage = largeIcon;
+            applyStyleCommandPushButtonData.ToolTip = "Apply an override style to selected elements";
+            applyStyleCommandPushButtonData.AvailabilityClassName = "DougKlassen.Revit.Perfect.Commands.OverrideableViewCommandAvailability";
+            ApplyStylesPanel.AddItem(applyStyleCommandPushButtonData);
+#endregion Viz Apply Styles Panel
+
+#region Viz Manage Callouts Panel
+            RibbonPanel ManageCalloutsPanel = application.CreateRibbonPanel(tabName, "Manage View Callouts");
+
+            PushButtonData filterBugsCommandPushButtonData = new PushButtonData(
+                 "filterBugsCommandButton", //name of the button
+                 "Filter View Callouts", //text on the button
+                 FileLocations.AddInDirectory + FileLocations.AssemblyName + ".dll",
+                 "DougKlassen.Revit.Perfect.Commands.FilterBugsCommand");
+            filterBugsCommandPushButtonData.LargeImage = largeIcon;
+            filterBugsCommandPushButtonData.ToolTip = "Filter Callouts for the current view";
+            filterBugsCommandPushButtonData.AvailabilityClassName = "DougKlassen.Revit.Perfect.Commands.OverrideableViewCommandAvailability";
+            ManageCalloutsPanel.AddItem(filterBugsCommandPushButtonData);
+#endregion Viz Manage Callouts Panel
 
             return Result.Succeeded;
-		}
+        }
 
         /// <summary>
         /// Helper method to add a button to a pulldown
@@ -317,5 +377,54 @@ namespace DougKlassen.Revit.Perfect
 
 			return bmp;
 		}
-	}
+    }
+}
+
+namespace DougKlassen.Revit.Perfect.Commands
+{
+    /// <summary>
+    /// Always make a command available, including when no project is open
+    /// </summary>
+    class AlwaysAvailableCommandAvailability : IExternalCommandAvailability
+    {
+        public Boolean IsCommandAvailable(UIApplication applicationData, CategorySet selectedCategories)
+        {
+            return true;
+        }
+    }
+
+    /// <summary>
+    /// Make command available if a view that allows graphic overrides is active
+    /// </summary>
+    public class OverrideableViewCommandAvailability : IExternalCommandAvailability
+    {
+        public bool IsCommandAvailable(UIApplication applicationData, CategorySet selectedCategories)
+        {
+            //check if a document is open
+            if (applicationData.ActiveUIDocument != null)
+            {
+                //check if there's an active view
+                if (applicationData.ActiveUIDocument.ActiveView != null)
+                {
+                    //check if graphic overrides are allowed
+                    if (applicationData.ActiveUIDocument.ActiveView.AreGraphicsOverridesAllowed())
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            else
+            {
+                return false;
+            }
+        }
+    }
 }

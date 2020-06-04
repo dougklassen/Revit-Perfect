@@ -1,5 +1,4 @@
 ﻿using Autodesk.Revit.DB;
-using Autodesk.Revit.UI;
 using DougKlassen.Revit.Perfect.Commands;
 using System;
 using System.Collections.Generic;
@@ -291,5 +290,95 @@ namespace DougKlassen.Revit.Perfect
 
             return errors;
         }
+
+#region Viz Helpers
+
+        /// <summary>
+        /// Generate a string description of an OverrideGraphicsSettings object
+        /// </summary>
+        /// <param name="settings">The OverrideGraphicsSettings object to be represented</param>
+        /// <returns>A description of the OverrideGraphicsSettings</returns>
+        public static String GetVizDescription(this OverrideGraphicSettings settings)
+        {
+            String desc = String.Empty;
+
+            desc +=
+                "Detail Level: " + settings.DetailLevel.ToString() + '\n' +
+                "Halftone: " + settings.Halftone.ToString() + '\n' +
+                "Projection Lines:\n" +
+                "- Pattern Id: " + settings.ProjectionLinePatternId.ToString() + '\n' +
+                "- Color: " + settings.ProjectionLineColor.GetVizDescription() + '\n' +
+                "- Weight: " + settings.ProjectionLineWeight.ToString() + '\n' +
+                "Surface Patterns:\n" +
+                "- Foreground Visible: " + settings.IsSurfaceForegroundPatternVisible.ToString() + '\n' +
+                "- Foreground Pattern Id: " + settings.SurfaceForegroundPatternId.ToString() + '\n' +
+                "- Foreground Color: " + settings.SurfaceForegroundPatternColor.GetVizDescription() + '\n' +
+                "- Background Visible: " + settings.IsSurfaceBackgroundPatternVisible.ToString() + '\n' +
+                "- Background Pattern Id: " + settings.SurfaceBackgroundPatternId.ToString() + '\n' +
+                "- Background Color: " + settings.SurfaceBackgroundPatternColor.GetVizDescription() + '\n' +
+                "Surface Transparency: " + settings.Transparency.ToString() + '\n' +
+                "Cut Lines:\n" +
+                "- Pattern Id: " + settings.CutLinePatternId.ToString() + '\n' +
+                "- Color: " + settings.CutLineColor.GetVizDescription() + '\n' +
+                "- Weight: " + settings.CutLineWeight.ToString() + '\n' +
+                "Cut Patterns:\n" +
+                "- Foreground Pattern Visibility: " + settings.IsCutForegroundPatternVisible.ToString() + '\n' +
+                "- Foreground Pattern Id: " + settings.CutForegroundPatternId.ToString() + '\n' +
+                "- Foreground Color: " + settings.CutForegroundPatternColor.GetVizDescription() + '\n' +
+                "- Background Pattern Visibility: " + settings.IsCutBackgroundPatternVisible.ToString() + '\n' +
+                "- Background Pattern Id: " + settings.CutBackgroundPatternId.ToString() + '\n' +
+                "- Background Color: " + settings.CutBackgroundPatternColor.GetVizDescription() + '\n';
+
+            return desc;
+        }
+
+        /// <summary>
+        /// Generate a string description of a Revit Color object
+        /// </summary>
+        /// <param name="color">A Revit Color</param>
+        /// <returns>A description of the Color</returns>
+        public static string GetVizDescription(this Autodesk.Revit.DB.Color color)
+        {
+            String desc = String.Empty;
+            if (color.IsValid)
+            {
+                desc += String.Format("Red: {0} Green: {1} Blue: {2}", color.Red, color.Green, color.Blue);
+            }
+            else
+            {
+                desc += "Invalid";
+            }
+            return desc;
+        }
+
+        /// <summary>
+        /// Get a VizColor object that represents a Revit Color object
+        /// </summary>
+        /// <param name="color">A Revit Color</param>
+        /// <returns>A VizColor representation of the Revit Color</returns>
+        public static VizColor GetVizModel(this Color color)
+        {
+            if (color.IsValid)
+            {
+                return new VizColor(color);
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Get a VizOverrides object that represents an OverrideGraphicSettings object
+        /// </summary>
+        /// <param name="settings">An OverrideGraphicSettings object</param>
+        /// <returns>A VizOverrides representation of the OverrideGraphicsSettings object</returns>
+        public static VizOverrides GetVizModel(this OverrideGraphicSettings settings)
+        {
+            return new VizOverrides(settings);
+        }
+
+#endregion Viz Helpers
+
     }
 }

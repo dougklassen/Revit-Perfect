@@ -1,7 +1,5 @@
-﻿using System;
+﻿using Autodesk.Revit.UI;
 using System.Reflection;
-
-using Autodesk.Revit.UI;
 
 namespace DougKlassen.Revit.Perfect.Commands
 {
@@ -20,13 +18,4 @@ namespace DougKlassen.Revit.Perfect.Commands
             return Result.Succeeded;
         }
     }
-
-    class AboutCommandAvailability : IExternalCommandAvailability
-    {
-        public Boolean IsCommandAvailable(UIApplication applicationData, Autodesk.Revit.DB.CategorySet selectedCategories)
-        {
-            return true;
-        }
-    }
-
 }

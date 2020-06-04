@@ -74,6 +74,9 @@
     <Reference Include="ICSharpCode.SharpZipLib, Version=1.0.0.999, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
       <HintPath>..\packages\SharpZipLib.1.0.0\lib\net45\ICSharpCode.SharpZipLib.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="NPOI, Version=2.4.1.0, Culture=neutral, PublicKeyToken=0df73ec7942b34e1, processorArchitecture=MSIL">
       <HintPath>..\packages\NPOI.2.4.1\lib\net45\NPOI.dll</HintPath>
     </Reference>
@@ -137,6 +140,14 @@
     <Compile Include="Commands\LoadImportStyles\LoadImportStylesCommand.cs" />
     <Compile Include="Commands\PurgeViews\PurgeViewsCommand.cs" />
     <Compile Include="Commands\SplitWallByLevel\SplitWallByLevelCommand.cs" />
+    <Compile Include="Commands\VizCommands\ApplyStylesPanel\ApplyStyleCommand.cs" />
+    <Compile Include="Commands\VizCommands\ApplyStylesPanel\PickupStyleCommand.cs" />
+    <Compile Include="Commands\VizCommands\ManageCalloutsPanel\FilterBugsCommand.cs" />
+    <Compile Include="Commands\VizCommands\ManageCalloutsPanel\FilterCalloutsWindow.xaml.cs">
+      <DependentUpon>FilterCalloutsWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Commands\VizCommands\ResetPanel\ResetGraphicsCommand.cs" />
+    <Compile Include="Commands\VizCommands\ResetPanel\ResetHiddenCommand.cs" />
     <Compile Include="Interface\SelectObjectsWindow.xaml.cs">
       <DependentUpon>SelectObjectsWindow.xaml</DependentUpon>
     </Compile>
@@ -156,6 +167,11 @@
     </Compile>
     <Compile Include="Commands\RenameFamilies\RenameFamiliesCommand.cs" />
     <Compile Include="Helpers.cs" />
+    <Compile Include="Models\IVizSettingsRepo.cs" />
+    <Compile Include="Models\VizColor.cs" />
+    <Compile Include="Models\VizOverrides.cs" />
+    <Compile Include="Models\VizSettings.cs" />
+    <Compile Include="Models\VizSettingsJsonRepo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -188,6 +204,10 @@
     <Page Include="Commands\CreateQuantitySchedule\ChooseScheduleWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Commands\VizCommands\ManageCalloutsPanel\FilterCalloutsWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Interface\SelectObjectsWindow.xaml">
       <SubType>Designer</SubType>
