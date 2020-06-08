@@ -15,6 +15,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using DougKlassen.Revit.Snoop.Models;
 using DougKlassen.Revit.Snoop.Repositories;
+using DougKlassen.Revit.Snoop;
 
 namespace DougKlassen.Revit.SnoopConfigurator
 {
@@ -23,24 +24,120 @@ namespace DougKlassen.Revit.SnoopConfigurator
     /// </summary>
     public partial class MainWindow : Window
     {
+        private FileLocations fileLocations = FileLocations.Instance;
+
         public MainWindow()
         {
-            String configFilePath = Directory.GetCurrentDirectory() + SnoopConfig.configFileName;
+            Config = new SnoopConfig();
+            Config.SetDefaultValues();
+            LoadConfig();
 
-            try
-            {
-                SnoopConfigJsonRepo repo = new SnoopConfigJsonRepo(configFilePath);
-                Config = repo.LoadConfig();
+            ConfigFilePath = fileLocations.ConfigFilePath;
 
-            }
-            catch (Exception)
-            {
-                Config = new SnoopConfig();
-                Config.SetDefaultValues(Directory.GetCurrentDirectory());
-            }
             InitializeComponent();
         }
 
-        SnoopConfig Config { get; set; }
+        /// <summary>
+        /// The path to the configuration file
+        /// </summary>
+        public String ConfigFilePath
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Load status of the config file
+        /// </summary>
+        public String ConfigFileStatus
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Does the config file have unsaved changes
+        /// </summary>
+        public Boolean HasUnsavedChanges
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// The text contents of the configuration file
+        /// </summary>
+        public String ConfigFileContents
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// A user friendly description of the current configuration
+        /// </summary>
+        public String ConfigFileDescription
+        {
+            get
+            {
+                return Config.GetDescription();
+            }
+        }
+
+        /// <summary>
+        /// The active configuration
+        /// </summary>
+        public SnoopConfig Config
+        {
+            get;
+            set;
+        }
+
+        private void generateButton_Click(object sender, RoutedEventArgs e)
+        {
+            Config = new SnoopConfig();
+            Config.SetDefaultValues();
+
+
+
+            HasUnsavedChanges = true;
+        }
+
+        private void writeButton_Click(object sender, RoutedEventArgs e)
+        {
+            HasUnsavedChanges = false;
+        }
+
+        private void reloadButton_Click(object sender, RoutedEventArgs e)
+        {
+            LoadConfig();
+        }
+
+        /// <summary>
+        /// Read the config file and parse the contents into a new SnoopConfig object
+        /// </summary>
+        private void LoadConfig()
+        {
+            try
+            {
+                ConfigFileContents = File.ReadAllText(fileLocations.ConfigFilePath);
+
+                try
+                {
+                    SnoopConfigJsonRepo repo = new SnoopConfigJsonRepo(fileLocations.ConfigFilePath);
+                    Config = repo.LoadConfig();
+                }
+                catch (Exception)
+                {
+                    ConfigFileStatus = "Couldn't parse config file";
+                }
+            }
+            catch (Exception)
+            {
+                ConfigFileStatus = "Couldn't find config file";
+            }
+
+            HasUnsavedChanges = false;
+        }
     }
 }

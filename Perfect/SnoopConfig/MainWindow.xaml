@@ -5,16 +5,31 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DougKlassen.Revit.SnoopConfigurator"
         mc:Ignorable="d"
-        Title="Snoop Configurator" Height="798" Width="700" ResizeMode="NoResize"
-        DataContext="{Binding ElementName=snoopConfiguratorWindow, Path=Config}">
-    <DockPanel>
-        <Grid DockPanel.Dock="Bottom" Height="40" >
-            <Button x:Name="okButton" Content="Ok" HorizontalAlignment="Left" Margin="487,10,0,0" VerticalAlignment="Top" Width="74"/>
-            <Button x:Name="cancelButton" Content="Cancel" HorizontalAlignment="Left" Margin="584,10,0,0" VerticalAlignment="Top" Width="76"/>
-        </Grid>
-        <StackPanel VerticalAlignment="Top" Width="100">
-            <Label Content="{Binding ConfigFilePath}"/>
-        </StackPanel>
-
-    </DockPanel>
+        Title="Snoop Configurator"
+        DataContext="{Binding ElementName=snoopConfiguratorWindow}">
+    <TabControl x:Name="tabControl">
+        <TabItem Header="Config">
+            <DockPanel>
+                <StackPanel DockPanel.Dock="Top" VerticalAlignment="Top">
+                    <Label Content="Configuration" FontSize="20" />
+                    <TextBlock x:Name="configFileTextBlock" Text="{Binding ConfigFilePath}"/>
+                    <TextBlock x:Name="fileStatusTextBlock" Text="{Binding ConfigFileStatus}"/>
+                </StackPanel>
+                <StackPanel DockPanel.Dock="Bottom" >
+                    <Button x:Name="generateButton" Content="Regenerate" Click="generateButton_Click" />
+                    <Button x:Name="writeButton" Content="Write Config" Click="writeButton_Click" IsEnabled="{Binding HasUnsavedChanges}"/>
+                    <Button x:Name="reloadButton" Content="Reload Config" Click="reloadButton_Click"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="{Binding ConfigFileContents}" />
+                    <TextBlock Text="{Binding ConfigFileDescription}" />
+                </StackPanel>
+                <TextBlock />
+            </DockPanel>
+        </TabItem>
+        <TabItem Header="Active">
+            <DockPanel>                
+            </DockPanel>
+        </TabItem>
+    </TabControl>
 </Window>

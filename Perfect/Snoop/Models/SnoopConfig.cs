@@ -6,41 +6,39 @@ namespace DougKlassen.Revit.Snoop.Models
 {
     public class SnoopConfig
     {
-        public static readonly String configFileName = "SnoopConfig.json";
-        public static readonly String taskFileName = "SnoopTask.json";
+        FileLocations fileLocations = FileLocations.Instance;
 
         public String HomeDirectoryPath { get; set; }
         public String ConfigFilePath { get; set; }
         public String CurrentTaskFilePath { get; set; }
-        public IEnumerable<SnoopTask> ToDoList { get; set; }
+        public IEnumerable<SnoopTask> TaskList { get; set; }
         public IEnumerable<String> ActiveProjects { get; set; }
         public Dictionary<String, String> RevitFilePaths { get; set; }
 
+        /// <summary>
+        /// Create a new SnoopConfig object. Values will not be set;
+        /// </summary>
         public SnoopConfig()
         {
         }
 
-        public void SetDefaultValues(String homeDir)
+        /// <summary>
+        /// Set the config settings to default values
+        /// </summary>
+        public void SetDefaultValues()
         {
-            if (!homeDir.EndsWith("\\"))
-            {
-                homeDir += "\\";
-            }
-            HomeDirectoryPath = homeDir;
-            ConfigFilePath = homeDir + configFileName;
-            CurrentTaskFilePath = homeDir + taskFileName;
-            ToDoList = new List<SnoopTask>();
+            HomeDirectoryPath = fileLocations.HomeDirectoryPath;
+            ConfigFilePath = fileLocations.ConfigFilePath;
+            CurrentTaskFilePath = fileLocations.TaskFileName;
+            TaskList = new List<SnoopTask>();
             ActiveProjects = new List<String>();
-            RevitFilePaths = new Dictionary<String, String>();
-            for (int i = 2010; i <= 2030; i++)
-            {
-                String revitPath = String.Format(@"C:\Program Files\Autodesk\Revit {0}\Revit.exe",i);
-                if (File.Exists(revitPath))
-                {
-                    RevitFilePaths.Add(i.ToString(), revitPath);
-                }
-            }
+            RevitFilePaths = fileLocations.RevitFilePaths;
         }
+
+        /// <summary>
+        /// Get a user friendly text description of the current config file
+        /// </summary>
+        /// <returns></returns>
         public String GetDescription()
         {
             String msg = String.Empty;

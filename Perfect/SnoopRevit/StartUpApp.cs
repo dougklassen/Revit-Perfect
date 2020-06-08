@@ -13,17 +13,14 @@ namespace DougKlassen.Revit.Snoop
 {
     public class StartUpApp : IExternalApplication
     {
-        FileLocations files = FileLocations.Instance;
+        FileLocations fileLocations = FileLocations.Instance;
         SnoopConfig config;
 
         Result IExternalApplication.OnStartup(UIControlledApplication application)
         {
-            //initialize AddInDirectory. The addin should be stored in a directory named after the assembly
-            files.HomeDirectoryPath = application.ControlledApplication.AllUsersAddinsLocation + "\\Perfect\\";
-
-            if (File.Exists(files.ConfigFilePath))
+            if (File.Exists(fileLocations.ConfigFilePath))
             {
-                SnoopConfigJsonRepo configRepo = new SnoopConfigJsonRepo(files.ConfigFilePath);
+                SnoopConfigJsonRepo configRepo = new SnoopConfigJsonRepo(fileLocations.ConfigFilePath);
                 try
                 {
                     config = configRepo.LoadConfig();

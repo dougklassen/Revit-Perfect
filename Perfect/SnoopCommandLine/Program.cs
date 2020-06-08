@@ -10,6 +10,7 @@ namespace DougKlassen.Revit.Snoop
         static void Main(String[] args)
         {
             SnoopConfig config;
+            FileLocations fileLocations = FileLocations.Instance;
 
             if (args.Length > 0)
             {
@@ -22,8 +23,8 @@ namespace DougKlassen.Revit.Snoop
 
                         config = new SnoopConfig();
                         String workingDir = Directory.GetCurrentDirectory();
-                        config.SetDefaultValues(workingDir);
-                        if (File.Exists(config.ConfigFilePath))
+                        config.SetDefaultValues();
+                        if (File.Exists(fileLocations.ConfigFileName))
                         {
                             Console.WriteLine("\nConfig file already exists at " + config.ConfigFilePath);
                             return;
@@ -46,17 +47,16 @@ namespace DougKlassen.Revit.Snoop
                         Console.WriteLine("\nConfig File Validation");
                         Console.WriteLine("-----");
 
-                        String configFilePath = String.Format("{0}\\{1}", Directory.GetCurrentDirectory(), SnoopConfig.configFileName);
                         String msg = String.Empty;
 
-                        Console.WriteLine(String.Format("Looking for {0}\n", configFilePath));
+                        Console.WriteLine(String.Format("Looking for {0}\n", fileLocations.ConfigFilePath));
 
                         //check the working directory
-                        if (File.Exists(SnoopConfig.configFileName))
+                        if (File.Exists(fileLocations.ConfigFilePath))
                         {
                             try
                             {
-                                SnoopConfigJsonRepo repo = new SnoopConfigJsonRepo(configFilePath);
+                                SnoopConfigJsonRepo repo = new SnoopConfigJsonRepo(fileLocations.ConfigFilePath);
                                 config = repo.LoadConfig();
                                 ShowConfigInfo(config);
                             }
