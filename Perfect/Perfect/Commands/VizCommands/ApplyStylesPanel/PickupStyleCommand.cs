@@ -1,7 +1,6 @@
 ﻿using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
 using Autodesk.Revit.UI.Selection;
-using System;
 using System.Linq;
 
 namespace DougKlassen.Revit.Perfect.Commands
@@ -11,7 +10,6 @@ namespace DougKlassen.Revit.Perfect.Commands
     {
         public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
         {
-            String ttl = "Style Eyedropper";
             IVizSettingsRepo repo = new VizSettingsJsonRepo();
             VizSettings vizSettings = repo.LoadSettings();
 
@@ -30,7 +28,7 @@ namespace DougKlassen.Revit.Perfect.Commands
                 {
                     sourceElementId = uiDoc.Selection.PickObject(ObjectType.Element).ElementId;
                 }
-                catch (Autodesk.Revit.Exceptions.OperationCanceledException e)
+                catch (Autodesk.Revit.Exceptions.OperationCanceledException)
                 {
                     return Result.Cancelled;
                 }

@@ -16,6 +16,7 @@
                     <TextBlock x:Name="fileStatusTextBlock" Text="{Binding ConfigFileStatus}"/>
                 </StackPanel>
                 <StackPanel DockPanel.Dock="Bottom" >
+                    <Button x:Name="editButton" Content="Edit Config File" Click="editButton_Click" />
                     <Button x:Name="generateButton" Content="Regenerate" Click="generateButton_Click" />
                     <Button x:Name="writeButton" Content="Write Config" Click="writeButton_Click" IsEnabled="{Binding HasUnsavedChanges}"/>
                     <Button x:Name="reloadButton" Content="Reload Config" Click="reloadButton_Click"/>

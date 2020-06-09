@@ -49,7 +49,7 @@ namespace DougKlassen.Revit.Perfect
             {
                 application.CreateRibbonTab(tabName);
             }
-            catch (Autodesk.Revit.Exceptions.ArgumentException e)
+            catch (Autodesk.Revit.Exceptions.ArgumentException)
             {
                 //ignore
             }

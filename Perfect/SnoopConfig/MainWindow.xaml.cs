@@ -38,53 +38,6 @@ namespace DougKlassen.Revit.SnoopConfigurator
         }
 
         /// <summary>
-        /// The path to the configuration file
-        /// </summary>
-        public String ConfigFilePath
-        {
-            get;
-            set;
-        }
-
-        /// <summary>
-        /// Load status of the config file
-        /// </summary>
-        public String ConfigFileStatus
-        {
-            get;
-            set;
-        }
-
-        /// <summary>
-        /// Does the config file have unsaved changes
-        /// </summary>
-        public Boolean HasUnsavedChanges
-        {
-            get;
-            set;
-        }
-
-        /// <summary>
-        /// The text contents of the configuration file
-        /// </summary>
-        public String ConfigFileContents
-        {
-            get;
-            set;
-        }
-
-        /// <summary>
-        /// A user friendly description of the current configuration
-        /// </summary>
-        public String ConfigFileDescription
-        {
-            get
-            {
-                return Config.GetDescription();
-            }
-        }
-
-        /// <summary>
         /// The active configuration
         /// </summary>
         public SnoopConfig Config
@@ -93,24 +46,89 @@ namespace DougKlassen.Revit.SnoopConfigurator
             set;
         }
 
-        private void generateButton_Click(object sender, RoutedEventArgs e)
+        /// <summary>
+        /// The path to the configuration file
+        /// </summary>
+        public static readonly DependencyProperty ConfigFilePathProperty =
+            DependencyProperty.Register("ConfigFilePath", typeof(String), typeof(MainWindow));
+        public String ConfigFilePath
         {
-            Config = new SnoopConfig();
-            Config.SetDefaultValues();
-
-
-
-            HasUnsavedChanges = true;
+            get
+            {
+                return (String)GetValue(ConfigFilePathProperty);
+            }
+            set
+            {
+                SetValue(ConfigFilePathProperty, value);
+            }
         }
 
-        private void writeButton_Click(object sender, RoutedEventArgs e)
+        /// <summary>
+        /// Load status of the config file
+        /// </summary>
+        public static readonly DependencyProperty ConfigFileStatusProperty =
+            DependencyProperty.Register("ConfigFileStatus", typeof(String), typeof(MainWindow));
+        public String ConfigFileStatus
         {
-            HasUnsavedChanges = false;
+            get
+            {
+                return (String)GetValue(ConfigFileStatusProperty);
+            }
+            set
+            {
+                SetValue(ConfigFileStatusProperty, value);
+            }
         }
 
-        private void reloadButton_Click(object sender, RoutedEventArgs e)
+        /// <summary>
+        /// Does the config file have unsaved changes
+        /// </summary>
+        public static readonly DependencyProperty HasUnsavedChangesProperty =
+            DependencyProperty.Register("HasUnsavedChanges", typeof(Boolean), typeof(MainWindow));
+        public Boolean HasUnsavedChanges
         {
-            LoadConfig();
+            get
+            {
+                return (Boolean)GetValue(HasUnsavedChangesProperty);
+            }
+            set
+            {
+                SetValue(HasUnsavedChangesProperty, value);
+            }
+        }
+
+        /// <summary>
+        /// The text contents of the configuration file
+        /// </summary>
+        public static readonly DependencyProperty ConfigFileContentsProperty =
+            DependencyProperty.Register("ConfigFileContents", typeof(String), typeof(MainWindow));
+        public String ConfigFileContents
+        {
+            get
+            {
+                return (String)GetValue(ConfigFileContentsProperty);
+            }
+            set
+            {
+                SetValue(ConfigFileContentsProperty, value);
+            }
+        }
+
+        /// <summary>
+        /// A user friendly description of the current configuration
+        /// </summary>
+        public static readonly DependencyProperty ConfigFileDescriptionProperty =
+            DependencyProperty.Register("ConfigFileDescription", typeof(String), typeof(MainWindow));
+        public String ConfigFileDescription
+        {
+            get
+            {
+                return (String)GetValue(ConfigFileDescriptionProperty);
+            }
+            set
+            {
+                SetValue(ConfigFileDescriptionProperty, value);
+            }
         }
 
         /// <summary>
@@ -121,10 +139,11 @@ namespace DougKlassen.Revit.SnoopConfigurator
             try
             {
                 ConfigFileContents = File.ReadAllText(fileLocations.ConfigFilePath);
+                ConfigFileDescription = Config.GetDescription();
 
                 try
                 {
-                    SnoopConfigJsonRepo repo = new SnoopConfigJsonRepo(fileLocations.ConfigFilePath);
+                    ISnoopConfigRepo repo = new SnoopConfigJsonRepo(fileLocations.ConfigFilePath);
                     Config = repo.LoadConfig();
                 }
                 catch (Exception)
@@ -138,6 +157,51 @@ namespace DougKlassen.Revit.SnoopConfigurator
             }
 
             HasUnsavedChanges = false;
+        }
+
+        /// <summary>
+        /// Write current configuration to config file
+        /// </summary>
+        private void WriteConfig()
+        {
+            try
+            {
+                ISnoopConfigRepo repo = new SnoopConfigJsonRepo(fileLocations.ConfigFilePath);
+                repo.WriteConfig(Config);
+
+                ConfigFileStatus = "Sucessfully saved config file";
+                HasUnsavedChanges = false;
+            }
+            catch (Exception)
+            {
+                ConfigFileStatus = "Couldn't write config file";
+            }
+        }
+
+        private void generateButton_Click(object sender, RoutedEventArgs e)
+        {
+            Config = new SnoopConfig();
+            Config.SetDefaultValues();
+
+            HasUnsavedChanges = true;
+        }
+
+        private void writeButton_Click(object sender, RoutedEventArgs e)
+        {
+            WriteConfig();
+            HasUnsavedChanges = false;
+        }
+
+        private void reloadButton_Click(object sender, RoutedEventArgs e)
+        {
+            LoadConfig();
+        }
+
+
+
+        private void editButton_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }
