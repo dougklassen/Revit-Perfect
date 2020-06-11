@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,7 +13,6 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
-using System.Windows.Shapes;
 using DougKlassen.Revit.Snoop.Models;
 using DougKlassen.Revit.Snoop.Repositories;
 using DougKlassen.Revit.Snoop;
@@ -24,10 +24,12 @@ namespace DougKlassen.Revit.SnoopConfigurator
     /// </summary>
     public partial class MainWindow : Window
     {
-        private FileLocations fileLocations = FileLocations.Instance;
 
         public MainWindow()
         {
+            FileLocations fileLocations = FileLocations.Instance;
+            ConfigFilePath = fileLocations.ConfigFilePath;
+
             Config = new SnoopConfig();
             Config.SetDefaultValues();
             LoadConfig();
@@ -136,27 +138,29 @@ namespace DougKlassen.Revit.SnoopConfigurator
         /// </summary>
         private void LoadConfig()
         {
+
             try
             {
-                ConfigFileContents = File.ReadAllText(fileLocations.ConfigFilePath);
+                ConfigFileContents = File.ReadAllText(ConfigFilePath);
                 ConfigFileDescription = Config.GetDescription();
 
                 try
                 {
-                    ISnoopConfigRepo repo = new SnoopConfigJsonRepo(fileLocations.ConfigFilePath);
+                    ISnoopConfigRepo repo = new SnoopConfigJsonRepo(ConfigFilePath);
                     Config = repo.LoadConfig();
                 }
                 catch (Exception)
                 {
-                    ConfigFileStatus = "Couldn't parse config file";
+                    ConfigFileStatus = "Couldn't parse configuration file";
                 }
+
+                ConfigFileStatus = "Sucessfully loaded configuration file";
+                HasUnsavedChanges = false;
             }
             catch (Exception)
             {
-                ConfigFileStatus = "Couldn't find config file";
+                ConfigFileStatus = "Couldn't find configuration file";
             }
-
-            HasUnsavedChanges = false;
         }
 
         /// <summary>
@@ -166,15 +170,16 @@ namespace DougKlassen.Revit.SnoopConfigurator
         {
             try
             {
-                ISnoopConfigRepo repo = new SnoopConfigJsonRepo(fileLocations.ConfigFilePath);
+                ISnoopConfigRepo repo = new SnoopConfigJsonRepo(ConfigFilePath);
                 repo.WriteConfig(Config);
 
-                ConfigFileStatus = "Sucessfully saved config file";
+                ConfigFileStatus = "Sucessfully saved configuration file";
+                ConfigFileContents = File.ReadAllText(ConfigFilePath);
                 HasUnsavedChanges = false;
             }
             catch (Exception)
             {
-                ConfigFileStatus = "Couldn't write config file";
+                ConfigFileStatus = "Couldn't write configuration file";
             }
         }
 
@@ -182,6 +187,7 @@ namespace DougKlassen.Revit.SnoopConfigurator
         {
             Config = new SnoopConfig();
             Config.SetDefaultValues();
+            ConfigFileDescription = Config.GetDescription();
 
             HasUnsavedChanges = true;
         }
@@ -197,11 +203,20 @@ namespace DougKlassen.Revit.SnoopConfigurator
             LoadConfig();
         }
 
-
-
         private void editButton_Click(object sender, RoutedEventArgs e)
         {
-
+            ProcessStartInfo pi = new ProcessStartInfo(ConfigFilePath);
+            pi.UseShellExecute = true;
+            pi.WorkingDirectory = Path.GetDirectoryName(ConfigFilePath);
+            pi.Verb = "OPEN";
+            try
+            {
+                Process.Start(pi);
+            }
+            catch
+            {
+                MessageBox.Show("Couldn't open configuration file for editing");
+            }
         }
     }
 }

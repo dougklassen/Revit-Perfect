@@ -54,7 +54,7 @@ namespace DougKlassen.Revit.Snoop
         {
             get
             {
-                return HomeDirectoryPath + ConfigFileName;
+                return HomeDirectoryPath + "\\" + ConfigFileName;
             }
         }
 

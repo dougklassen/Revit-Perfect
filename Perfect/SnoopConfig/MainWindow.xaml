@@ -11,21 +11,29 @@
         <TabItem Header="Config">
             <DockPanel>
                 <StackPanel DockPanel.Dock="Top" VerticalAlignment="Top">
-                    <Label Content="Configuration" FontSize="20" />
-                    <TextBlock x:Name="configFileTextBlock" Text="{Binding ConfigFilePath}"/>
-                    <TextBlock x:Name="fileStatusTextBlock" Text="{Binding ConfigFileStatus}"/>
+                    <TextBlock x:Name="configFileTextBlock" Text="{Binding ConfigFilePath}" Margin="10"/>
+                    <TextBlock x:Name="fileStatusTextBlock" Text="{Binding ConfigFileStatus}" Margin="10,0,10,10"/>
                 </StackPanel>
-                <StackPanel DockPanel.Dock="Bottom" >
-                    <Button x:Name="editButton" Content="Edit Config File" Click="editButton_Click" />
-                    <Button x:Name="generateButton" Content="Regenerate" Click="generateButton_Click" />
-                    <Button x:Name="writeButton" Content="Write Config" Click="writeButton_Click" IsEnabled="{Binding HasUnsavedChanges}"/>
-                    <Button x:Name="reloadButton" Content="Reload Config" Click="reloadButton_Click"/>
+                <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right" >
+                    <Button x:Name="editButton" Content="Edit Config File" Click="editButton_Click" Style="{StaticResource PanelButton}"/>
+                    <Button x:Name="reloadButton" Content="Reload Config File" Click="reloadButton_Click" Style="{StaticResource PanelButton}"/>
+                    <Button x:Name="generateButton" Content="Reload Default Settings" Click="generateButton_Click" Style="{StaticResource PanelButton}"/>
+                    <Button x:Name="writeButton" Content="Save Config File" Click="writeButton_Click" Style="{StaticResource PanelButton}" IsEnabled="{Binding HasUnsavedChanges}"/>
                 </StackPanel>
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="{Binding ConfigFileContents}" />
-                    <TextBlock Text="{Binding ConfigFileDescription}" />
-                </StackPanel>
-                <TextBlock />
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition Height="150"/>
+                    </Grid.RowDefinitions>
+                    <Border Grid.Row="0" Style="{StaticResource LightPanelBorder}">
+                        <ScrollViewer>
+                            <TextBlock Text="{Binding ConfigFileContents}" Margin="10"/>
+                        </ScrollViewer>
+                    </Border>
+                    <Border Grid.Row="1" Style="{StaticResource LightPanelBorder}">
+                        <TextBlock Text="{Binding ConfigFileDescription}" Margin="10"/>
+                    </Border>
+                </Grid>
             </DockPanel>
         </TabItem>
         <TabItem Header="Active">
