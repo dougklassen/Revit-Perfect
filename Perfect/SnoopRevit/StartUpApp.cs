@@ -13,14 +13,14 @@ namespace DougKlassen.Revit.Snoop
 {
     public class StartUpApp : IExternalApplication
     {
-        FileLocations fileLocations = FileLocations.Instance;
+        String configFilePath = FileLocations.Instance.ConfigFilePath;
         SnoopConfig config;
 
         Result IExternalApplication.OnStartup(UIControlledApplication application)
         {
-            if (File.Exists(fileLocations.ConfigFilePath))
+            if (File.Exists(configFilePath))
             {
-                SnoopConfigJsonRepo configRepo = new SnoopConfigJsonRepo(fileLocations.ConfigFilePath);
+                SnoopConfigJsonRepo configRepo = new SnoopConfigJsonRepo(configFilePath);
                 try
                 {
                     config = configRepo.LoadConfig();
@@ -30,11 +30,10 @@ namespace DougKlassen.Revit.Snoop
                     TaskDialog.Show("Snoop", "Couldn't parse config file");
                     return Result.Failed;
                 }
-                TaskDialog.Show("Snoop", "Config file " + config.ConfigFilePath + " loaded");
             }
             else
             {
-                TaskDialog.Show("Snoop", "No config file found");
+                TaskDialog.Show("Snoop", "No config file found at " + configFilePath);
             }
 
             return Result.Succeeded;

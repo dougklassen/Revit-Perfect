@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
+using System.Text.RegularExpressions;
 
 namespace DougKlassen.Revit.Snoop
 {
@@ -12,6 +14,18 @@ namespace DougKlassen.Revit.Snoop
     {
         private FileLocations()
         {
+            String path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            HomeDirectoryPath = StandardizeToTrailingBackslash(path);
+
+            RevitFilePaths = new Dictionary<String, String>();
+            for (int i = 2010; i <= 2030; i++)
+            {
+                String revitPath = String.Format(@"C:\Program Files\Autodesk\Revit {0}\Revit.exe", i);
+                if (File.Exists(revitPath))
+                {
+                    RevitFilePaths.Add(i.ToString(), revitPath);
+                }
+            }
         }
 
         private static readonly Lazy<FileLocations> lazy
@@ -41,10 +55,7 @@ namespace DougKlassen.Revit.Snoop
         /// </summary>
         public String HomeDirectoryPath
         {
-            get
-            {
-                return Directory.GetCurrentDirectory();
-            }
+            get;
         }
 
         /// <summary>
@@ -54,7 +65,7 @@ namespace DougKlassen.Revit.Snoop
         {
             get
             {
-                return HomeDirectoryPath + "\\" + ConfigFileName;
+                return HomeDirectoryPath + ConfigFileName;
             }
         }
 
@@ -85,19 +96,31 @@ namespace DougKlassen.Revit.Snoop
         /// </summary>
         public Dictionary<String, String> RevitFilePaths
         {
-            get
-            {
-                Dictionary<String, String> paths = new Dictionary<String, String>();
-                for (int i = 2010; i <= 2030; i++)
-                {
-                    String revitPath = String.Format(@"C:\Program Files\Autodesk\Revit {0}\Revit.exe", i);
-                    if (File.Exists(revitPath))
-                    {
-                        paths.Add(i.ToString(), revitPath);
-                    }
-                }
-                return paths;
-            }
+            get;
+            private set;
+        }
+
+        /// <summary>
+        /// Return a version of a directory path that doesn't end with a trailing backslash
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
+        private String StandardizeToNoTrailingBackslash(String path)
+        {
+            //match trailing slashes and whitespace
+            Regex trimRegEx = new Regex(@"[\\|\/|\s]+$");
+            path = trimRegEx.Replace(path, String.Empty);
+            return path;
+        }
+
+        /// <summary>
+        /// Return a version of a directory path that ends with a trailing backslash
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
+        private String StandardizeToTrailingBackslash(String path)
+        {
+            return StandardizeToNoTrailingBackslash(path) + "\\";
         }
     }
 }
