@@ -6,39 +6,94 @@
         xmlns:local="clr-namespace:DougKlassen.Revit.SnoopConfigurator"
         mc:Ignorable="d"
         Title="Snoop Configurator"
-        DataContext="{Binding ElementName=snoopConfiguratorWindow}">
-    <TabControl x:Name="tabControl">
-        <TabItem Header="Config">
-            <DockPanel>
-                <StackPanel DockPanel.Dock="Top" VerticalAlignment="Top">
-                    <TextBlock x:Name="configFileTextBlock" Text="{Binding ConfigFilePath}" Margin="10"/>
-                    <TextBlock x:Name="fileStatusTextBlock" Text="{Binding ConfigFileStatus}" Margin="10,0,10,10"/>
-                </StackPanel>
-                <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right" >
-                    <Button x:Name="editButton" Content="Edit Config File" Click="editButton_Click" Style="{StaticResource PanelButton}"/>
-                    <Button x:Name="reloadButton" Content="Reload Config File" Click="reloadButton_Click" Style="{StaticResource PanelButton}"/>
-                    <Button x:Name="generateButton" Content="Reload Default Settings" Click="generateButton_Click" Style="{StaticResource PanelButton}"/>
-                    <Button x:Name="writeButton" Content="Save Config File" Click="writeButton_Click" Style="{StaticResource PanelButton}" IsEnabled="{Binding HasUnsavedChanges}"/>
-                </StackPanel>
+        DataContext="{Binding ElementName=snoopConfiguratorWindow}" MinWidth="750" MinHeight="550">
+    <DockPanel>
+        <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right"  Margin="10">
+            <Button x:Name="editButton" Style="{StaticResource PanelButton}" Content="Edit Config File" Click="editButton_Click"/>
+            <Button x:Name="generateButton" Style="{StaticResource PanelButton}" Content="Reload Default Settings" Click="generateButton_Click"/>
+            <Button x:Name="reloadButton" Content="Reload Config File" Click="reloadButton_Click" Style="{StaticResource PanelButton}"/>
+            <Button x:Name="writeButton" Style="{StaticResource PanelButton}" Content="Save Config File" Click="writeButton_Click" IsEnabled="{Binding HasUnsavedChanges}"/>
+        </StackPanel>
+        <TabControl x:Name="tabControl">
+            <TabItem Header="Configuration">
+                <DockPanel>
+                    <StackPanel DockPanel.Dock="Top" Style="{StaticResource ButtonPanel}">
+                        <TextBlock x:Name="fileStatusTextBlock" Text="{Binding ConfigFileStatus}" Margin="10,0,10,10"/>
+                    </StackPanel>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition Height="150"/>
+                        </Grid.RowDefinitions>
+                        <GroupBox Grid.Row="0" Style="{StaticResource LightPanelBox}" Header="{Binding ConfigFilePath}">
+                            <ScrollViewer>
+                                <TextBlock Text="{Binding ConfigFileContents}" Margin="5"/>
+                            </ScrollViewer>
+                        </GroupBox>
+                        <GroupBox Grid.Row="1" Style="{StaticResource LightPanelBox}" Header="Config Settings">
+                            <TextBlock Text="{Binding ConfigFileDescription}" Margin="5"/>
+                        </GroupBox>
+                    </Grid>
+                </DockPanel>
+            </TabItem>
+            <TabItem Header="Active Projects">
                 <Grid>
                     <Grid.RowDefinitions>
+                        <RowDefinition Height="100"/>
                         <RowDefinition/>
-                        <RowDefinition Height="150"/>
                     </Grid.RowDefinitions>
-                    <Border Grid.Row="0" Style="{StaticResource LightPanelBorder}">
-                        <ScrollViewer>
-                            <TextBlock Text="{Binding ConfigFileContents}" Margin="10"/>
-                        </ScrollViewer>
-                    </Border>
-                    <Border Grid.Row="1" Style="{StaticResource LightPanelBorder}">
-                        <TextBlock Text="{Binding ConfigFileDescription}" Margin="10"/>
-                    </Border>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="275"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <GroupBox Grid.Column="0" Grid.RowSpan="2" Style="{StaticResource LightPanelBox}" Header="Projects">
+                        <DockPanel>
+                            <StackPanel DockPanel.Dock="Bottom" Style="{StaticResource ButtonPanel}">
+                                <Button x:Name="editProjectButton" Style="{StaticResource PanelButton}" Content="Edit" Click="editProjectButton_Click"/>
+                                <Button x:Name="addProjectButton" Content="Add" Style="{StaticResource PanelButton}" Click="addProjectButton_Click"/>
+                                <Button x:Name="removeProjectButton" Content="Remove" Style="{StaticResource PanelButton}" Click="removeProjectButton_Click"/>
+                            </StackPanel>
+                            <ListBox x:Name="projectsListBox" ItemsSource="{Binding Config.ActiveProjects}" SelectionChanged="projectsListBox_SelectionChanged">
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <Label Content="{Binding ProjectName}"/>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+                        </DockPanel>
+                    </GroupBox>
+                    <StackPanel Grid.Column="1" Grid.Row="0" Margin="10">
+                        <StackPanel Orientation="Horizontal">
+                            <Label Content="Project:" FontWeight="Bold"/>
+                            <Label Content="{Binding SelectedProject.ProjectName}"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <Label Content="File Path:" FontWeight="Bold"/>
+                            <Label Content="{Binding SelectedProject.FilePath}"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <Label Content="Revit Version:" FontWeight="Bold"/>
+                            <Label Content="{Binding SelectedProject.RevitVersion}"/>
+                        </StackPanel>
+                    </StackPanel>
+                    <GroupBox Grid.Column="1" Grid.Row="1" Style="{StaticResource LightPanelBox}" Header="Tasks">
+                        <DockPanel Grid.Column="1">
+                            <StackPanel DockPanel.Dock="Bottom" Style="{StaticResource ButtonPanel}">
+                                <Button x:Name="editTaskButton" Style="{StaticResource PanelButton}" Content="Edit" Click="editTaskButton_Click"/>
+                                <Button x:Name="addTaskButton" Style="{StaticResource PanelButton}" Content="Add" Click="addTaskButton_Click"/>
+                                <Button x:Name="removeTaskButton" Style="{StaticResource PanelButton}" Content="Remove" Click="removeTaskButton_Click"/>
+                            </StackPanel>
+                            <ListBox x:Name="tasksListBox" ItemsSource="{Binding SelectedProject.TaskList}">
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <Label Content="{Binding FriendlyName}"/>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+                        </DockPanel>
+                    </GroupBox>
                 </Grid>
-            </DockPanel>
-        </TabItem>
-        <TabItem Header="Active">
-            <DockPanel>                
-            </DockPanel>
-        </TabItem>
-    </TabControl>
+            </TabItem>
+        </TabControl>
+    </DockPanel>
 </Window>

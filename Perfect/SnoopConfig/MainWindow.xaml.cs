@@ -134,6 +134,40 @@ namespace DougKlassen.Revit.SnoopConfigurator
         }
 
         /// <summary>
+        /// The project that is currently selected in the project pane
+        /// </summary>
+        public static readonly DependencyProperty SelectedProjectProperty =
+            DependencyProperty.Register("SelectedProject", typeof(SnoopProject), typeof(MainWindow));
+        public SnoopProject SelectedProject
+        {
+            get
+            {
+                return (SnoopProject)GetValue(SelectedProjectProperty);
+            }
+            set
+            {
+                SetValue(SelectedProjectProperty, value);
+            }
+        }
+
+        /// <summary>
+        /// The task that is currently selected in the task pane
+        /// </summary>
+        public static readonly DependencyProperty SelectedTaskProperty =
+            DependencyProperty.Register("SelectedTask", typeof(SnoopTask), typeof(MainWindow));
+        public SnoopTask SelectedTask
+        {
+            get
+            {
+                return (SnoopTask)GetValue(SelectedTaskProperty);
+            }
+            set
+            {
+                SetValue(SelectedTaskProperty, value);
+            }
+        }
+
+        /// <summary>
         /// Read the config file and parse the contents into a new SnoopConfig object
         /// </summary>
         private void LoadConfig()
@@ -183,6 +217,7 @@ namespace DougKlassen.Revit.SnoopConfigurator
             }
         }
 
+//TODO: add warning dialogs about overwriting config files
         private void generateButton_Click(object sender, RoutedEventArgs e)
         {
             Config = new SnoopConfig();
@@ -217,6 +252,57 @@ namespace DougKlassen.Revit.SnoopConfigurator
             {
                 MessageBox.Show("Couldn't open configuration file for editing");
             }
+        }
+
+        private void projectsListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            SelectedProject = projectsListBox.SelectedItem as SnoopProject;
+        }
+
+        private void editProjectButton_Click(object sender, RoutedEventArgs e)
+        {
+            SnoopProject editProject = SelectedProject.Clone() as SnoopProject;
+            ConfigureProjectWindow configureWindow
+                = new ConfigureProjectWindow(editProject, Config.RevitFilePaths.Keys);
+            Boolean result = (Boolean)configureWindow.ShowDialog();
+            if (result)
+            {
+                SelectedProject.SetValues(editProject);
+                HasUnsavedChanges = true;
+            }
+        }
+
+        private void addProjectButton_Click(object sender, RoutedEventArgs e)
+        {
+            SnoopProject newProject = new SnoopProject();
+            newProject.ProjectName = "Project " + (Config.ActiveProjects.Count + 1).ToString();
+            ConfigureProjectWindow configureWindow = new ConfigureProjectWindow(newProject, Config.RevitFilePaths.Keys);
+            Boolean result = (Boolean) configureWindow.ShowDialog();
+            if (result)
+            {
+                Config.ActiveProjects.Add(newProject);
+                HasUnsavedChanges = true;
+            }
+        }
+
+        private void removeProjectButton_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void editTaskButton_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void addTaskButton_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void removeTaskButton_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

@@ -6,14 +6,19 @@
     <Application.Resources>
         <ResourceDictionary>
             <Style x:Key="PanelButton" TargetType="Button">
-                <Setter Property="Margin" Value="0,10,10,10"/>
+                <Setter Property="Margin" Value="5,1,5,1"/>
                 <Setter Property="Height" Value="20"/>
                 <Setter Property="Padding" Value="5,2,5,3"/>
             </Style>
-            <Style x:Key="LightPanelBorder" TargetType="Border">
+            <Style x:Key="LightPanelBox" TargetType="GroupBox">
                 <Setter Property="BorderBrush" Value="Gray"/>
                 <Setter Property="BorderThickness" Value="2"/>
-                <Setter Property="Margin" Value="10,0,10,10"/>
+                <Setter Property="Margin" Value="10,0,10,6"/>
+            </Style>
+            <Style x:Key="ButtonPanel" TargetType="StackPanel">
+                <Setter Property="Margin" Value="15,6,15,10"/>
+                <Setter Property="Orientation" Value="Horizontal"/>
+                <Setter Property="HorizontalAlignment" Value="Right"/>
             </Style>
         </ResourceDictionary>
     </Application.Resources>

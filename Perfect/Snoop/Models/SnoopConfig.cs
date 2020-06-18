@@ -1,37 +1,121 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Collections.Generic;
-using System.IO;
+using System.Runtime.CompilerServices;
+using System.Collections.ObjectModel;
 
 namespace DougKlassen.Revit.Snoop.Models
 {
-    public class SnoopConfig
+    public class SnoopConfig : INotifyPropertyChanged
     {
+        #region Fields
         FileLocations fileLocations = FileLocations.Instance;
 
-        public String HomeDirectoryPath { get; set; }
-        public String ConfigFilePath { get; set; }
-        public String CurrentTaskFilePath { get; set; }
-        public IEnumerable<SnoopTask> TaskList { get; set; }
-        public IEnumerable<String> ActiveProjects { get; set; }
-        public Dictionary<String, String> RevitFilePaths { get; set; }
+        public event PropertyChangedEventHandler PropertyChanged;
 
+        private String homeDirectoryPath;
+        private String configFileName;
+        private String taskFileName;
+        private ObservableCollection<SnoopProject> activeProjects;
+        private Dictionary<String, String> revitFilePaths;
+        #endregion Fields
+
+        #region Constructors
         /// <summary>
         /// Create a new SnoopConfig object. Values will not be set;
         /// </summary>
         public SnoopConfig()
         {
         }
+        #endregion Constructors
 
+        #region Properties
+        /// <summary>
+        /// The directory containing all config and task files
+        /// </summary>
+        public String HomeDirectoryPath {
+            get
+            {
+                return homeDirectoryPath;
+            }
+            set
+            {
+                homeDirectoryPath = value;
+                OnPropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// The file name of the configuration file
+        /// </summary>
+        public String ConfigFileName {
+            get
+            {
+                return configFileName;
+            }
+            set
+            {
+                configFileName = value;
+                OnPropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// The file name used for task files
+        /// </summary>
+        public String TaskFileName {
+            get
+            {
+                return taskFileName;
+            }
+            set
+            {
+                taskFileName = value;
+                OnPropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// All projects being processed
+        /// </summary>
+        public ObservableCollection<SnoopProject> ActiveProjects {
+            get
+            {
+                return activeProjects;
+            }
+            set
+            {
+                activeProjects = value;
+                OnPropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// All Revit installations available. The key is the version year. The value is the file path.
+        /// </summary>
+        public Dictionary<String, String> RevitFilePaths {
+            get
+            {
+                return revitFilePaths;
+            }
+            set
+            {
+                revitFilePaths = value;
+                OnPropertyChanged();
+            }
+        }
+        #endregion Properties
+
+        #region Methods
         /// <summary>
         /// Set the config settings to default values
         /// </summary>
         public void SetDefaultValues()
         {
             HomeDirectoryPath = fileLocations.HomeDirectoryPath;
-            ConfigFilePath = fileLocations.ConfigFilePath;
-            CurrentTaskFilePath = fileLocations.TaskFileName;
-            TaskList = new List<SnoopTask>();
-            ActiveProjects = new List<String>();
+            ConfigFileName = fileLocations.ConfigFileName;
+            TaskFileName = fileLocations.TaskFileName;
+            ActiveProjects = new ObservableCollection<SnoopProject>();
             RevitFilePaths = fileLocations.RevitFilePaths;
         }
 
@@ -43,8 +127,8 @@ namespace DougKlassen.Revit.Snoop.Models
         {
             String msg = String.Empty;
             msg += "Home Directory Path: " + HomeDirectoryPath;
-            msg += "\nFile Path: " + ConfigFilePath;
-            msg += "\nCurrent Task Path: " + CurrentTaskFilePath;
+            msg += "\nConfiguration File: " + ConfigFileName;
+            msg += "\nCurrent Task File: " + TaskFileName;
             msg += "\nRevit Installations:";
             foreach (String install in RevitFilePaths.Keys)
             {
@@ -53,5 +137,16 @@ namespace DougKlassen.Revit.Snoop.Models
 
             return msg;
         }
+
+        /// <summary>
+        /// Raise the PropertyChanged event
+        /// </summary>
+        /// <param name="name">The name of the Property that has been updated. This is provided via
+        /// the CallerMemberName attribute</param>
+        protected void OnPropertyChanged([CallerMemberName] String propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+        #endregion Methods
     }
 }

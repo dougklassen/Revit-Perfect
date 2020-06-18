@@ -20,7 +20,7 @@ namespace DougKlassen.Revit.Snoop
             RevitFilePaths = new Dictionary<String, String>();
             for (int i = 2010; i <= 2030; i++)
             {
-                String revitPath = String.Format(@"C:\Program Files\Autodesk\Revit {0}\Revit.exe", i);
+                String revitPath = GetRevitPathFromVersion(i.ToString());
                 if (File.Exists(revitPath))
                 {
                     RevitFilePaths.Add(i.ToString(), revitPath);
@@ -121,6 +121,17 @@ namespace DougKlassen.Revit.Snoop
         private String StandardizeToTrailingBackslash(String path)
         {
             return StandardizeToNoTrailingBackslash(path) + "\\";
+        }
+
+        /// <summary>
+        /// Return the path to a Revit install based on the version year
+        /// </summary>
+        /// <param name="version">The version of Revit as a string representing the year, e.g. "2020"</param>
+        /// <returns>The path to the Revit executable for the specified version</returns>
+        private String GetRevitPathFromVersion(String version)
+        {
+            String revitPath = String.Format(@"C:\Program Files\Autodesk\Revit {0}\Revit.exe", version);
+            return revitPath;
         }
     }
 }
