@@ -287,7 +287,8 @@ namespace DougKlassen.Revit.SnoopConfigurator
 
         private void removeProjectButton_Click(object sender, RoutedEventArgs e)
         {
-
+            Config.ActiveProjects.Remove(SelectedProject);
+            HasUnsavedChanges = true;
         }
 
         private void editTaskButton_Click(object sender, RoutedEventArgs e)
