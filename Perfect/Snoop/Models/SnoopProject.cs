@@ -1,12 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
 namespace DougKlassen.Revit.Snoop.Models
 {
-    public class SnoopProject : INotifyPropertyChanged, ICloneable
+    public class SnoopProject : ICloneable, INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -85,13 +84,19 @@ namespace DougKlassen.Revit.Snoop.Models
         }
 
         /// <summary>
-        /// Raise the PropertyChanged event
+        /// Sets all properties to match the source SnoopProject, using a deep copy
         /// </summary>
-        /// <param name="name">The name of the Property that has been updated. This is provided via
-        /// the CallerMemberName attribute</param>
-        protected void OnPropertyChanged([CallerMemberName] String propertyName = null)
+        /// <param name="source">The source SnoopProject</param>
+        public void SetValues(SnoopProject source)
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            this.ProjectName = source.ProjectName;
+            this.FilePath = source.FilePath;
+            this.RevitVersion = source.RevitVersion;
+            this.TaskList = new ObservableCollection<SnoopTask>();
+            foreach (SnoopTask task in source.TaskList)
+            {
+                this.TaskList.Add((SnoopTask)task.Clone());
+            }
         }
 
         /// <summary>
@@ -106,19 +111,13 @@ namespace DougKlassen.Revit.Snoop.Models
         }
 
         /// <summary>
-        /// Sets all properties to match the source SnoopProject, using a deep copy
+        /// Raise the PropertyChanged event
         /// </summary>
-        /// <param name="source">The source SnoopProject</param>
-        public void SetValues(SnoopProject source)
+        /// <param name="name">The name of the Property that has been updated. This is provided via
+        /// the CallerMemberName attribute</param>
+        protected void OnPropertyChanged([CallerMemberName] String propertyName = null)
         {
-            this.ProjectName = source.ProjectName;
-            this.FilePath = source.FilePath;
-            this.RevitVersion = source.RevitVersion;
-            this.TaskList = new ObservableCollection<SnoopTask>();
-            foreach (SnoopTask task in source.TaskList)
-            {
-                this.TaskList.Add((SnoopTask)task.Clone());
-            }
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

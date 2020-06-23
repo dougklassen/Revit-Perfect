@@ -1,21 +1,11 @@
-﻿using System;
-using System.IO;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
+﻿using DougKlassen.Revit.Snoop;
 using DougKlassen.Revit.Snoop.Models;
 using DougKlassen.Revit.Snoop.Repositories;
-using DougKlassen.Revit.Snoop;
+using System;
+using System.Diagnostics;
+using System.IO;
+using System.Windows;
+using System.Windows.Controls;
 
 namespace DougKlassen.Revit.SnoopConfigurator
 {
@@ -35,6 +25,9 @@ namespace DougKlassen.Revit.SnoopConfigurator
             LoadConfig();
 
             ConfigFilePath = fileLocations.ConfigFilePath;
+
+            CanEditProject = false; //set to false until a project is selected
+            CanEditTask = false; //set to false until a task is selected
 
             InitializeComponent();
         }
@@ -168,6 +161,40 @@ namespace DougKlassen.Revit.SnoopConfigurator
         }
 
         /// <summary>
+        /// Whether an editable project is selected as the SelectedProject
+        /// </summary>
+        public static readonly DependencyProperty CanEditProjectProperty =
+            DependencyProperty.Register("CanEditProject", typeof(Boolean), typeof(MainWindow));
+        public Boolean CanEditProject
+        {
+            get
+            {
+                return (Boolean)GetValue(CanEditProjectProperty);
+            }
+            set
+            {
+                SetValue(CanEditProjectProperty, value);
+            }
+        }
+
+        /// <summary>
+        /// Whether an editable task is selected as the SelectedTask
+        /// </summary>
+        public static readonly DependencyProperty CanEditTaskProperty =
+            DependencyProperty.Register("CanEditTask", typeof(Boolean), typeof(MainWindow));
+        public Boolean CanEditTask
+        {
+            get
+            {
+                return (Boolean)GetValue(CanEditTaskProperty);
+            }
+            set
+            {
+                SetValue(CanEditTaskProperty, value);
+            }
+        }
+
+        /// <summary>
         /// Read the config file and parse the contents into a new SnoopConfig object
         /// </summary>
         private void LoadConfig()
@@ -257,13 +284,14 @@ namespace DougKlassen.Revit.SnoopConfigurator
         private void projectsListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             SelectedProject = projectsListBox.SelectedItem as SnoopProject;
+            CanEditProject = true;
         }
 
         private void editProjectButton_Click(object sender, RoutedEventArgs e)
         {
             SnoopProject editProject = SelectedProject.Clone() as SnoopProject;
-            ConfigureProjectWindow configureWindow
-                = new ConfigureProjectWindow(editProject, Config.RevitFilePaths.Keys);
+            ConfigureProjectWindow configureWindow =
+                new ConfigureProjectWindow(editProject, Config.RevitFilePaths.Keys);
             Boolean result = (Boolean)configureWindow.ShowDialog();
             if (result)
             {
@@ -293,17 +321,39 @@ namespace DougKlassen.Revit.SnoopConfigurator
 
         private void editTaskButton_Click(object sender, RoutedEventArgs e)
         {
-
+            SnoopTask editTask = SelectedTask.Clone() as SnoopTask;
+            ConfigureTaskWindow configureWindow =
+                new ConfigureTaskWindow(editTask);
+            Boolean result = (Boolean)configureWindow.ShowDialog();
+            if (result)
+            {
+                SelectedTask.SetValues(editTask);
+                HasUnsavedChanges = true;
+            }
         }
 
         private void addTaskButton_Click(object sender, RoutedEventArgs e)
         {
-
+            SnoopTask task = new SnoopTask();
+            ConfigureTaskWindow window = new ConfigureTaskWindow(task);
+            Boolean result = (Boolean)window.ShowDialog();
+            if (result)
+            {
+                SelectedProject.TaskList.Add(task);
+                HasUnsavedChanges = true;
+            }
         }
 
         private void removeTaskButton_Click(object sender, RoutedEventArgs e)
         {
+            SelectedProject.TaskList.Remove(SelectedTask);
+            HasUnsavedChanges = true;
+        }
 
+        private void tasksListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            SelectedTask = tasksListBox.SelectedItem as SnoopTask;
+            CanEditTask = true;
         }
     }
 }

@@ -1,0 +1,25 @@
+﻿<Window x:Name="configureTaskWindow" x:Class="DougKlassen.Revit.SnoopConfigurator.ConfigureTaskWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:DougKlassen.Revit.SnoopConfigurator"
+        mc:Ignorable="d"
+        Title="Configure Task" Height="450" Width="330" ResizeMode="NoResize"
+        DataContext="{Binding ElementName=configureTaskWindow}">
+    <DockPanel>
+        <DockPanel DockPanel.Dock="Top" Margin="10">
+            <Label Content="Task Type: "/>
+            <ComboBox x:Name="taskTypeComboBox" ItemsSource="{Binding AvailableTaskTypes}" SelectionChanged="taskTypeComboBox_SelectionChanged"/>
+        </DockPanel>
+        <StackPanel DockPanel.Dock="Bottom" Style="{StaticResource ButtonPanel}">
+            <Button x:Name="okButton" Style="{StaticResource PanelButton}" Content="OK" Click="okButton_Click"/>
+            <Button x:Name="cancelButton" Style="{StaticResource PanelButton}" Content="Cancel" Click="cancelButton_Click"/>
+        </StackPanel>
+        <GroupBox Style="{StaticResource LightPanelBox}" Header="Task Parameters">
+            <ScrollViewer>
+                <StackPanel x:Name="taskParametersStackPanel" />
+            </ScrollViewer>
+        </GroupBox>
+    </DockPanel>
+</Window>

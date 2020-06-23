@@ -43,15 +43,15 @@
                         <RowDefinition/>
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="275"/>
+                        <ColumnDefinition Width="330"/>
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
                     <GroupBox Grid.Column="0" Grid.RowSpan="2" Style="{StaticResource LightPanelBox}" Header="Projects">
                         <DockPanel>
                             <StackPanel DockPanel.Dock="Bottom" Style="{StaticResource ButtonPanel}">
-                                <Button x:Name="editProjectButton" Style="{StaticResource PanelButton}" Content="Edit" Click="editProjectButton_Click"/>
+                                <Button x:Name="editProjectButton" Style="{StaticResource PanelButton}" Content="Edit" Click="editProjectButton_Click" IsEnabled="{Binding CanEditProject}"/>
                                 <Button x:Name="addProjectButton" Content="Add" Style="{StaticResource PanelButton}" Click="addProjectButton_Click"/>
-                                <Button x:Name="removeProjectButton" Content="Remove" Style="{StaticResource PanelButton}" Click="removeProjectButton_Click"/>
+                                <Button x:Name="removeProjectButton" Content="Remove" Style="{StaticResource PanelButton}" Click="removeProjectButton_Click" IsEnabled="{Binding CanEditProject}"/>
                             </StackPanel>
                             <ListBox x:Name="projectsListBox" ItemsSource="{Binding Config.ActiveProjects}" SelectionChanged="projectsListBox_SelectionChanged">
                                 <ListBox.ItemTemplate>
@@ -79,11 +79,11 @@
                     <GroupBox Grid.Column="1" Grid.Row="1" Style="{StaticResource LightPanelBox}" Header="Tasks">
                         <DockPanel Grid.Column="1">
                             <StackPanel DockPanel.Dock="Bottom" Style="{StaticResource ButtonPanel}">
-                                <Button x:Name="editTaskButton" Style="{StaticResource PanelButton}" Content="Edit" Click="editTaskButton_Click"/>
-                                <Button x:Name="addTaskButton" Style="{StaticResource PanelButton}" Content="Add" Click="addTaskButton_Click"/>
-                                <Button x:Name="removeTaskButton" Style="{StaticResource PanelButton}" Content="Remove" Click="removeTaskButton_Click"/>
+                                <Button x:Name="editTaskButton" Style="{StaticResource PanelButton}" Content="Edit" Click="editTaskButton_Click" IsEnabled="{Binding CanEditTask}"/>
+                                <Button x:Name="addTaskButton" Style="{StaticResource PanelButton}" Content="Add" Click="addTaskButton_Click" IsEnabled="{Binding CanEditProject}"/>
+                                <Button x:Name="removeTaskButton" Style="{StaticResource PanelButton}" Content="Remove" Click="removeTaskButton_Click" IsEnabled="{Binding CanEditTask}"/>
                             </StackPanel>
-                            <ListBox x:Name="tasksListBox" ItemsSource="{Binding SelectedProject.TaskList}">
+                            <ListBox x:Name="tasksListBox" ItemsSource="{Binding SelectedProject.TaskList}" SelectionChanged="tasksListBox_SelectionChanged">
                                 <ListBox.ItemTemplate>
                                     <DataTemplate>
                                         <Label Content="{Binding FriendlyName}"/>

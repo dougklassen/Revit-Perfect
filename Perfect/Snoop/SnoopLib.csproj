@@ -94,6 +94,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="FileLocations.cs" />
+    <Compile Include="Helpers.cs" />
     <Compile Include="Models\CategoryModel.cs" />
     <Compile Include="Models\ColorModel.cs" />
     <Compile Include="Models\ObjectStylesModel.cs" />
@@ -102,6 +103,7 @@
     <Compile Include="Models\ScheduleModel.cs" />
     <Compile Include="Models\SnoopProject.cs" />
     <Compile Include="Models\SnoopTask.cs" />
+    <Compile Include="Models\SnoopTaskParameter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Models\SnoopConfig.cs" />
     <Compile Include="Repositories\CategoryCatalogJsonRepo.cs" />

@@ -1,9 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 
 namespace DougKlassen.Revit.Snoop.Models
 {
-    public enum SnoopTasks
+    /// <summary>
+    /// An enumeration of task types
+    /// </summary>
+    public enum SnoopTaskType
     {
         ExportAllData,
         Audit,
@@ -11,8 +17,21 @@ namespace DougKlassen.Revit.Snoop.Models
         AuditCompact
     }
 
-    public class SnoopTask : ICloneable
+    /// <summary>
+    /// A task run on a project by the task engine
+    /// </summary>
+    public class SnoopTask : ICloneable, INotifyPropertyChanged
     {
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        private SnoopTaskType taskType;
+        private ObservableCollection<SnoopTaskParameter> taskParameters;
+
+        public SnoopTask()
+        {            
+            TaskParameters = new ObservableCollection<SnoopTaskParameter>();
+        }
+
         /// <summary>
         /// The user friendly name for the task
         /// </summary>
@@ -20,19 +39,82 @@ namespace DougKlassen.Revit.Snoop.Models
         {
             get
             {
-                return Enum.GetName(typeof(SnoopTasks), Task);
+                return TaskType.GetFriendlyName();
             }
         }
 
         /// <summary>
         /// The type of task
         /// </summary>
-        public SnoopTasks Task { get; set; }
+        public SnoopTaskType TaskType
+        {
+            get
+            {
+                return taskType;
+            }
+            set
+            {
+                taskType = value;
+                OnPropertyChanged();
+                OnPropertyChanged("FriendlyName"); //changing the TaskType also changes FriendlyName
+            }
+        }
 
         /// <summary>
         /// Parameters passed to the engine executing the task
         /// </summary>
-        public Dictionary<String, String> Parameters { get; set; }
+        public ObservableCollection<SnoopTaskParameter> TaskParameters
+        {
+            get
+            {
+                return taskParameters;
+            }
+            set
+            {
+                taskParameters = value;
+                OnPropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// Return a canonical list of all parameters types used by a specified SnoopTaskType.
+        /// Parameter type determines the interface presented when setting the parameter.
+        /// </summary>
+        /// <param name="taskType">The specified task type</param>
+        /// <returns>Parameters used by the task</returns>
+        public static List<SnoopParameterType> GetParameterTypes(SnoopTaskType taskType)
+        {
+            List<SnoopParameterType> paramTypes = new List<SnoopParameterType>();
+
+            switch (taskType)
+            {
+                case SnoopTaskType.ExportAllData:
+                    paramTypes.Add(SnoopParameterType.FileOutputDirectory);
+                    break;
+                case SnoopTaskType.Audit:
+                    break;
+                case SnoopTaskType.Compact:
+                    break;
+                case SnoopTaskType.AuditCompact:
+                    break;
+            }
+
+            return paramTypes;
+        }
+
+        /// <summary>
+        /// Sets all values to match the source task using a deep copy
+        /// </summary>
+        /// <param name="source">The source SnoopTask</param>
+        public void SetValues(SnoopTask source)
+        {
+            this.TaskType = source.TaskType;
+            this.TaskParameters = new ObservableCollection<SnoopTaskParameter>();
+            foreach (SnoopTaskParameter taskParam in source.TaskParameters)
+            {
+                this.TaskParameters.Add(taskParam);
+            }
+        }
 
         /// <summary>
         /// Return a clone of the task
@@ -42,23 +124,19 @@ namespace DougKlassen.Revit.Snoop.Models
         {
             SnoopTask clone = new SnoopTask();
 
-            clone.SetValue(this);
+            clone.SetValues(this);
 
             return clone;
         }
 
         /// <summary>
-        /// Sets all values to match the source task using a deep copy
+        /// Raise the PropertyChanged event
         /// </summary>
-        /// <param name="source">The source SnoopTask</param>
-        public void SetValue(SnoopTask source)
+        /// <param name="name">The name of the Property that has been updated. This is provided via
+        /// the CallerMemberName attribute</param>
+        protected void OnPropertyChanged([CallerMemberName] String propertyName = null)
         {
-            this.Task = source.Task;
-            this.Parameters = new Dictionary<String, String>();
-            foreach (String key in source.Parameters.Keys)
-            {
-                this.Parameters.Add(key, source.Parameters[key]);
-            }
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }
