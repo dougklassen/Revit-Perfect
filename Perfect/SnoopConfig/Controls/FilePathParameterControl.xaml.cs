@@ -1,25 +1,13 @@
 ﻿using DougKlassen.Revit.Snoop.Models;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace DougKlassen.Revit.SnoopConfigurator
 {
     /// <summary>
     /// Interaction logic for FilePathParameterControl.xaml
     /// </summary>
-        public partial class FileOutputPathParameterControl : UserControl, IParameterControl
+    public partial class FileOutputPathParameterControl : UserControl, IParameterControl
     {
         public FileOutputPathParameterControl(SnoopTaskParameter taskParameter)
         {
@@ -28,5 +16,15 @@ namespace DougKlassen.Revit.SnoopConfigurator
         }
 
         public SnoopTaskParameter TaskParameter { get; set; }
+
+        private void browseButton_Click(object sender, System.Windows.RoutedEventArgs e)
+        {
+            System.Windows.Forms.FolderBrowserDialog selectDialog = new System.Windows.Forms.FolderBrowserDialog();
+            System.Windows.Forms.DialogResult result = selectDialog.ShowDialog();
+            if (result == System.Windows.Forms.DialogResult.OK)
+            {
+                TaskParameter.ParameterValue = selectDialog.SelectedPath;
+            }
+        }
     }
 }

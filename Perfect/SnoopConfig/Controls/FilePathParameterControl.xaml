@@ -7,10 +7,12 @@
              mc:Ignorable="d"
              x:Name="filePathParameterControl" 
              DataContext="{Binding ElementName=filePathParameterControl}" 
-             d:DesignWidth="800" Height="34" Margin="5">
-    <DockPanel>
-        <Label DockPanel.Dock="Left" Content="{Binding Path=TaskParameter.FriendlyName}"/>
-        <Button x:Name="browseButton" DockPanel.Dock="Right" Content="Browse"/>
-        <TextBox x:Name="valueTextBlock" Text="{Binding Path=TaskParameter.ParameterValue}"/>
-    </DockPanel>
+             d:DesignWidth="800" Margin="5">
+    <StackPanel>
+        <Label DockPanel.Dock="Left" Content="{Binding Path=TaskParameter.FriendlyName}" FontWeight="Bold"/>
+        <DockPanel>
+            <Button x:Name="browseButton" DockPanel.Dock="Right" Content="Browse" Width="60" Click="browseButton_Click"/>
+            <TextBox x:Name="valueTextBlock" Text="{Binding Path=TaskParameter.ParameterValue}" Margin="0,0,5,0"/>
+        </DockPanel>
+    </StackPanel>
 </UserControl>

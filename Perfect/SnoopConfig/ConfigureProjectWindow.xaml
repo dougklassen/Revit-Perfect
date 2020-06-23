@@ -13,14 +13,14 @@
             <Button x:Name="cancelButton" Style="{StaticResource PanelButton}" Content="Cancel" Click="cancelButton_Click"/>
         </StackPanel>
         <StackPanel Margin="10,12,10,0">
-            <Label Content="Project Name"/>
+            <Label Content="Project Name" FontWeight="Bold"/>
             <TextBox Text="{Binding Project.ProjectName}"/>
-            <Label Content="File Path"/>
+            <Label Content="File Path" FontWeight="Bold"/>
             <DockPanel>
-                <Button DockPanel.Dock="Right" Content="Browse" Width="60" Click="Button_Click"/>
+                <Button x:Name="browseButton" DockPanel.Dock="Right" Content="Browse" Width="60" Click="browseButton_Click"/>
                 <TextBox Text="{Binding Project.FilePath}" Margin="0,0,5,0"/>
             </DockPanel>
-            <Label Content="Revit Version"/>
+            <Label Content="Revit Version" FontWeight="Bold"/>
             <ComboBox x:Name="revitVersionComboBox" SelectionChanged="revitVersionComboBox_SelectionChanged" Width="160" HorizontalAlignment="Left" />
         </StackPanel>
     </DockPanel>

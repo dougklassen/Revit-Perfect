@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DougKlassen.Revit.SnoopConfigurator"
         mc:Ignorable="d"
-        Title="Configure Task" Height="450" Width="330" ResizeMode="NoResize"
+        Title="Configure Task" Height="450" Width="550" ResizeMode="NoResize"
         DataContext="{Binding ElementName=configureTaskWindow}">
     <DockPanel>
         <DockPanel DockPanel.Dock="Top" Margin="10">

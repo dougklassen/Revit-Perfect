@@ -15,27 +15,6 @@
             <Button x:Name="writeButton" Style="{StaticResource PanelButton}" Content="Save Config File" Click="writeButton_Click" IsEnabled="{Binding HasUnsavedChanges}"/>
         </StackPanel>
         <TabControl x:Name="tabControl">
-            <TabItem Header="Configuration">
-                <DockPanel>
-                    <StackPanel DockPanel.Dock="Top" Style="{StaticResource ButtonPanel}">
-                        <TextBlock x:Name="fileStatusTextBlock" Text="{Binding ConfigFileStatus}" Margin="10,0,10,10"/>
-                    </StackPanel>
-                    <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition/>
-                            <RowDefinition Height="150"/>
-                        </Grid.RowDefinitions>
-                        <GroupBox Grid.Row="0" Style="{StaticResource LightPanelBox}" Header="{Binding ConfigFilePath}">
-                            <ScrollViewer>
-                                <TextBlock Text="{Binding ConfigFileContents}" Margin="5"/>
-                            </ScrollViewer>
-                        </GroupBox>
-                        <GroupBox Grid.Row="1" Style="{StaticResource LightPanelBox}" Header="Config Settings">
-                            <TextBlock Text="{Binding ConfigFileDescription}" Margin="5"/>
-                        </GroupBox>
-                    </Grid>
-                </DockPanel>
-            </TabItem>
             <TabItem Header="Active Projects">
                 <Grid>
                     <Grid.RowDefinitions>
@@ -93,6 +72,27 @@
                         </DockPanel>
                     </GroupBox>
                 </Grid>
+            </TabItem>
+            <TabItem Header="Configuration">
+                <DockPanel>
+                    <StackPanel DockPanel.Dock="Top" Style="{StaticResource ButtonPanel}">
+                        <TextBlock x:Name="fileStatusTextBlock" Text="{Binding ConfigFileStatus}" Margin="10,0,10,10"/>
+                    </StackPanel>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition Height="150"/>
+                        </Grid.RowDefinitions>
+                        <GroupBox Grid.Row="0" Style="{StaticResource LightPanelBox}" Header="{Binding ConfigFilePath}">
+                            <ScrollViewer>
+                                <TextBlock Text="{Binding ConfigFileContents}" Margin="5"/>
+                            </ScrollViewer>
+                        </GroupBox>
+                        <GroupBox Grid.Row="1" Style="{StaticResource LightPanelBox}" Header="Config Settings">
+                            <TextBlock Text="{Binding ConfigFileDescription}" Margin="5"/>
+                        </GroupBox>
+                    </Grid>
+                </DockPanel>
             </TabItem>
         </TabControl>
     </DockPanel>
