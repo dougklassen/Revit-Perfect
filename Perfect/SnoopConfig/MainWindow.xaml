@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:DougKlassen.Revit.SnoopConfigurator"
         mc:Ignorable="d"
         Title="Snoop Configurator"
-        DataContext="{Binding ElementName=snoopConfiguratorWindow}" MinWidth="750" MinHeight="550">
+        DataContext="{Binding ElementName=snoopConfiguratorWindow}" MinWidth="750" MinHeight="550" Closing="snoopConfiguratorWindow_Closing">
     <DockPanel>
         <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right"  Margin="10">
             <Button x:Name="editButton" Style="{StaticResource PanelButton}" Content="Edit Config File" Click="editButton_Click"/>

@@ -403,5 +403,18 @@ namespace DougKlassen.Revit.SnoopConfigurator
             SelectedTask = tasksListBox.SelectedItem as SnoopTask;
             CanEditTask = true;
         }
+
+        private void snoopConfiguratorWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if (HasUnsavedChanges)
+            {
+                MessageBoxResult result = MessageBox.Show("Close without saving changes?", "Unsaved changes", MessageBoxButton.OKCancel);
+
+                if (result != MessageBoxResult.OK)
+                {
+                    e.Cancel = true;
+                }
+            }
+        }
     }
 }
