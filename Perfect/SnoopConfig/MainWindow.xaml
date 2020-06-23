@@ -32,7 +32,7 @@
                                 <Button x:Name="addProjectButton" Content="Add" Style="{StaticResource PanelButton}" Click="addProjectButton_Click"/>
                                 <Button x:Name="removeProjectButton" Content="Remove" Style="{StaticResource PanelButton}" Click="removeProjectButton_Click" IsEnabled="{Binding CanEditProject}"/>
                             </StackPanel>
-                            <ListBox x:Name="projectsListBox" ItemsSource="{Binding Config.ActiveProjects}" SelectionChanged="projectsListBox_SelectionChanged">
+                            <ListBox x:Name="projectsListBox" ItemsSource="{Binding Path=Config.ActiveProjects}" SelectionChanged="projectsListBox_SelectionChanged">
                                 <ListBox.ItemTemplate>
                                     <DataTemplate>
                                         <Label Content="{Binding ProjectName}"/>

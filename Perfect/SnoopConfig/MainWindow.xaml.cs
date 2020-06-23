@@ -14,7 +14,6 @@ namespace DougKlassen.Revit.SnoopConfigurator
     /// </summary>
     public partial class MainWindow : Window
     {
-
         public MainWindow()
         {
             FileLocations fileLocations = FileLocations.Instance;
@@ -35,10 +34,18 @@ namespace DougKlassen.Revit.SnoopConfigurator
         /// <summary>
         /// The active configuration
         /// </summary>
+        public static readonly DependencyProperty ConfigProperty =
+            DependencyProperty.Register("ConfigProperty", typeof(SnoopConfig), typeof(MainWindow));
         public SnoopConfig Config
         {
-            get;
-            set;
+            get
+            {
+                return (SnoopConfig)GetValue(ConfigProperty);
+            }
+            set
+            {
+                SetValue(ConfigProperty, value);
+            }
         }
 
         /// <summary>
@@ -244,25 +251,66 @@ namespace DougKlassen.Revit.SnoopConfigurator
             }
         }
 
-//TODO: add warning dialogs about overwriting config files
+        /// <summary>
+        /// Reset all selections and reset the project list
+        /// </summary>
+        private void RefreshAll()
+        {
+            SelectedTask = null;
+            SelectedProject = null;
+            //ItemsSource property needs to be manually updated because the binding still points to the property of theold config object
+            projectsListBox.ItemsSource = Config.ActiveProjects; 
+        }
+
         private void generateButton_Click(object sender, RoutedEventArgs e)
         {
-            Config = new SnoopConfig();
-            Config.SetDefaultValues();
-            ConfigFileDescription = Config.GetDescription();
+            MessageBoxResult result = MessageBox.Show(
+                "Overwrite configuration with default settings?",
+                "Overwrite Settings",                
+                MessageBoxButton.OKCancel);
 
-            HasUnsavedChanges = true;
+            if (result == MessageBoxResult.OK)
+            {
+                Config = new SnoopConfig();
+                Config.SetDefaultValues();
+                ConfigFileDescription = Config.GetDescription();
+
+                RefreshAll();
+
+                HasUnsavedChanges = true;
+            }
         }
 
         private void writeButton_Click(object sender, RoutedEventArgs e)
         {
-            WriteConfig();
-            HasUnsavedChanges = false;
+            if (File.Exists(ConfigFilePath))
+            {
+                MessageBoxResult result = MessageBox.Show(
+                    "Overwrite configuration file?",
+                    "Save Configuration",
+                    MessageBoxButton.OKCancel);
+
+                if (result == MessageBoxResult.OK)
+                {
+                    WriteConfig();
+                    HasUnsavedChanges = false;
+                } 
+            }
         }
 
         private void reloadButton_Click(object sender, RoutedEventArgs e)
         {
-            LoadConfig();
+            MessageBoxResult result = MessageBox.Show(
+                "Load settings from configuration file?",
+                "Load Configuration",
+                MessageBoxButton.OKCancel);
+
+            if (result == MessageBoxResult.OK)
+            {
+                LoadConfig();
+
+                RefreshAll();
+            }
         }
 
         private void editButton_Click(object sender, RoutedEventArgs e)
