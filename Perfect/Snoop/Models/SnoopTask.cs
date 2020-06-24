@@ -56,7 +56,7 @@ namespace DougKlassen.Revit.Snoop.Models
             {
                 taskType = value;
                 OnPropertyChanged();
-                OnPropertyChanged("FriendlyName"); //changing the TaskType also changes FriendlyName
+                OnPropertyChanged(nameof(FriendlyName)); //changing the TaskType also changes FriendlyName
             }
         }
 

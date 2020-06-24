@@ -14,6 +14,11 @@ namespace DougKlassen.Revit.SnoopConfigurator
     /// </summary>
     public partial class MainWindow : Window
     {
+        /// <summary>
+        /// The heading used for all message boxes displayed by this window
+        /// </summary>
+        private String messageBoxTitle = "Configurator";
+
         public MainWindow()
         {
             FileLocations fileLocations = FileLocations.Instance;
@@ -258,7 +263,7 @@ namespace DougKlassen.Revit.SnoopConfigurator
         {
             SelectedTask = null;
             SelectedProject = null;
-            //ItemsSource property needs to be manually updated because the binding still points to the property of theold config object
+            //ItemsSource property needs to be manually updated because the binding still points to the property of the old config object:
             projectsListBox.ItemsSource = Config.ActiveProjects; 
         }
 
@@ -266,7 +271,7 @@ namespace DougKlassen.Revit.SnoopConfigurator
         {
             MessageBoxResult result = MessageBox.Show(
                 "Overwrite configuration with default settings?",
-                "Overwrite Settings",                
+                messageBoxTitle,                
                 MessageBoxButton.OKCancel);
 
             if (result == MessageBoxResult.OK)
@@ -287,7 +292,7 @@ namespace DougKlassen.Revit.SnoopConfigurator
             {
                 MessageBoxResult result = MessageBox.Show(
                     "Overwrite configuration file?",
-                    "Save Configuration",
+                    messageBoxTitle,
                     MessageBoxButton.OKCancel);
 
                 if (result == MessageBoxResult.OK)
@@ -302,7 +307,7 @@ namespace DougKlassen.Revit.SnoopConfigurator
         {
             MessageBoxResult result = MessageBox.Show(
                 "Load settings from configuration file?",
-                "Load Configuration",
+                messageBoxTitle,
                 MessageBoxButton.OKCancel);
 
             if (result == MessageBoxResult.OK)
@@ -408,11 +413,15 @@ namespace DougKlassen.Revit.SnoopConfigurator
         {
             if (HasUnsavedChanges)
             {
-                MessageBoxResult result = MessageBox.Show("Close without saving changes?", "Unsaved changes", MessageBoxButton.OKCancel);
+                MessageBoxResult result = MessageBox.Show("Save unsaved changes to configuration?", "Configurator", MessageBoxButton.YesNoCancel);
 
-                if (result != MessageBoxResult.OK)
+                if (result == MessageBoxResult.Cancel)
                 {
                     e.Cancel = true;
+                }
+                else if (result == MessageBoxResult.Yes)
+                {
+                    WriteConfig();
                 }
             }
         }

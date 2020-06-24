@@ -46,7 +46,7 @@ namespace DougKlassen.Revit.Snoop.Models
             {
                 parameterType = value;
                 OnPropertyChanged();
-                OnPropertyChanged("FriendlyName"); //changing the ParameterType also changes FriendlyName
+                OnPropertyChanged(nameof(FriendlyName)); //changing the ParameterType also changes FriendlyName
             }
         }
 
