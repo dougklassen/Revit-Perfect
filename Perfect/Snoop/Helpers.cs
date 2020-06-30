@@ -57,5 +57,17 @@ namespace DougKlassen.Revit.Snoop
                     return null;
             }
         }
+
+        /// <summary>
+        /// Generates a timestamp string in the format "yyyyMMdd-HHmmss"
+        /// </summary>
+        /// <returns>A timestamp string in the format "yyyyMMdd-HHmmss"</returns>
+        public static String GetTimeStamp()
+        {
+            DateTime now = DateTime.Now;
+            return String.Format("{0}-{1}",
+                now.ToString("yyyyMMdd"),
+                now.ToString("HHmmss"));
+        }
     }
 }

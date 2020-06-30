@@ -5,30 +5,30 @@ using System.IO;
 
 namespace DougKlassen.Revit.Snoop.Repositories
 {
-    public class SnoopConfigJsonRepo : ISnoopConfigRepo
+    class SnoopScriptJsonRepo : ISnoopScriptRepo
     {
         private String filePath;
 
-        public SnoopConfigJsonRepo(String configFilePath)
+        public SnoopScriptJsonRepo(String scriptFilePath)
         {
-            filePath = configFilePath;
+            filePath = scriptFilePath;
         }
 
-        public SnoopConfig LoadConfig()
+        public SnoopScript LoadScript()
         {
             String jsonData = File.ReadAllText(filePath);
             try
             {
-                SnoopConfig config = (SnoopConfig)JsonConvert.DeserializeObject(jsonData, typeof(SnoopConfig));
-                return config;
+                SnoopScript script = (SnoopScript)JsonConvert.DeserializeObject(jsonData, typeof(SnoopScript));
+                return script;
             }
             catch (Exception e)
             {
-                throw new Exception("Couldn't parse config file", e);
+                throw new Exception("Couldn't parse script file", e);
             }
         }
 
-        public void WriteConfig(SnoopConfig config)
+        public void WriteScript(SnoopScript script)
         {
             JsonSerializerSettings settings = new JsonSerializerSettings()
             {
@@ -36,12 +36,12 @@ namespace DougKlassen.Revit.Snoop.Repositories
             };
             try
             {
-                String jsonData = JsonConvert.SerializeObject(config, settings);
+                String jsonData = JsonConvert.SerializeObject(script, settings);
                 File.WriteAllText(filePath, jsonData);
             }
             catch (Exception e)
             {
-                throw new Exception("Couldn't write config file", e);
+                throw new Exception("Couldn't write script file", e);
             }
         }
     }

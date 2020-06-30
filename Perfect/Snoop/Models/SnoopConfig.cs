@@ -61,9 +61,9 @@ namespace DougKlassen.Revit.Snoop.Models
         }
 
         /// <summary>
-        /// The file name used for task files
+        /// The file name used for task script files
         /// </summary>
-        public String TaskFileName {
+        public String ScriptFileName {
             get
             {
                 return taskFileName;
@@ -114,7 +114,7 @@ namespace DougKlassen.Revit.Snoop.Models
         {
             HomeDirectoryPath = fileLocations.HomeDirectoryPath;
             ConfigFileName = fileLocations.ConfigFileName;
-            TaskFileName = fileLocations.TaskFileName;
+            ScriptFileName = fileLocations.TaskFileName;
             ActiveProjects = new ObservableCollection<SnoopProject>();
             RevitFilePaths = fileLocations.RevitFilePaths;
         }
@@ -128,7 +128,7 @@ namespace DougKlassen.Revit.Snoop.Models
             String msg = String.Empty;
             msg += "Home Directory Path: " + HomeDirectoryPath;
             msg += "\nConfiguration File: " + ConfigFileName;
-            msg += "\nCurrent Task File: " + TaskFileName;
+            msg += "\nCurrent Task File: " + ScriptFileName;
             msg += "\nRevit Installations:";
             foreach (String install in RevitFilePaths.Keys)
             {

@@ -73,26 +73,43 @@
                     </GroupBox>
                 </Grid>
             </TabItem>
-            <TabItem Header="Configuration">
+            <TabItem Header="Task Manager">
                 <DockPanel>
-                    <StackPanel DockPanel.Dock="Top" Style="{StaticResource ButtonPanel}">
-                        <TextBlock x:Name="fileStatusTextBlock" Text="{Binding ConfigFileStatus}" Margin="10,0,10,10"/>
-                    </StackPanel>
                     <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition/>
-                            <RowDefinition Height="150"/>
-                        </Grid.RowDefinitions>
-                        <GroupBox Grid.Row="0" Style="{StaticResource LightPanelBox}" Header="{Binding ConfigFilePath}">
-                            <ScrollViewer>
-                                <TextBlock Text="{Binding ConfigFileContents}" Margin="5"/>
-                            </ScrollViewer>
-                        </GroupBox>
-                        <GroupBox Grid.Row="1" Style="{StaticResource LightPanelBox}" Header="Config Settings">
-                            <TextBlock Text="{Binding ConfigFileDescription}" Margin="5"/>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <DockPanel Grid.Column="0">
+                            <StackPanel DockPanel.Dock="Bottom" Style="{StaticResource ButtonPanel}">
+                                <Button x:Name="generateScriptsButton" Style="{StaticResource PanelButton}" Content="Generate Scripts"/>
+                            </StackPanel>
+                        </DockPanel>
+                        <GroupBox Grid.Column="1" Style="{StaticResource LightPanelBox}" Header="Session Log">
+                            <DockPanel Grid.Column="1">
+                                <ScrollViewer>
+                                    <TextBlock x:Name="logTextBlock" Text="{Binding SessionLog}"/>
+                                </ScrollViewer>
+                            </DockPanel>
                         </GroupBox>
                     </Grid>
                 </DockPanel>
+            </TabItem>
+            <TabItem Header="Configuration">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition Height="150"/>
+                    </Grid.RowDefinitions>
+                    <GroupBox Grid.Row="0" Style="{StaticResource LightPanelBox}" Header="{Binding ConfigFilePath}">
+                        <ScrollViewer>
+                            <TextBlock Text="{Binding ConfigFileContents}" Margin="5"/>
+                        </ScrollViewer>
+                    </GroupBox>
+                    <GroupBox Grid.Row="1" Style="{StaticResource LightPanelBox}" Header="Config Settings">
+                        <TextBlock Text="{Binding ConfigFileDescription}" Margin="5"/>
+                    </GroupBox>
+                </Grid>
             </TabItem>
         </TabControl>
     </DockPanel>

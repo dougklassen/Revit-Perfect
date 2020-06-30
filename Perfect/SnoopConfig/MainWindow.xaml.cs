@@ -4,6 +4,7 @@ using DougKlassen.Revit.Snoop.Repositories;
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -19,6 +20,8 @@ namespace DougKlassen.Revit.SnoopConfigurator
         /// </summary>
         private String messageBoxTitle = "Configurator";
 
+        private StringBuilder sessionLog = new StringBuilder();
+
         public MainWindow()
         {
             FileLocations fileLocations = FileLocations.Instance;
@@ -32,6 +35,8 @@ namespace DougKlassen.Revit.SnoopConfigurator
 
             CanEditProject = false; //set to false until a project is selected
             CanEditTask = false; //set to false until a task is selected
+
+            LogMessage("Snoop Configurator started");
 
             InitializeComponent();
         }
@@ -55,6 +60,23 @@ namespace DougKlassen.Revit.SnoopConfigurator
         }
 
         /// <summary>
+        /// A log of all activity during the session
+        /// </summary>
+        public static readonly DependencyProperty SessionLogProperty =
+            DependencyProperty.Register("SessionLogProperty", typeof(String), typeof(MainWindow));
+        public String SessionLog
+        {
+            get
+            {
+                return (String)GetValue(SessionLogProperty);
+            }
+            set
+            {
+                SetValue(SessionLogProperty, value);
+            }
+        }
+
+        /// <summary>
         /// The path to the configuration file
         /// </summary>
         public static readonly DependencyProperty ConfigFilePathProperty =
@@ -68,23 +90,6 @@ namespace DougKlassen.Revit.SnoopConfigurator
             set
             {
                 SetValue(ConfigFilePathProperty, value);
-            }
-        }
-
-        /// <summary>
-        /// Load status of the config file
-        /// </summary>
-        public static readonly DependencyProperty ConfigFileStatusProperty =
-            DependencyProperty.Register("ConfigFileStatus", typeof(String), typeof(MainWindow));
-        public String ConfigFileStatus
-        {
-            get
-            {
-                return (String)GetValue(ConfigFileStatusProperty);
-            }
-            set
-            {
-                SetValue(ConfigFileStatusProperty, value);
             }
         }
 
@@ -208,6 +213,16 @@ namespace DougKlassen.Revit.SnoopConfigurator
         }
 
         /// <summary>
+        /// Add a new timestamped entry to the session log
+        /// </summary>
+        /// <param name="message">The message to add</param>
+        private void LogMessage(String message)
+        {
+            sessionLog.AppendFormat("{0}: {1}\n\n", Helpers.GetTimeStamp(), message);
+            SessionLog = sessionLog.ToString();
+        }
+
+        /// <summary>
         /// Read the config file and parse the contents into a new SnoopConfig object
         /// </summary>
         private void LoadConfig()
@@ -225,15 +240,15 @@ namespace DougKlassen.Revit.SnoopConfigurator
                 }
                 catch (Exception)
                 {
-                    ConfigFileStatus = "Couldn't parse configuration file";
+                    LogMessage("Couldn't parse configuration file");
                 }
 
-                ConfigFileStatus = "Sucessfully loaded configuration file";
+                LogMessage("Sucessfully loaded configuration file");
                 HasUnsavedChanges = false;
             }
             catch (Exception)
             {
-                ConfigFileStatus = "Couldn't find configuration file";
+                LogMessage("Couldn't find configuration file");
             }
         }
 
@@ -247,13 +262,13 @@ namespace DougKlassen.Revit.SnoopConfigurator
                 ISnoopConfigRepo repo = new SnoopConfigJsonRepo(ConfigFilePath);
                 repo.WriteConfig(Config);
 
-                ConfigFileStatus = "Sucessfully saved configuration file";
+                LogMessage("Sucessfully saved configuration file");
                 ConfigFileContents = File.ReadAllText(ConfigFilePath);
                 HasUnsavedChanges = false;
             }
             catch (Exception)
             {
-                ConfigFileStatus = "Couldn't write configuration file";
+                LogMessage("Couldn't write configuration file");
             }
         }
 

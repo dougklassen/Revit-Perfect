@@ -35,6 +35,36 @@ namespace DougKlassen.Revit.SnoopConfigurator
             MainWindow.Show();
         }
 
+        /// <summary>
+        /// Manually exit the application
+        /// </summary>
+        private void ExitApplication()
+        {
+            isExiting = true;
+            MainWindow.Close();
+            notifyIcon.Dispose();
+            notifyIcon = null;
+        }
+
+        /// <summary>
+        /// Restore the main window from a hidden or minimized state and bring it to the front
+        /// </summary>
+        private void ShowMainWindow()
+        {
+            if (MainWindow.IsVisible)
+            {
+                if (MainWindow.WindowState == WindowState.Minimized)
+                {
+                    MainWindow.WindowState = WindowState.Normal;
+                }
+                MainWindow.Activate();
+            }
+            else
+            {
+                MainWindow.Show();
+            }
+        }
+
         private void NotifyIcon_Click(object sender, EventArgs e)
         {
             System.Drawing.Point mousePoint = Control.MousePosition;
@@ -49,30 +79,6 @@ namespace DougKlassen.Revit.SnoopConfigurator
             {
                 e.Cancel = true;
                 MainWindow.Hide();
-            }
-        }
-
-        private void ExitApplication()
-        {
-            isExiting = true;
-            MainWindow.Close();
-            notifyIcon.Dispose();
-            notifyIcon = null;
-        }
-
-        private void ShowMainWindow()
-        {
-            if (MainWindow.IsVisible)
-            {
-                if (MainWindow.WindowState == WindowState.Minimized)
-                {
-                    MainWindow.WindowState = WindowState.Normal;
-                }
-                MainWindow.Activate();
-            }
-            else
-            {
-                MainWindow.Show();
             }
         }
     }

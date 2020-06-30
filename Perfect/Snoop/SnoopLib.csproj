@@ -102,6 +102,7 @@
     <Compile Include="Models\ProjectDataModel.cs" />
     <Compile Include="Models\ScheduleModel.cs" />
     <Compile Include="Models\SnoopProject.cs" />
+    <Compile Include="Models\SnoopScript.cs" />
     <Compile Include="Models\SnoopTask.cs" />
     <Compile Include="Models\SnoopTaskParameter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -113,11 +114,13 @@
     <Compile Include="Repositories\IProjectDataRepo.cs" />
     <Compile Include="Repositories\IScheduleCatalogRepo.cs" />
     <Compile Include="Repositories\ISnoopConfigRepo.cs" />
+    <Compile Include="Repositories\ISnoopScriptRepo.cs" />
     <Compile Include="Repositories\ObjectStylesJsonRepo.cs" />
     <Compile Include="Repositories\ParameterCatalogJsonRepo.cs" />
     <Compile Include="Repositories\ProjectDataCatalogJsonRepo.cs" />
     <Compile Include="Repositories\ScheduleCatalogJsonRepo.cs" />
     <Compile Include="Repositories\SnoopConfigJsonRepo.cs" />
+    <Compile Include="Repositories\SnoopScriptJsonRepo.cs" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
