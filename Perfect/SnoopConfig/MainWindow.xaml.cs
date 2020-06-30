@@ -36,6 +36,7 @@ namespace DougKlassen.Revit.SnoopConfigurator
             InitializeComponent();
         }
 
+
         /// <summary>
         /// The active configuration
         /// </summary>
