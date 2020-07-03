@@ -20,7 +20,7 @@ namespace DougKlassen.Revit.Snoop
             RevitFilePaths = new Dictionary<String, String>();
             for (int i = 2010; i <= 2030; i++)
             {
-                String revitPath = GetRevitPathFromVersion(i.ToString());
+                String revitPath = GetRevitExecutableFilePathForVersion(i.ToString());
                 if (File.Exists(revitPath))
                 {
                     RevitFilePaths.Add(i.ToString(), revitPath);
@@ -51,7 +51,8 @@ namespace DougKlassen.Revit.Snoop
         }
 
         /// <summary>
-        /// The path of the home directory. Currently set to the same directory as the assembly
+        /// The path of the home directory. Currently set to the directory from which SnoopConfigurator is run,
+        /// which should be the same directory as the Perfect add in for the newest version of Revit
         /// </summary>
         public String HomeDirectoryPath
         {
@@ -72,22 +73,11 @@ namespace DougKlassen.Revit.Snoop
         /// <summary>
         /// The name of the tasks file that will be used to run Revit Tasks
         /// </summary>
-        public String TaskFileName
+        public String ScriptFileName
         {
             get
             {
-                return "SnoopTask.json";
-            }
-        }
-
-        /// <summary>
-        /// The full path of the tasks file
-        /// </summary>
-        public String TaskFilePath
-        {
-            get
-            {
-                return HomeDirectoryPath + TaskFileName;
+                return "SnoopTasks.json";
             }
         }
 
@@ -105,7 +95,7 @@ namespace DougKlassen.Revit.Snoop
         /// </summary>
         /// <param name="path"></param>
         /// <returns></returns>
-        private String StandardizeToNoTrailingBackslash(String path)
+        public String StandardizeToNoTrailingBackslash(String path)
         {
             //match trailing slashes and whitespace
             Regex trimRegEx = new Regex(@"[\\|\/|\s]+$");
@@ -118,7 +108,7 @@ namespace DougKlassen.Revit.Snoop
         /// </summary>
         /// <param name="path"></param>
         /// <returns></returns>
-        private String StandardizeToTrailingBackslash(String path)
+        public String StandardizeToTrailingBackslash(String path)
         {
             return StandardizeToNoTrailingBackslash(path) + "\\";
         }
@@ -128,10 +118,34 @@ namespace DougKlassen.Revit.Snoop
         /// </summary>
         /// <param name="version">The version of Revit as a string representing the year, e.g. "2020"</param>
         /// <returns>The path to the Revit executable for the specified version</returns>
-        private String GetRevitPathFromVersion(String version)
+        public String GetRevitExecutableFilePathForVersion(String version)
         {
             String revitPath = String.Format(@"C:\Program Files\Autodesk\Revit {0}\Revit.exe", version);
             return revitPath;
+        }
+
+        /// <summary>
+        /// Return the path to the add-in directory based on the version year
+        /// </summary>
+        /// <param name="version">The version of Revit as a string representing the year, e.g. "2020"</param>
+        /// <returns>The path to the Revit add-in directory for the specified version</returns>
+        public String GetAddInDirectoryPathForVersion(String version)
+        {
+            String addInPath = String.Format(@"C:\ProgramData\Autodesk\Revit\Addins\{0}", version);
+            return addInPath;
+        }
+
+        /// <summary>
+        /// Return 
+        /// </summary>
+        /// <param name="version">The version of Revit as a string representing the year, e.g. "2020"</param>
+        /// <returns>The path to the script file for the specified version</returns>
+        public String GetScriptFilePathForVersion(String version)
+        {
+            String scriptPath = String.Format(@"{0}\Perfect\{1}",
+                StandardizeToNoTrailingBackslash(GetAddInDirectoryPathForVersion(version)),
+                ScriptFileName);
+            return scriptPath;
         }
     }
 }

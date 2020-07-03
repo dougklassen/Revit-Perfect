@@ -2,7 +2,7 @@
 
 namespace DougKlassen.Revit.Snoop.Repositories
 {
-    interface ISnoopScriptRepo
+    public interface ISnoopScriptRepo
     {
         SnoopScript LoadScript();
 

@@ -5,7 +5,7 @@ using System.IO;
 
 namespace DougKlassen.Revit.Snoop.Repositories
 {
-    class SnoopScriptJsonRepo : ISnoopScriptRepo
+    public class SnoopScriptJsonRepo : ISnoopScriptRepo
     {
         private String filePath;
 

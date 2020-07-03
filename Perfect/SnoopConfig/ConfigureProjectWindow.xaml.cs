@@ -1,6 +1,7 @@
 ﻿using DougKlassen.Revit.Snoop.Models;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -20,6 +21,8 @@ namespace DougKlassen.Revit.SnoopConfigurator
             revitVersions = new List<string>(availableVersions);
 
             int versionSelection;
+
+            //if the project has an unknown version add it to the list
             if (!string.IsNullOrWhiteSpace(Project.RevitVersion))
             {
                 if (!revitVersions.Contains(Project.RevitVersion))
@@ -27,8 +30,15 @@ namespace DougKlassen.Revit.SnoopConfigurator
                     revitVersions.Add(Project.RevitVersion);
                 }
             }
+
             revitVersionComboBox.ItemsSource = availableVersions;
+            //find the index of the projects current version
             versionSelection = revitVersionComboBox.Items.IndexOf(Project.RevitVersion);
+            //if no selection has been found yet, set it to the first item
+            if (versionSelection == -1 && revitVersionComboBox.HasItems)
+            {
+                versionSelection = 0;
+            }
             revitVersionComboBox.SelectedIndex = versionSelection;
         }
 

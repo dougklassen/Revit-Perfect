@@ -2,6 +2,7 @@
 using DougKlassen.Revit.Snoop.Models;
 using DougKlassen.Revit.Snoop.Repositories;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Text;
@@ -19,12 +20,12 @@ namespace DougKlassen.Revit.SnoopConfigurator
         /// The heading used for all message boxes displayed by this window
         /// </summary>
         private String messageBoxTitle = "Configurator";
-
+        private FileLocations fileLocations;
         private StringBuilder sessionLog = new StringBuilder();
 
         public MainWindow()
         {
-            FileLocations fileLocations = FileLocations.Instance;
+            fileLocations = FileLocations.Instance;
             ConfigFilePath = fileLocations.ConfigFilePath;
 
             Config = new SnoopConfig();
@@ -46,7 +47,7 @@ namespace DougKlassen.Revit.SnoopConfigurator
         /// The active configuration
         /// </summary>
         public static readonly DependencyProperty ConfigProperty =
-            DependencyProperty.Register("ConfigProperty", typeof(SnoopConfig), typeof(MainWindow));
+            DependencyProperty.Register("Config", typeof(SnoopConfig), typeof(MainWindow));
         public SnoopConfig Config
         {
             get
@@ -63,7 +64,7 @@ namespace DougKlassen.Revit.SnoopConfigurator
         /// A log of all activity during the session
         /// </summary>
         public static readonly DependencyProperty SessionLogProperty =
-            DependencyProperty.Register("SessionLogProperty", typeof(String), typeof(MainWindow));
+            DependencyProperty.Register("SessionLog", typeof(String), typeof(MainWindow));
         public String SessionLog
         {
             get
@@ -227,7 +228,6 @@ namespace DougKlassen.Revit.SnoopConfigurator
         /// </summary>
         private void LoadConfig()
         {
-
             try
             {
                 ConfigFileContents = File.ReadAllText(ConfigFilePath);
@@ -273,14 +273,42 @@ namespace DougKlassen.Revit.SnoopConfigurator
         }
 
         /// <summary>
-        /// Reset all selections and reset the project list
+        /// Generate task script files for all versions of Revit for all active projects
         /// </summary>
-        private void RefreshAll()
+        private void GenerateScripts()
+        {
+            LogMessage("Generating scripts for all active projects");
+
+            Dictionary<String, SnoopScript> currentScripts = Config.GenerateScripts();
+            if (currentScripts.Count == 0)
+            {
+                LogMessage("No tasks found for any active projects");
+            }
+
+            foreach (String version in currentScripts.Keys)
+            {
+                String scriptFilePath = fileLocations.GetScriptFilePathForVersion(version);
+                try
+                {
+                    ISnoopScriptRepo repo = new SnoopScriptJsonRepo(scriptFilePath);
+                    repo.WriteScript(currentScripts[version]);
+
+                    LogMessage(String.Format("Successfully wrote script file \"{0}\"", scriptFilePath));
+                }
+                catch (Exception)
+                {
+                    LogMessage(String.Format("Couldn't write script file \"{0}\"", scriptFilePath));
+                }
+            }
+        }
+
+        /// <summary>
+        /// Reset all selections
+        /// </summary>
+        private void ResetAll()
         {
             SelectedTask = null;
             SelectedProject = null;
-            //ItemsSource property needs to be manually updated because the binding still points to the property of the old config object:
-            projectsListBox.ItemsSource = Config.ActiveProjects; 
         }
 
         private void generateButton_Click(object sender, RoutedEventArgs e)
@@ -292,11 +320,13 @@ namespace DougKlassen.Revit.SnoopConfigurator
 
             if (result == MessageBoxResult.OK)
             {
+                LogMessage("Overwriting with default settings");
+
                 Config = new SnoopConfig();
                 Config.SetDefaultValues();
                 ConfigFileDescription = Config.GetDescription();
 
-                RefreshAll();
+                ResetAll();
 
                 HasUnsavedChanges = true;
             }
@@ -329,8 +359,7 @@ namespace DougKlassen.Revit.SnoopConfigurator
             if (result == MessageBoxResult.OK)
             {
                 LoadConfig();
-
-                RefreshAll();
+                ResetAll();
             }
         }
 
@@ -352,8 +381,16 @@ namespace DougKlassen.Revit.SnoopConfigurator
 
         private void projectsListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            SelectedProject = projectsListBox.SelectedItem as SnoopProject;
-            CanEditProject = true;
+            if (projectsListBox.SelectedIndex != -1)
+            {
+                SelectedProject = projectsListBox.SelectedItem as SnoopProject;
+                CanEditProject = true;
+            }
+            else
+            {
+                SelectedProject = null;
+                CanEditProject = false;
+            }
         }
 
         private void editProjectButton_Click(object sender, RoutedEventArgs e)
@@ -421,8 +458,17 @@ namespace DougKlassen.Revit.SnoopConfigurator
 
         private void tasksListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            SelectedTask = tasksListBox.SelectedItem as SnoopTask;
-            CanEditTask = true;
+            if (tasksListBox.SelectedIndex == -1)
+            {
+                SelectedTask = tasksListBox.SelectedItem as SnoopTask;
+                CanEditTask = true;
+            }
+            else
+            {
+                SelectedTask = null;
+                CanEditTask = false;
+            }
+
         }
 
         private void snoopConfiguratorWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
@@ -440,6 +486,11 @@ namespace DougKlassen.Revit.SnoopConfigurator
                     WriteConfig();
                 }
             }
+        }
+
+        private void generateScriptsButton_Click(object sender, RoutedEventArgs e)
+        {
+            GenerateScripts();
         }
     }
 }

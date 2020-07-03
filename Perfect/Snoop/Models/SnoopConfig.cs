@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Collections.ObjectModel;
+using System.Security.Cryptography.X509Certificates;
 
 namespace DougKlassen.Revit.Snoop.Models
 {
@@ -114,7 +115,7 @@ namespace DougKlassen.Revit.Snoop.Models
         {
             HomeDirectoryPath = fileLocations.HomeDirectoryPath;
             ConfigFileName = fileLocations.ConfigFileName;
-            ScriptFileName = fileLocations.TaskFileName;
+            ScriptFileName = fileLocations.ScriptFileName;
             ActiveProjects = new ObservableCollection<SnoopProject>();
             RevitFilePaths = fileLocations.RevitFilePaths;
         }
@@ -136,6 +137,34 @@ namespace DougKlassen.Revit.Snoop.Models
             }
 
             return msg;
+        }
+
+        /// <summary>
+        /// Generate a dictionary of scripts keyed by Revit version for all active project tasks.
+        /// </summary>
+        /// <returns>A dictionary where the key is the version of Revit targeted and the value is a script to run on that version</returns>
+        public Dictionary<String, SnoopScript> GenerateScripts()
+        {
+            Dictionary<String, SnoopScript> scripts = new Dictionary<String, SnoopScript>();
+
+            foreach (SnoopProject project in ActiveProjects)
+            {
+                if (String.IsNullOrWhiteSpace(project.RevitVersion))
+                {
+                    continue;
+                }
+                else if (project.TaskList.Count > 0)
+                {
+                    //Create a script for the project's Revit version if it doesn't exist already
+                    if (!scripts.ContainsKey(project.RevitVersion))
+                    {
+                        scripts.Add(project.RevitVersion, new SnoopScript());
+                    }
+                    scripts[project.RevitVersion].AddProject(project);
+                }
+            }
+
+            return scripts;
         }
 
         /// <summary>

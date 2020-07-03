@@ -82,7 +82,7 @@
                         </Grid.ColumnDefinitions>
                         <DockPanel Grid.Column="0">
                             <StackPanel DockPanel.Dock="Bottom" Style="{StaticResource ButtonPanel}">
-                                <Button x:Name="generateScriptsButton" Style="{StaticResource PanelButton}" Content="Generate Scripts"/>
+                                <Button x:Name="generateScriptsButton" Style="{StaticResource PanelButton}" Content="Generate Scripts" Click="generateScriptsButton_Click"/>
                             </StackPanel>
                         </DockPanel>
                         <GroupBox Grid.Column="1" Style="{StaticResource LightPanelBox}" Header="Session Log">
