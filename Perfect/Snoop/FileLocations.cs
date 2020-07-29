@@ -136,7 +136,7 @@ namespace DougKlassen.Revit.Snoop
         }
 
         /// <summary>
-        /// Return 
+        /// Return the designated location for the script file for a given version of Revit
         /// </summary>
         /// <param name="version">The version of Revit as a string representing the year, e.g. "2020"</param>
         /// <returns>The path to the script file for the specified version</returns>

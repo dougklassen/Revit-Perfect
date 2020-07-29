@@ -39,6 +39,8 @@ namespace DougKlassen.Revit.SnoopConfigurator
 
             LogMessage("Snoop Configurator started");
 
+            RefreshActiveScripts();
+
             InitializeComponent();
         }
 
@@ -214,6 +216,37 @@ namespace DougKlassen.Revit.SnoopConfigurator
         }
 
         /// <summary>
+        /// All scripts that exist as script files ready to be run
+        /// </summary>
+        public static readonly DependencyProperty ActiveScriptsProperty =
+            DependencyProperty.Register("ActiveScripts", typeof(List<String>), typeof(MainWindow));
+        public List<String> ActiveScripts
+        {
+            get
+            {
+                return (List<String>)GetValue(ActiveScriptsProperty);
+            }
+            set
+            {
+                SetValue(ActiveScriptsProperty, value);
+            }
+        }
+
+        public static readonly DependencyProperty SelectedScriptTextProperty =
+            DependencyProperty.Register("SelectedScriptText", typeof(String), typeof(MainWindow));
+        public String SelectedScriptText
+        {
+            get
+            {
+                return (String)GetValue(SelectedScriptTextProperty);
+            }
+            set
+            {
+                SetValue(SelectedScriptTextProperty, value);
+            }
+        }
+
+        /// <summary>
         /// Add a new timestamped entry to the session log
         /// </summary>
         /// <param name="message">The message to add</param>
@@ -300,6 +333,38 @@ namespace DougKlassen.Revit.SnoopConfigurator
                     LogMessage(String.Format("Couldn't write script file \"{0}\"", scriptFilePath));
                 }
             }
+        }
+
+        /// <summary>
+        /// Delete all active scripts
+        /// </summary>
+        private void ClearScripts()
+        {
+            foreach (String version in Helpers.GetRevitVersions())
+            {
+                String scriptFile = fileLocations.GetScriptFilePathForVersion(version);
+                if (File.Exists(scriptFile))
+                {
+                    File.Delete(scriptFile);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Update the list of active script files
+        /// </summary>
+        private void RefreshActiveScripts()
+        {
+            List<String> foundScripts = new List<String>();
+            foreach (String version in Helpers.GetRevitVersions())
+            {
+                String scriptPath = fileLocations.GetScriptFilePathForVersion(version);
+                if (File.Exists(scriptPath))
+                {
+                    foundScripts.Add(scriptPath);
+                }
+            }
+            ActiveScripts = foundScripts;
         }
 
         /// <summary>
@@ -491,6 +556,18 @@ namespace DougKlassen.Revit.SnoopConfigurator
         private void generateScriptsButton_Click(object sender, RoutedEventArgs e)
         {
             GenerateScripts();
+            RefreshActiveScripts();
+        }
+
+        private void refreshScriptsButton_Click(object sender, RoutedEventArgs e)
+        {
+            RefreshActiveScripts();
+        }
+
+        private void clearScriptsButton_Click(object sender, RoutedEventArgs e)
+        {
+            ClearScripts();
+            RefreshActiveScripts();
         }
     }
 }

@@ -73,24 +73,31 @@
                     </GroupBox>
                 </Grid>
             </TabItem>
-            <TabItem Header="Task Manager">
+            <TabItem Header="Script Manager">
                 <DockPanel>
                     <Grid>
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition/>
+                            <ColumnDefinition Width="300"/>
                             <ColumnDefinition/>
                         </Grid.ColumnDefinitions>
                         <DockPanel Grid.Column="0">
-                            <StackPanel DockPanel.Dock="Bottom" Style="{StaticResource ButtonPanel}">
-                                <Button x:Name="generateScriptsButton" Style="{StaticResource PanelButton}" Content="Generate Scripts" Click="generateScriptsButton_Click"/>
-                            </StackPanel>
+                            <GroupBox Header="Active Scripts" Style="{StaticResource LightPanelBox}">
+                                <DockPanel>
+                                    <StackPanel DockPanel.Dock="Bottom" Style="{StaticResource ButtonPanel}">
+                                        <Button x:Name="refreshScriptsButton" Style="{StaticResource PanelButton}" Content="Refresh" Click="refreshScriptsButton_Click"/>
+                                        <Button x:Name="clearScriptsButton" Style="{StaticResource PanelButton}" Content="Clear" Click="clearScriptsButton_Click"/>
+                                        <Button x:Name="generateScriptsButton" Style="{StaticResource PanelButton}" Content="Generate All" Click="generateScriptsButton_Click"/>
+                                    </StackPanel>
+                                    <ListView ItemsSource="{Binding ActiveScripts}">
+
+                                    </ListView>
+                                </DockPanel>
+                            </GroupBox>
                         </DockPanel>
-                        <GroupBox Grid.Column="1" Style="{StaticResource LightPanelBox}" Header="Session Log">
-                            <DockPanel Grid.Column="1">
-                                <ScrollViewer>
-                                    <TextBlock x:Name="logTextBlock" Text="{Binding SessionLog}"/>
-                                </ScrollViewer>
-                            </DockPanel>
+                        <GroupBox Grid.Column="1" Style="{StaticResource LightPanelBox}" Header="Script Contents">
+                            <ScrollViewer>
+                                <TextBlock x:Name="scriptTextBlock" Text="{Binding SelectedScriptText}"/>
+                            </ScrollViewer>
                         </GroupBox>
                     </Grid>
                 </DockPanel>
@@ -110,6 +117,11 @@
                         <TextBlock Text="{Binding ConfigFileDescription}" Margin="5"/>
                     </GroupBox>
                 </Grid>
+            </TabItem>
+            <TabItem Header="Session Log">
+                <ScrollViewer>
+                    <TextBlock x:Name="logTextBlock" Text="{Binding SessionLog}"/>
+                </ScrollViewer>
             </TabItem>
         </TabControl>
     </DockPanel>

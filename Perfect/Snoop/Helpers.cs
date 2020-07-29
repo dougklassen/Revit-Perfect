@@ -69,5 +69,19 @@ namespace DougKlassen.Revit.Snoop
                 now.ToString("yyyyMMdd"),
                 now.ToString("HHmmss"));
         }
+
+        /// <summary>
+        /// Return a collections of all Revit versions that may exist
+        /// </summary>
+        /// <returns>A collection of Revit versions denoted by year</returns>
+        public static IEnumerable<String> GetRevitVersions()
+        {
+            int lowRange = 2014;
+            Int32 highRange = 2030;
+            for (int y = lowRange; y < highRange; y++)
+            {
+                yield return y.ToString();
+            }
+        }
     }
 }
