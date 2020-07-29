@@ -523,7 +523,7 @@ namespace DougKlassen.Revit.SnoopConfigurator
 
         private void tasksListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (tasksListBox.SelectedIndex == -1)
+            if (tasksListBox.SelectedIndex != -1)
             {
                 SelectedTask = tasksListBox.SelectedItem as SnoopTask;
                 CanEditTask = true;
@@ -533,7 +533,6 @@ namespace DougKlassen.Revit.SnoopConfigurator
                 SelectedTask = null;
                 CanEditTask = false;
             }
-
         }
 
         private void snoopConfiguratorWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
@@ -557,6 +556,7 @@ namespace DougKlassen.Revit.SnoopConfigurator
         {
             GenerateScripts();
             RefreshActiveScripts();
+            scriptsListBox.SelectedIndex = -1;
         }
 
         private void refreshScriptsButton_Click(object sender, RoutedEventArgs e)
@@ -568,6 +568,19 @@ namespace DougKlassen.Revit.SnoopConfigurator
         {
             ClearScripts();
             RefreshActiveScripts();
+        }
+
+        private void scriptsListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (scriptsListBox.SelectedIndex != -1)
+            {
+                String scriptPath = scriptsListBox.SelectedItem as String;
+                SelectedScriptText = File.ReadAllText(scriptPath);
+            }
+            else
+            {
+                SelectedScriptText = String.Empty;
+            }
         }
     }
 }

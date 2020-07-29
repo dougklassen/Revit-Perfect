@@ -88,9 +88,7 @@
                                         <Button x:Name="clearScriptsButton" Style="{StaticResource PanelButton}" Content="Clear" Click="clearScriptsButton_Click"/>
                                         <Button x:Name="generateScriptsButton" Style="{StaticResource PanelButton}" Content="Generate All" Click="generateScriptsButton_Click"/>
                                     </StackPanel>
-                                    <ListView ItemsSource="{Binding ActiveScripts}">
-
-                                    </ListView>
+                                    <ListBox x:Name="scriptsListBox" ItemsSource="{Binding ActiveScripts}" SelectionChanged="scriptsListBox_SelectionChanged"/>
                                 </DockPanel>
                             </GroupBox>
                         </DockPanel>
