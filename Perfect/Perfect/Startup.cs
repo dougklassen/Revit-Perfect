@@ -287,10 +287,10 @@ namespace DougKlassen.Revit.Perfect
             RibbonPanel ManageCalloutsPanel = application.CreateRibbonPanel(tabName, "Manage View Callouts");
 
             PushButtonData filterBugsCommandPushButtonData = new PushButtonData(
-                 "filterBugsCommandButton", //name of the button
+                 "filterCalloutsCommandButton", //name of the button
                  "Filter View Callouts", //text on the button
                  FileLocations.AddInDirectory + FileLocations.AssemblyName + ".dll",
-                 "DougKlassen.Revit.Perfect.Commands.FilterBugsCommand");
+                 "DougKlassen.Revit.Perfect.Commands.FilterCalloutsCommand");
             filterBugsCommandPushButtonData.LargeImage = largeIcon;
             filterBugsCommandPushButtonData.ToolTip = "Filter Callouts for the current view";
             filterBugsCommandPushButtonData.AvailabilityClassName = "DougKlassen.Revit.Perfect.Commands.OverrideableViewCommandAvailability";

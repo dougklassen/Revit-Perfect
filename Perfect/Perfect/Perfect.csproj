@@ -142,7 +142,7 @@
     <Compile Include="Commands\SplitWallByLevel\SplitWallByLevelCommand.cs" />
     <Compile Include="Commands\VizCommands\ApplyStylesPanel\ApplyStyleCommand.cs" />
     <Compile Include="Commands\VizCommands\ApplyStylesPanel\PickupStyleCommand.cs" />
-    <Compile Include="Commands\VizCommands\ManageCalloutsPanel\FilterBugsCommand.cs" />
+    <Compile Include="Commands\VizCommands\ManageCalloutsPanel\FilterCalloutsCommand.cs" />
     <Compile Include="Commands\VizCommands\ManageCalloutsPanel\FilterCalloutsWindow.xaml.cs">
       <DependentUpon>FilterCalloutsWindow.xaml</DependentUpon>
     </Compile>
@@ -150,9 +150,6 @@
     <Compile Include="Commands\VizCommands\ResetPanel\ResetHiddenCommand.cs" />
     <Compile Include="Interface\SelectObjectsWindow.xaml.cs">
       <DependentUpon>SelectObjectsWindow.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Interface\ViewCalloutVisibilityWindow.xaml.cs">
-      <DependentUpon>ViewCalloutVisibilityWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Interface\SelectElementsWindow.xaml.cs">
       <DependentUpon>SelectElementsWindow.xaml</DependentUpon>
@@ -210,10 +207,6 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Interface\SelectObjectsWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Interface\ViewCalloutVisibilityWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

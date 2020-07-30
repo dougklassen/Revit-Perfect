@@ -5,8 +5,11 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DougKlassen.Revit.Perfect.Commands"
         mc:Ignorable="d"
-        Title="Window1" Height="450" Width="800">
-    <Grid>
-        
-    </Grid>
+        Title="Filter View Callouts" Height="450" Width="350" ResizeMode="NoResize">
+    <DockPanel>
+        <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right" Margin="10">
+            <Button x:Name="OkButton" Content="OK" Height="20" Margin="5,1,5,1" Padding="5,2,5,3" Click="OkButton_Click"/>
+            <Button x:Name="CancelButton" Content="Cancel" Height="20" Margin="5,1,5,1" Padding="5,2,5,3" Click="CancelButton_Click"/>
+        </StackPanel>
+    </DockPanel>
 </Window>
