@@ -20,14 +20,16 @@ namespace DougKlassen.Revit.Perfect.Commands
     /// </summary>
     public partial class FilterCalloutsWindow : Window
     {
-        public FilterCalloutsWindow(List<View> views)
+        public FilterCalloutsWindow(List<ViewSheet> sheets)
         {
-            ViewsToProcess = views;
+            SheetsToProccess = sheets;
 
             InitializeComponent();
+
+            MessageTextBox.Text = String.Format("{0} sheets selected", sheets.Count);
         }
 
-        public List<View> ViewsToProcess
+        public List<ViewSheet> SheetsToProccess
         {
             get;
             set;

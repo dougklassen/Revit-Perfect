@@ -293,7 +293,7 @@ namespace DougKlassen.Revit.Perfect
                  "DougKlassen.Revit.Perfect.Commands.FilterCalloutsCommand");
             filterBugsCommandPushButtonData.LargeImage = largeIcon;
             filterBugsCommandPushButtonData.ToolTip = "Filter Callouts for the current view";
-            filterBugsCommandPushButtonData.AvailabilityClassName = "DougKlassen.Revit.Perfect.Commands.OverrideableViewCommandAvailability";
+            filterBugsCommandPushButtonData.AvailabilityClassName = "DougKlassen.Revit.Perfect.Commands.SheetCommandAvailability";
             ManageCalloutsPanel.AddItem(filterBugsCommandPushButtonData);
 #endregion Viz Manage Callouts Panel
 
@@ -425,6 +425,29 @@ namespace DougKlassen.Revit.Perfect.Commands
             {
                 return false;
             }
+        }
+    }
+
+    /// <summary>
+    /// Make command available if the current view is a sheet or the current selection contains at least one sheet
+    /// </summary>
+    public class SheetCommandAvailability : IExternalCommandAvailability
+    {
+        public bool IsCommandAvailable(UIApplication applicationData, CategorySet selectedCategories)
+        {
+            UIDocument uiDoc = applicationData.ActiveUIDocument;
+            Document dbDoc = applicationData.ActiveUIDocument.Document;
+
+            if(
+                selectedCategories.Contains(Category.GetCategory(dbDoc, BuiltInCategory.OST_Sheets)) ||
+                uiDoc.ActiveView is ViewSheet)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }    
         }
     }
 }

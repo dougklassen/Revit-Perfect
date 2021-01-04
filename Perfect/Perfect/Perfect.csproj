@@ -91,15 +91,13 @@
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
-    <!--begin Revit API References-->
     <Reference Include="RevitAPI">
-      <HintPath>..\..\..\..\..\..\..\Program Files\Autodesk\Revit $(VersionNumber)\RevitAPI.dll</HintPath>
-      <Private>False</Private>
+      <HintPath>..\..\..\..\dlls\2021.1\RevitAPI.dll</HintPath>
     </Reference>
     <Reference Include="RevitAPIUI">
-      <HintPath>..\..\..\..\..\..\..\Program Files\Autodesk\Revit $(VersionNumber)\RevitAPIUI.dll</HintPath>
-      <Private>False</Private>
+      <HintPath>..\..\..\..\dlls\2021.1\RevitAPIUI.dll</HintPath>
     </Reference>
+    <!--begin Revit API References-->
     <!--end Revit API References-->
     <Reference Include="System" />
     <Reference Include="System.Core" />
