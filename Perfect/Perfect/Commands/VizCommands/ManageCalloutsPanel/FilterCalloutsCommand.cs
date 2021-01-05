@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
@@ -57,8 +54,6 @@ namespace DougKlassen.Revit.Perfect.Commands
             }
             Int32 charsToMatch = window.CharsToMatch;
 
-            //TODO: debug
-            String debug = String.Empty;
             //process each selected sheet
             foreach (ViewSheet sheet in sheets)
             {
@@ -96,35 +91,23 @@ namespace DougKlassen.Revit.Perfect.Commands
 
                         foreach (Element viewer in viewers)
                         {
-                            debug += "\n\nView " + view.Name;
-                            debug += String.Format("\nBug sheet num: {0} Filter: {1}",
-                                viewer.get_Parameter(BuiltInParameter.VIEWER_SHEET_NUMBER).AsString(),
-                                filterString);
                             if ( viewer.get_Parameter(BuiltInParameter.VIEWER_SHEET_NUMBER).AsString().StartsWith(filterString))
                             {
                                 if (viewer.IsHidden(view))
                                 {
+                                    //is currently hidden, will be shown
                                     bugsToShow.Add(viewer.Id);
-                                    debug += "\nis hidden, will be shown";
                                 }
-                                else
-                                {
-                                    debug += "\nis already visible";
-                                }
+                                //else is already visible
                             }
                             else if(!viewer.IsHidden(view))
                             {
+                                //is currently visible, will be hidden
                                 bugsToHide.Add(viewer.Id);
-                                debug += "\nis visible, will be hidden";
                             }
-                            else
-                            {
-                                debug += "\nis already hidden";
-                            }
+                            //else is already hidden
                         }
 
-                        debug += "\n\n" + bugsToShow.Count + " callouts revealed in " + view.Name;
-                        debug += "\n" + bugsToHide.Count + " callouts hidden in " + view.Name;
                         if (bugsToShow.Count > 0)
                         {
                             view.UnhideElements(bugsToShow);
@@ -147,11 +130,6 @@ namespace DougKlassen.Revit.Perfect.Commands
                             {
                                 ElementId indexedViewId = marker.GetViewId(i);
                                 View indexedView = dbDoc.GetElement(indexedViewId) as View;
-                                if (indexedView == null)
-                                {
-                                    debug += "\n???indexed view is null";
-                                    continue;
-                                }
                                 //look for a visible viewer matching the view reference found
                                 foreach (Element viewer in viewers)
                                 {
@@ -170,13 +148,17 @@ namespace DougKlassen.Revit.Perfect.Commands
                             {
                                 if (marker.IsHidden(view))
                                 {
+                                    //is hidden, will be shown
                                     markersToShow.Add(marker.Id);
                                 }
+                                //else is already visible 
                             }
                             else if (!marker.IsHidden(view))
                             {
+                                //is visible, will be hidden
                                 markersToHide.Add(marker.Id);
                             }
+                            //else is already hidden
                         }
 
                         if (markersToShow.Count > 0)
@@ -198,10 +180,6 @@ namespace DougKlassen.Revit.Perfect.Commands
                     t.Commit();
                 }
             }
-
-            //TODO: debug
-            debug += "\nSheets selected: " + sheets.Count;
-            TaskDialog.Show("debug", debug);
 
             return Result.Succeeded;
         }
