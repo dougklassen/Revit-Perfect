@@ -130,16 +130,22 @@ namespace DougKlassen.Revit.Perfect.Commands
                             {
                                 ElementId indexedViewId = marker.GetViewId(i);
                                 View indexedView = dbDoc.GetElement(indexedViewId) as View;
+                                //viewers = new FilteredElementCollector(dbDoc, viewId)
+                                //    .OfCategory(BuiltInCategory.OST_Viewers);
                                 //look for a visible viewer matching the view reference found
                                 foreach (Element viewer in viewers)
                                 {
                                     //check if there is a visible elevation viewer with a matching name 
-                                    if (
-                                        !viewer.IsHidden(view) &&
-                                        viewer.get_Parameter(BuiltInParameter.VIEW_FAMILY).AsString().Equals("Elevations") &&
-                                        viewer.get_Parameter(BuiltInParameter.VIEW_NAME).AsString().Equals(indexedView.Name))
+                                    if (indexedView != null &&
+                                        viewer.get_Parameter(BuiltInParameter.VIEW_FAMILY).AsString() != null &&
+                                        viewer.get_Parameter(BuiltInParameter.VIEW_NAME).AsString() != null)
                                     {
-                                        hasVisiblePointer = true;
+                                        if ( !viewer.IsHidden(view) &&
+                                            viewer.get_Parameter(BuiltInParameter.VIEW_FAMILY).AsString().Equals("Elevations") &&
+                                            viewer.get_Parameter(BuiltInParameter.VIEW_NAME).AsString().Equals(indexedView.Name))
+                                        {
+                                            hasVisiblePointer = true;
+                                        } 
                                     }
                                 }
                             }
