@@ -25,7 +25,7 @@
         <StackPanel Margin="25">
             <TextBlock x:Name="MessageTextBox" TextWrapping="Wrap" Margin="0,0,0,10">X sheets selected</TextBlock>
             <TextBlock TextWrapping="Wrap" Margin="0,0,0,10">View callouts will be filtered by matching their sheet reference to the sheet number of the current sheet. Specify the number of characters to match in the sheet number:</TextBlock>
-            <Slider x:Name="DigitsSlider" Maximum="4" Margin="15" Value="{Binding CharsToMatch, ElementName=window}"></Slider>
+            <Slider x:Name="DigitsSlider" Maximum="5" Margin="15" Value="{Binding CharsToMatch, ElementName=window}"></Slider>
             <StackPanel Orientation="Horizontal">
                 <TextBlock Style="{StaticResource FilterDigit}" Text="{Binding Value, ElementName=DigitsSlider}"/>
             </StackPanel>

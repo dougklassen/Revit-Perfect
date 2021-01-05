@@ -55,16 +55,10 @@ namespace DougKlassen.Revit.Perfect.Commands
             {
                 return Result.Cancelled;
             }
-            
-
-
             Int32 charsToMatch = window.CharsToMatch;
 
             //TODO: debug
-            List<ElementId> refs = new List<ElementId>();
             String debug = String.Empty;
-            Int32 viewCount = 0;
-
             //process each selected sheet
             foreach (ViewSheet sheet in sheets)
             {
@@ -84,39 +78,33 @@ namespace DougKlassen.Revit.Perfect.Commands
 
                     //process all views placed on the sheet
                     var placedViews = sheet.GetAllPlacedViews();
-
-                    //TODO: debug
-                    viewCount += placedViews.Count;
-
-                    List<ElementId> bugsToHide = new List<ElementId>();
-                    List<ElementId> bugsToShow = new List<ElementId>();
                     foreach (ElementId viewId in placedViews)
                     {
                         View view = dbDoc.GetElement(viewId) as View;
-                        //find view callouts visible in this viewwo
-                        List<ElementId> referenceIds = new List<ElementId>();
-
                         //temporarily enter reveal hidden mode so that hidden callouts are included
                         Boolean alreadyInRevealHidden = view.IsInTemporaryViewMode(TemporaryViewMode.RevealHiddenElements);
                         if(!alreadyInRevealHidden)
                         {
                             view.EnableRevealHiddenMode();
                         }
-                        FilteredElementCollector bugs = new FilteredElementCollector(dbDoc, viewId)
+
+#region process viewers 
+                        List<ElementId> bugsToHide = new List<ElementId>();
+                        List<ElementId> bugsToShow = new List<ElementId>();
+                        FilteredElementCollector viewers = new FilteredElementCollector(dbDoc, viewId)
                             .OfCategory(BuiltInCategory.OST_Viewers);
 
-                        //TODO: not correctly hiding or unhiding
-                        foreach (Element bug in bugs)
+                        foreach (Element viewer in viewers)
                         {
                             debug += "\n\nView " + view.Name;
                             debug += String.Format("\nBug sheet num: {0} Filter: {1}",
-                                bug.get_Parameter(BuiltInParameter.VIEWER_SHEET_NUMBER).AsString(),
+                                viewer.get_Parameter(BuiltInParameter.VIEWER_SHEET_NUMBER).AsString(),
                                 filterString);
-                            if ( bug.get_Parameter(BuiltInParameter.VIEWER_SHEET_NUMBER).AsString().StartsWith(filterString))
+                            if ( viewer.get_Parameter(BuiltInParameter.VIEWER_SHEET_NUMBER).AsString().StartsWith(filterString))
                             {
-                                if (bug.IsHidden(view))
+                                if (viewer.IsHidden(view))
                                 {
-                                    bugsToShow.Add(bug.Id);
+                                    bugsToShow.Add(viewer.Id);
                                     debug += "\nis hidden, will be shown";
                                 }
                                 else
@@ -124,9 +112,9 @@ namespace DougKlassen.Revit.Perfect.Commands
                                     debug += "\nis already visible";
                                 }
                             }
-                            else if(!bug.IsHidden(view))
+                            else if(!viewer.IsHidden(view))
                             {
-                                bugsToHide.Add(bug.Id);
+                                bugsToHide.Add(viewer.Id);
                                 debug += "\nis visible, will be hidden";
                             }
                             else
@@ -145,12 +133,67 @@ namespace DougKlassen.Revit.Perfect.Commands
                         {
                             view.HideElements(bugsToHide);
                         }
+#endregion process viewers 
+
+#region process markers
+                        //process elevation markers to hide all markers that have all viewers hidden
+                        List<ElementId> markersToShow = new List<ElementId>();
+                        List<ElementId> markersToHide = new List<ElementId>();
+                        var markers = new FilteredElementCollector(dbDoc, viewId).OfCategory(BuiltInCategory.OST_Elev);
+                        foreach (ElevationMarker marker in markers)
+                        {
+                            Boolean hasVisiblePointer = false;
+                            for (int i = 0; i < marker.MaximumViewCount; i++)
+                            {
+                                ElementId indexedViewId = marker.GetViewId(i);
+                                View indexedView = dbDoc.GetElement(indexedViewId) as View;
+                                if (indexedView == null)
+                                {
+                                    debug += "\n???indexed view is null";
+                                    continue;
+                                }
+                                //look for a visible viewer matching the view reference found
+                                foreach (Element viewer in viewers)
+                                {
+                                    //check if there is a visible elevation viewer with a matching name 
+                                    if (
+                                        !viewer.IsHidden(view) &&
+                                        viewer.get_Parameter(BuiltInParameter.VIEW_FAMILY).AsString().Equals("Elevations") &&
+                                        viewer.get_Parameter(BuiltInParameter.VIEW_NAME).AsString().Equals(indexedView.Name))
+                                    {
+                                        hasVisiblePointer = true;
+                                    }
+                                }
+                            }
+
+                            if (hasVisiblePointer)
+                            {
+                                if (marker.IsHidden(view))
+                                {
+                                    markersToShow.Add(marker.Id);
+                                }
+                            }
+                            else if (!marker.IsHidden(view))
+                            {
+                                markersToHide.Add(marker.Id);
+                            }
+                        }
+
+                        if (markersToShow.Count > 0)
+                        {
+                            view.UnhideElements(markersToShow);
+                        }
+                        if (markersToHide.Count > 0)
+                        {
+                            view.HideElements(markersToHide);
+                        }
+#endregion process markers
+
                         //reset reveal hidden mode if necessary
-                        if(!alreadyInRevealHidden)
+                        if (!alreadyInRevealHidden)
                         {
                             view.DisableTemporaryViewMode(TemporaryViewMode.RevealHiddenElements);
                         }
-
                     }
                     t.Commit();
                 }
@@ -158,8 +201,6 @@ namespace DougKlassen.Revit.Perfect.Commands
 
             //TODO: debug
             debug += "\nSheets selected: " + sheets.Count;
-            debug += "\nPlaced views found: " + viewCount;
-            debug += "\nView callouts found: " + refs.Count;
             TaskDialog.Show("debug", debug);
 
             return Result.Succeeded;
