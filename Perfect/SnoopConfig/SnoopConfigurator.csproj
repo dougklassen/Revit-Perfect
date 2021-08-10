@@ -3,13 +3,13 @@
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <!--Keep this line updated with the latest configuration-->
-    <Configuration Condition=" '$(Configuration)' == '' ">Rvt2021</Configuration>
+    <Configuration Condition=" '$(Configuration)' == '' ">Rvt2022</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{5A281D54-B00A-4874-822A-4AD7C5E011BB}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <RootNamespace>DougKlassen.Revit.SnoopConfigurator</RootNamespace>
     <AssemblyName>SnoopConfigurator</AssemblyName>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <!--The following line is added so that Visual Studio will allow new WPF windows to be added-->
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -50,6 +50,10 @@
     <VersionNumber>2021</VersionNumber>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Rvt2022|AnyCPU'">
+    <VersionNumber>2022</VersionNumber>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+  </PropertyGroup>
   <!--Common Settings-->
   <PropertyGroup>
     <OutputPath>bin\$(Configuration)</OutputPath>
@@ -70,6 +74,9 @@
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Rvt2022|AnyCPU' ">
+    <OutputPath>bin\Revit2022\</OutputPath>
   </PropertyGroup>
   <!--end Build Configurations-->
   <ItemGroup>
