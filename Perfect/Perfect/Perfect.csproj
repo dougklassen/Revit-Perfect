@@ -17,47 +17,56 @@
     <TargetFrameworkProfile />
   </PropertyGroup>
   <!--Build Configurations-->
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Rvt2014|AnyCPU'">
+  <PropertyGroup Condition="'$(Configuration)' == 'Rvt2014'">
     <VersionNumber>2014</VersionNumber>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <DefineConstants>UNITTYPE</DefineConstants>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Rvt2015|AnyCPU'">
+  <PropertyGroup Condition="'$(Configuration)' == 'Rvt2015'">
     <VersionNumber>2015</VersionNumber>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <DefineConstants>UNITTYPE</DefineConstants>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Rvt2016|AnyCPU'">
+  <PropertyGroup Condition="'$(Configuration)' == 'Rvt2016'">
     <VersionNumber>2016</VersionNumber>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <DefineConstants>UNITTYPE</DefineConstants>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Rvt2017|AnyCPU'">
+  <PropertyGroup Condition="'$(Configuration)' == 'Rvt2017'">
     <VersionNumber>2017</VersionNumber>
     <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <DefineConstants>UNITTYPE</DefineConstants>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Rvt2018|AnyCPU'">
+  <PropertyGroup Condition="'$(Configuration)' == 'Rvt2018'">
     <VersionNumber>2018</VersionNumber>
     <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
+    <DefineConstants>UNITTYPE</DefineConstants>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Rvt2019|AnyCPU'">
+  <PropertyGroup Condition="'$(Configuration)' == 'Rvt2019'">
     <VersionNumber>2019</VersionNumber>
     <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
+    <DefineConstants>UNITTYPE</DefineConstants>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Rvt2020|AnyCPU'">
+  <PropertyGroup Condition="'$(Configuration)' == 'Rvt2020'">
     <VersionNumber>2020</VersionNumber>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <DefineConstants>UNITTYPE</DefineConstants>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Rvt2021|AnyCPU'">
+  <PropertyGroup Condition="'$(Configuration)' == 'Rvt2021'">
     <VersionNumber>2021</VersionNumber>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <DefineConstants>FORGETYPE;</DefineConstants>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Rvt2022|AnyCPU'">
+  <PropertyGroup Condition="'$(Configuration)' == 'Rvt2022'">
     <VersionNumber>2022</VersionNumber>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <DefineConstants>FORGETYPE;</DefineConstants>
   </PropertyGroup>
   <!--Common Settings-->
   <PropertyGroup>
     <OutputPath>bin\$(Configuration)</OutputPath>
     <DebugSymbols>true</DebugSymbols>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DefineConstants>DEBUG;TRACE;$(DefineConstants)</DefineConstants>
     <DebugType>full</DebugType>
     <PlatformTarget>x64</PlatformTarget>
     <LangVersion>7.3</LangVersion>

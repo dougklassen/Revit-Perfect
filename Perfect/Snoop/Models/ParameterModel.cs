@@ -48,6 +48,7 @@ namespace DougKlassen.Revit.Snoop.Models
             {
                 type = Enum.GetName(typeof(ParameterType), def.ParameterType);
             }
+#if UNITTYPE //versions prior to 2021
             try
             {
                 unitType = LabelUtils.GetLabelFor(def.UnitType);
@@ -56,6 +57,10 @@ namespace DougKlassen.Revit.Snoop.Models
             {
                 unitType = Enum.GetName(typeof(UnitType), def.UnitType);
             }
+#endif
+#if FORGETYPE
+    //TODO: code from Forge schema
+#endif
 
             if (def is InternalDefinition)
             {
