@@ -11,6 +11,7 @@
 + Bake column top and base attachments
 + Unhide all elements hidden in view
 + Automatically create filters based on selected parameter
++ Color working views red
 
 # Completed
 

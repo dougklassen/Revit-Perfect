@@ -43,6 +43,45 @@ namespace DougKlassen.Revit.Perfect.Commands
                         field = definition.GetField(f);
 
                         FormatOptions formatOptions = field.GetFormatOptions();
+#if FORGETYPE
+                        ForgeTypeId specType = field.GetSpecTypeId();
+                        if (specType == SpecTypeId.Length)
+                        {
+                            if (!lengthRegex.IsMatch(field.ColumnHeading))
+                            {
+                                field.ColumnHeading += " (lf)";
+                            }
+                            formatOptions.UseDefault = false;
+                            formatOptions.SetUnitTypeId(UnitTypeId.Feet); //TODO:verify that this is decimal feet
+                            formatOptions.Accuracy = 0.001;
+                        }
+                        else if (specType == SpecTypeId.Area)
+                        {
+                            if (!areaRegex.IsMatch(field.ColumnHeading))
+                            {
+                                field.ColumnHeading += " (sf)";
+                            }
+                            formatOptions.UseDefault = false;
+                            formatOptions.SetUnitTypeId(UnitTypeId.SquareFeet);
+                            formatOptions.Accuracy = 0.1;
+                        }
+                        else if (specType == SpecTypeId.Volume)
+                        {
+                            if (!volumeRegex.IsMatch(field.ColumnHeading))
+                            {
+                                field.ColumnHeading += " (cy)";
+                            }
+                            formatOptions.UseDefault = false;
+                            formatOptions.SetUnitTypeId(UnitTypeId.CubicYards);
+                            formatOptions.Accuracy = 0.1;
+                        }
+                        else if (specType == SpecTypeId.Currency)
+                        {
+                            formatOptions.UseDefault = false;
+                            formatOptions.SetUnitTypeId(UnitTypeId.Currency);
+                            formatOptions.Accuracy = 0.01;
+                        }
+#else
                         switch (field.UnitType)
                         {
                             case UnitType.UT_Undefined:
@@ -86,14 +125,18 @@ namespace DougKlassen.Revit.Perfect.Commands
                             default:
                                 break;
                         }
-
+#endif
                         //standardize field format
                         if (!formatOptions.UseDefault)
                         {
+#if FORGETYPE
+                            formatOptions.SetSymbolTypeId(new ForgeTypeId()); //set to empty ForgeType to specify no units symbol
+#else
                             if (FormatOptions.CanHaveUnitSymbol(formatOptions.DisplayUnits))
                             {
                                 formatOptions.UnitSymbol = UnitSymbolType.UST_NONE;
                             }
+#endif
                             if (formatOptions.CanSuppressTrailingZeros())
                             {
                                 formatOptions.SuppressTrailingZeros = false;
