@@ -52,7 +52,7 @@ namespace DougKlassen.Revit.Perfect.Commands
                                 field.ColumnHeading += " (lf)";
                             }
                             formatOptions.UseDefault = false;
-                            formatOptions.SetUnitTypeId(UnitTypeId.Feet); //TODO:verify that this is decimal feet
+                            formatOptions.SetUnitTypeId(UnitTypeId.Feet); //UnitTypeId.Feet represents decimal feet
                             formatOptions.Accuracy = 0.001;
                         }
                         else if (specType == SpecTypeId.Area)

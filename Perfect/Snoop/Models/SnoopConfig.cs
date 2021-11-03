@@ -3,10 +3,12 @@ using System.ComponentModel;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Collections.ObjectModel;
-using System.Security.Cryptography.X509Certificates;
 
 namespace DougKlassen.Revit.Snoop.Models
 {
+    /// <summary>
+    /// Complete configuration information for Snoop including all active projects 
+    /// </summary>
     public class SnoopConfig : INotifyPropertyChanged
     {
         #region Fields
@@ -77,7 +79,7 @@ namespace DougKlassen.Revit.Snoop.Models
         }
 
         /// <summary>
-        /// All projects being processed
+        /// All projects being managed by Snoop 
         /// </summary>
         public ObservableCollection<SnoopProject> ActiveProjects {
             get

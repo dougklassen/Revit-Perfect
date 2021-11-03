@@ -131,6 +131,10 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!--These post build commands will copy the addin .dll to a named subfolder referenced by the manifest-->
   <Target Name="AfterBuild">
+    <!--copy to the Snoop configurator folder-->
+    <Exec Command="xcopy &quot;$(ProjectDir)$(OutDir)$(AssemblyName).pdb&quot; &quot;C:\ProgramData\Autodesk\Revit\Addins\Perfect\&quot; /s /y /i" />
+    <Exec Command="xcopy &quot;$(ProjectDir)$(OutDir)$(AssemblyName).dll&quot; &quot;C:\ProgramData\Autodesk\Revit\Addins\Perfect\&quot; /s /y /i" />
+    <!--copy to the Perfect version number add-in folder-->
     <Exec Command="xcopy &quot;$(ProjectDir)$(OutDir)$(AssemblyName).pdb&quot; &quot;C:\ProgramData\Autodesk\Revit\Addins\$(VersionNumber)\Perfect\&quot; /s /y /i" />
     <Exec Command="xcopy &quot;$(ProjectDir)$(OutDir)$(AssemblyName).dll&quot; &quot;C:\ProgramData\Autodesk\Revit\Addins\$(VersionNumber)\Perfect\&quot; /s /y /i" />
   </Target>

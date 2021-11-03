@@ -247,12 +247,23 @@ namespace DougKlassen.Revit.SnoopConfigurator
         }
 
         /// <summary>
-        /// Add a new timestamped entry to the session log
+        /// Add a timestamped entry to the session log
         /// </summary>
         /// <param name="message">The message to add</param>
         private void LogMessage(String message)
         {
             sessionLog.AppendFormat("{0}: {1}\n\n", Helpers.GetTimeStamp(), message);
+            SessionLog = sessionLog.ToString();
+        }
+        /// <summary>
+        /// Add a timestamped entry to the session log with exception informaiton
+        /// </summary>
+        /// <param name="message">The message to add</param>
+        /// <param name="exception">The exception being documented</param>
+        private void LogMessage(string message, Exception exception)
+        {
+            sessionLog.AppendFormat("{0}: {1}\n", Helpers.GetTimeStamp(), message);
+            sessionLog.AppendFormat("---\n{0}\n---\n\n", exception.Message);
             SessionLog = sessionLog.ToString();
         }
 
@@ -273,7 +284,8 @@ namespace DougKlassen.Revit.SnoopConfigurator
                 }
                 catch (Exception)
                 {
-                    LogMessage("Couldn't parse configuration file");
+                    LogMessage("Couldn't parse configuration file. Default configuration loaded.");
+                    HasUnsavedChanges = true;
                 }
 
                 LogMessage("Sucessfully loaded configuration file");
@@ -281,7 +293,8 @@ namespace DougKlassen.Revit.SnoopConfigurator
             }
             catch (Exception)
             {
-                LogMessage("Couldn't find configuration file");
+                LogMessage("Couldn't find configuration file. Default configuration loaded.");
+                HasUnsavedChanges = true;
             }
         }
 
@@ -299,14 +312,15 @@ namespace DougKlassen.Revit.SnoopConfigurator
                 ConfigFileContents = File.ReadAllText(ConfigFilePath);
                 HasUnsavedChanges = false;
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                LogMessage("Couldn't write configuration file");
+                LogMessage("Couldn't write configuration file", e);
             }
         }
 
         /// <summary>
         /// Generate task script files for all versions of Revit for all active projects
+        /// Note: this is for testing purposes. The task engine will automatically generate scripts.
         /// </summary>
         private void GenerateScripts()
         {
@@ -336,7 +350,8 @@ namespace DougKlassen.Revit.SnoopConfigurator
         }
 
         /// <summary>
-        /// Delete all active scripts
+        /// Delete all active scripts.
+        /// Note: this is for testing purposes. The task engine will automatically cleanup scripts after running them.
         /// </summary>
         private void ClearScripts()
         {
@@ -411,6 +426,11 @@ namespace DougKlassen.Revit.SnoopConfigurator
                     WriteConfig();
                     HasUnsavedChanges = false;
                 } 
+            }
+            else
+            {
+                WriteConfig();
+                HasUnsavedChanges = false;
             }
         }
 

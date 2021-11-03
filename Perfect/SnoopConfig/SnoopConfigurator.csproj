@@ -178,7 +178,8 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!--These post build commands will copy the .exe file to the Revit addin folder-->
   <Target Name="AfterBuild">
-    <Exec Command="xcopy &quot;$(ProjectDir)$(OutDir)$(AssemblyName).pdb&quot; &quot;C:\ProgramData\Autodesk\Revit\Addins\$(VersionNumber)\Perfect\&quot; /s /y /i" />
-    <Exec Command="xcopy &quot;$(ProjectDir)$(OutDir)$(AssemblyName).exe&quot; &quot;C:\ProgramData\Autodesk\Revit\Addins\$(VersionNumber)\Perfect\&quot; /s /y /i" />
+    <Exec Command="xcopy &quot;$(ProjectDir)$(OutDir)$(AssemblyName).pdb&quot; &quot;C:\ProgramData\Autodesk\Revit\Addins\Perfect\&quot; /s /y /i" />
+    <Exec Command="xcopy &quot;$(ProjectDir)$(OutDir)$(AssemblyName).exe&quot; &quot;C:\ProgramData\Autodesk\Revit\Addins\Perfect\&quot; /s /y /i" />
+    <Exec Command="xcopy &quot;$(ProjectDir)$(OutDir)Newtonsoft.Json.dll&quot; &quot;C:\ProgramData\Autodesk\Revit\Addins\Perfect\&quot; /s /y /i" />
   </Target>
 </Project>

@@ -51,8 +51,8 @@ namespace DougKlassen.Revit.Snoop
         }
 
         /// <summary>
-        /// The path of the home directory. Currently set to the directory from which SnoopConfigurator is run,
-        /// which should be the same directory as the Perfect add in for the newest version of Revit
+        /// The path of the home directory. This is the directory from which SnoopConfigurator is run,
+        /// which should be a directory named Perfect in the root of the Addins directory 
         /// </summary>
         public String HomeDirectoryPath
         {
@@ -71,7 +71,7 @@ namespace DougKlassen.Revit.Snoop
         }
 
         /// <summary>
-        /// The name of the tasks file that will be used to run Revit Tasks
+        /// The name of the tasks script file that will be used to run Revit Tasks
         /// </summary>
         public String ScriptFileName
         {
