@@ -7,6 +7,7 @@ namespace DougKlassen.Revit.Snoop.Models
 {
     public class SnoopProject : ICloneable, INotifyPropertyChanged
     {
+        //TODO: allow projects that aren't linked to a Revit file
         public event PropertyChangedEventHandler PropertyChanged;
 
         private String projectName;

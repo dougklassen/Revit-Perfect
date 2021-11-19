@@ -67,6 +67,7 @@ namespace DougKlassen.Revit.Perfect.Commands
                 "Select comments to be removed from elements");
 
             Boolean result = (Boolean) window.ShowDialog();
+            IEnumerable<String> tagsToRemove = window.SelectedObjects.Cast<String>();
 #endregion Select commments to delete
 
 #region Delete selected comments
@@ -79,8 +80,6 @@ namespace DougKlassen.Revit.Perfect.Commands
                 using (Transaction t = new Transaction(dbDoc, "Remove comments"))
                 {
                     t.Start();
-
-                    IEnumerable<String> commentsToRemove = window.SelectedObjects.Cast<String>();
 
                     //step through all selected elements and remove marked comments
                     foreach (ElementId id in selectedElements)
@@ -104,9 +103,9 @@ namespace DougKlassen.Revit.Perfect.Commands
                         }
 
                         //replace all instances of the specified comments and surrounding whitespace with the delimeter
-                        foreach (String removedComment in commentsToRemove)
+                        foreach (String removedTag in tagsToRemove)
                         {
-                            Regex removalRegEx = new Regex(@"(?:^|\s+)" + removedComment + @"\s*(?:$|\s)");
+                            Regex removalRegEx = new Regex(@"(?:^|\s+)" + removedTag + @"\s*(?:$|\s)");
                             commentString = removalRegEx.Replace(commentString, delimeter);
                         }
 

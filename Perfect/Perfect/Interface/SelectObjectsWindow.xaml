@@ -18,7 +18,7 @@
             <ListBox x:Name="tagListBox" ItemsSource="{Binding ObjectList, ElementName=selectObjectsWindow}">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
-                        <CheckBox Name="selectCheckBox" Content="{Binding Path=Description}" />
+                        <CheckBox Name="selectCheckBox" Content="{Binding Path=Description}" IsChecked="{Binding Path=IsSelected}"/>
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>
