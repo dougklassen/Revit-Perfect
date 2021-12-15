@@ -1,7 +1,6 @@
 # Commands to add
 
 + Select all
-+ Hide all views callouts based on matching sheet numers (specify number of digits)
 + Rework view naming to prefix with arbitrary portion of sheet number
 + Create, manage, and apply view specific override templates
 + Purge imported view specific CAD files from a selected view
@@ -13,11 +12,16 @@
 + Automatically create filters based on selected parameter
 + Select titleblocks based on sheet selection
 + Color working views red
++ Set family type names with one type to match family name
++ Remove FlagUnitElementsCommand
++ Remove RenameFamiliesCommand
++ Standardize to string, int, float
 
 # Completed
 
 + ~~Dissallow join on all selected walls~~
 + ~~Split walls by level~~
++ ~~Hide all views callouts based on matching sheet numers (specify number of digits)~~
 
 # Viz Commands to add
 

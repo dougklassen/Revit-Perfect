@@ -143,6 +143,7 @@
     <Compile Include="Commands\ExportParameters\ExportParametersCommand.cs" />
     <Compile Include="Commands\ExportProjectData\ExportProjectDataCommand.cs" />
     <Compile Include="Commands\ExportSchedules\ExportSchedulesCommand.cs" />
+    <Compile Include="Commands\FixFamilyTypeNames\FixFamilyTypeNamesCommand.cs" />
     <Compile Include="Commands\FlagUnitElements\FlagUnitElementsCommand.cs" />
     <Compile Include="Commands\LoadImportStyles\LoadImportStylesCommand.cs" />
     <Compile Include="Commands\PurgeViews\PurgeViewsCommand.cs" />

@@ -87,6 +87,11 @@ namespace DougKlassen.Revit.Perfect
                 commandClass: "SetViewTitleCommand",
                 buttonText: "Set Empty View Titles",
                 buttonToolTip: "Set Title on Sheet view parameter for views that don't have it set yet");
+            addButtonToPulldown(
+                pulldown: nameStandardsPullDownButton,
+                commandClass: "FixFamilyTypeNamesCommand",
+                buttonText: "Fix Family Type Names",
+                buttonToolTip: "Set family types in families with only one type to match the family name" );
     #endregion Naming Standards Pulldown
 
     #region Clean Up Pull Down
