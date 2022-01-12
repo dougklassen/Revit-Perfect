@@ -147,14 +147,14 @@
     <Compile Include="Commands\LoadImportStyles\LoadImportStylesCommand.cs" />
     <Compile Include="Commands\PurgeViews\PurgeViewsCommand.cs" />
     <Compile Include="Commands\SplitWallByLevel\SplitWallByLevelCommand.cs" />
-    <Compile Include="Commands\VizCommands\ApplyStylesPanel\ApplyStyleCommand.cs" />
-    <Compile Include="Commands\VizCommands\ApplyStylesPanel\PickupStyleCommand.cs" />
-    <Compile Include="Commands\VizCommands\ManageCalloutsPanel\FilterCalloutsCommand.cs" />
-    <Compile Include="Commands\VizCommands\ManageCalloutsPanel\FilterCalloutsWindow.xaml.cs">
+    <Compile Include="Commands\ApplyStyle\ApplyStyleCommand.cs" />
+    <Compile Include="Commands\PickupStyle\PickupStyleCommand.cs" />
+    <Compile Include="Commands\FilterCallouts\FilterCalloutsCommand.cs" />
+    <Compile Include="Commands\FilterCallouts\FilterCalloutsWindow.xaml.cs">
       <DependentUpon>FilterCalloutsWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Commands\VizCommands\ResetPanel\ResetGraphicsCommand.cs" />
-    <Compile Include="Commands\VizCommands\ResetPanel\ResetHiddenCommand.cs" />
+    <Compile Include="Commands\ResetGraphics\ResetGraphicsCommand.cs" />
+    <Compile Include="Commands\ResetHidden\ResetHiddenCommand.cs" />
     <Compile Include="Interface\SelectObjectsWindow.xaml.cs">
       <DependentUpon>SelectObjectsWindow.xaml</DependentUpon>
     </Compile>
@@ -208,7 +208,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Commands\VizCommands\ManageCalloutsPanel\FilterCalloutsWindow.xaml">
+    <Page Include="Commands\FilterCallouts\FilterCalloutsWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

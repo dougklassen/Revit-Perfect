@@ -14,9 +14,13 @@
 + Place views on sheet based on sheet number in view name
 + Replace and purge types for annotation objects such as dimensions and text styles that can hide in sketches, etc.
 + Compact detail numbering on sheet, ie renumber all details sequentially with no skipped numbers
++ Hide and reveal elements using parameter settings
+    - Use imported .csv files to tie elements to construction schedule
++ Allow generation of 4D views using imported schedule
 
 # Completed
 
++ ~~Integrate Viz with the rest of the add in, organize the "Commands" folder~~
 + ~~Remove FlagUnitElementsCommand~~
 + ~~Remove RenameFamiliesCommand~~
 + ~~Set family type names with one type to match family name~~
@@ -24,16 +28,6 @@
 + ~~Dissallow join on all selected walls~~
 + ~~Split walls by level~~
 + ~~Hide all views callouts based on matching sheet numers (specify number of digits)~~
-
-# Viz Commands to add
-
-+ Integrate Viz with the rest of the add in, organize the "Commands" folder
-+ Hide and reveal elements using parameter settings
-    - Use imported .csv files to tie elements to construction schedule
-+ Allow generation of 4D views using imported schedule
-
-# Viz Completed
-
 + ~~Unhide all elements hidden in view~~
 + ~~Undo all view specific graphic overrides~~
 + ~~View specific graphics override transfer~~
