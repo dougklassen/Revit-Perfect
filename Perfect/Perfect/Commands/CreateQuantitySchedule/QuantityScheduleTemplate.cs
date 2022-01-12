@@ -1,6 +1,6 @@
-﻿using System;
+﻿using Autodesk.Revit.DB;
+using System;
 using System.Collections.Generic;
-using Autodesk.Revit.DB;
 
 namespace DougKlassen.Revit.Perfect.Commands
 {
@@ -75,7 +75,7 @@ namespace DougKlassen.Revit.Perfect.Commands
         /// <summary>
         /// The type of value displayed by the field. Either a user defined project parameter, a built in parameter, or a calculation based on the 
         /// </summary>
-        public FieldType Type {get;set;}
+        public FieldType Type { get; set; }
         /// <summary>
         /// The source for the fields value. This will be either the name of a parameter value or a calculation, as specified by Type
         /// </summary>

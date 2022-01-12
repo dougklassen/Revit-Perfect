@@ -8,6 +8,9 @@ using System.Windows.Forms;
 
 namespace DougKlassen.Revit.Perfect.Commands
 {
+    /// <summary>
+    /// Create a json file with all categories present in the project 
+    /// </summary>
     [Autodesk.Revit.Attributes.Transaction(Autodesk.Revit.Attributes.TransactionMode.ReadOnly)]
     class ExportCategoriesCommand : IExternalCommand
     {

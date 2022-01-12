@@ -291,7 +291,7 @@ namespace DougKlassen.Revit.Perfect
             return errors;
         }
 
-#region Viz Helpers
+        #region Viz Helpers
 
         /// <summary>
         /// Generate a string description of an OverrideGraphicsSettings object
@@ -378,7 +378,7 @@ namespace DougKlassen.Revit.Perfect
             return new VizOverrides(settings);
         }
 
-#endregion Viz Helpers
+        #endregion Viz Helpers
 
     }
 }

@@ -28,7 +28,7 @@ namespace DougKlassen.Revit.Snoop.Models
         private ObservableCollection<SnoopTaskParameter> taskParameters;
 
         public SnoopTask()
-        {            
+        {
             TaskParameters = new ObservableCollection<SnoopTaskParameter>();
         }
 

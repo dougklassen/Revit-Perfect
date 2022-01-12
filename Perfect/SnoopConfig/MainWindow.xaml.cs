@@ -395,7 +395,7 @@ namespace DougKlassen.Revit.SnoopConfigurator
         {
             MessageBoxResult result = MessageBox.Show(
                 "Overwrite configuration with default settings?",
-                messageBoxTitle,                
+                messageBoxTitle,
                 MessageBoxButton.OKCancel);
 
             if (result == MessageBoxResult.OK)
@@ -425,7 +425,7 @@ namespace DougKlassen.Revit.SnoopConfigurator
                 {
                     WriteConfig();
                     HasUnsavedChanges = false;
-                } 
+                }
             }
             else
             {
@@ -496,7 +496,7 @@ namespace DougKlassen.Revit.SnoopConfigurator
             SnoopProject newProject = new SnoopProject();
             newProject.ProjectName = "Project " + (Config.ActiveProjects.Count + 1).ToString();
             ConfigureProjectWindow configureWindow = new ConfigureProjectWindow(newProject, Config.RevitFilePaths.Keys);
-            Boolean result = (Boolean) configureWindow.ShowDialog();
+            Boolean result = (Boolean)configureWindow.ShowDialog();
             if (result)
             {
                 Config.ActiveProjects.Add(newProject);

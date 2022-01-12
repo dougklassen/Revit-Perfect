@@ -3,12 +3,15 @@ using Autodesk.Revit.UI;
 using DougKlassen.Revit.Snoop.Models;
 using DougKlassen.Revit.Snoop.Repositories;
 using System;
-using System.Linq;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace DougKlassen.Revit.Perfect.Commands
 {
+    /// <summary>
+    /// Export all parameters in the current Revit project to a json file
+    /// </summary>
     [Autodesk.Revit.Attributes.Transaction(Autodesk.Revit.Attributes.TransactionMode.ReadOnly)]
     class ExportParametersCommand : IExternalCommand
     {

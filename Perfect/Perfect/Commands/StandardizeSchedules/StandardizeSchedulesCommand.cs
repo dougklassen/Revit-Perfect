@@ -1,15 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Text.RegularExpressions;
-
-using Autodesk.Revit.DB;
+﻿using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
+using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace DougKlassen.Revit.Perfect.Commands
 {
+    /// <summary>
+    /// Modify quanity schedules to match standards. Set column headings to include units.
+    /// Set digits past decimal place according to unit type.
+    /// </summary>
     [Autodesk.Revit.Attributes.Transaction(Autodesk.Revit.Attributes.TransactionMode.Manual)]
     class StandardizeSchedulesCommand : IExternalCommand
     {
@@ -28,7 +27,7 @@ namespace DougKlassen.Revit.Perfect.Commands
                 .GetElementIds()
                 .Select(id => dbDoc.GetElement(id) as ViewSchedule)
                 .Where(v => null != v);
-                
+
             using (Transaction t = new Transaction(dbDoc, "Standardize schedules"))
             {
                 t.Start();
@@ -154,7 +153,7 @@ namespace DougKlassen.Revit.Perfect.Commands
                             {
                                 formatOptions.SuppressSpaces = true;
                             }
-                            field.SetFormatOptions(formatOptions); 
+                            field.SetFormatOptions(formatOptions);
                         }
                     }
                 }

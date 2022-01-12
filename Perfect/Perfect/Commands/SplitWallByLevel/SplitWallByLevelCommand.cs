@@ -1,16 +1,15 @@
-﻿using System;
+﻿using Autodesk.Revit.DB;
+using Autodesk.Revit.UI;
+using DougKlassen.Revit.Perfect.Interface;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using Autodesk.Revit.DB;
-using Autodesk.Revit.UI;
-
-using DougKlassen.Revit.Perfect.Interface;
 
 namespace DougKlassen.Revit.Perfect.Commands
 {
+    /// <summary>
+    /// Splits selected walls by user-specified intervening levels.
+    /// </summary>
     [Autodesk.Revit.Attributes.Transaction(Autodesk.Revit.Attributes.TransactionMode.Manual)]
     class SplitWallByLevelCommand : IExternalCommand
     {
@@ -42,7 +41,7 @@ namespace DougKlassen.Revit.Perfect.Commands
             Double overallBottomElevation; //the bottom elevation of the wall
             Double overallTopElevation; //the top elevation of the wall
             Level overallLevelAbove = null; //the level immediatly above the highest host level.
-                //This will be the top constraint of the wall unless no level is found above the highest host level, in which case it will be set to null
+                                            //This will be the top constraint of the wall unless no level is found above the highest host level, in which case it will be set to null
             Double tolerance = 0.0001; //tolerance to use when choosing host levels
             List<Level> hostLevels = new List<Level>(); //The levels that will host the new individual walls
             String msg = String.Empty; //diagnostic string
@@ -50,13 +49,13 @@ namespace DougKlassen.Revit.Perfect.Commands
             /* get the elevation at the bottom of the wall */
             overallBottomElevation =
                 (dbDoc.GetElement(sourceWall.get_Parameter(BuiltInParameter.WALL_BASE_CONSTRAINT).AsElementId()) as Level).Elevation + //the elevation of the host level
-                + sourceWall.get_Parameter(BuiltInParameter.WALL_BASE_OFFSET).AsDouble(); //plus the bottom offset of the wall
+                +sourceWall.get_Parameter(BuiltInParameter.WALL_BASE_OFFSET).AsDouble(); //plus the bottom offset of the wall
 
             /* get the elevation at the top of the wall */
             Level topLevel = null; //get the top level constraint of the wall. It will be null if the wall is unconnected
             var wallTopLevelID = sourceWall.get_Parameter(BuiltInParameter.WALL_HEIGHT_TYPE).AsElementId();
-            if(sourceWall.get_Parameter(BuiltInParameter.WALL_HEIGHT_TYPE).AsValueString() != "Unconnected")
-                //if the wall is constrained to a top level
+            if (sourceWall.get_Parameter(BuiltInParameter.WALL_HEIGHT_TYPE).AsValueString() != "Unconnected")
+            //if the wall is constrained to a top level
             {
                 topLevel = dbDoc.GetElement(wallTopLevelID) as Level;
                 Double topOffset = sourceWall.get_Parameter(BuiltInParameter.WALL_TOP_OFFSET).AsDouble();

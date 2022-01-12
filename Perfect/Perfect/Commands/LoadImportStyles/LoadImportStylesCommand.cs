@@ -9,6 +9,9 @@ using System.Linq;
 
 namespace DougKlassen.Revit.Perfect.Commands
 {
+    /// <summary>
+    /// Load and apply CAD import styles that have previously been exported by ExportImportStylesCommand
+    /// </summary>
     [Autodesk.Revit.Attributes.Transaction(Autodesk.Revit.Attributes.TransactionMode.Manual)]
     class LoadImportStylesCommand : IExternalCommand
     {

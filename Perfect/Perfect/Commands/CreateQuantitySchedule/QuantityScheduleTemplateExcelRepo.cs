@@ -201,7 +201,7 @@ namespace DougKlassen.Revit.Perfect.Commands
                             //skip instances where no fields are defined
                             if (currentTemplate.Fields.Count > 0)
                             {
-                                templates.Add(currentTemplate);  
+                                templates.Add(currentTemplate);
                             }
                         }
                     }
@@ -324,7 +324,7 @@ namespace DougKlassen.Revit.Perfect.Commands
     public class QuantityScheduleParseException : FileFormatException
     {
         public QuantityScheduleParseException(String message)
-            :base(message)
+            : base(message)
         {
 
         }

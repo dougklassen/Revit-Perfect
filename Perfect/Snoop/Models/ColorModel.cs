@@ -34,7 +34,7 @@ namespace DougKlassen.Revit.Snoop.Models
 
         public Color GetColor()
         {
-            if(Red.HasValue && Green.HasValue && Blue.HasValue)
+            if (Red.HasValue && Green.HasValue && Blue.HasValue)
             {
                 return new Color(Red.Value, Green.Value, Blue.Value);
             }

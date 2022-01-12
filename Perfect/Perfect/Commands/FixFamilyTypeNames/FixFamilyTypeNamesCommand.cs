@@ -4,11 +4,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace DougKlassen.Revit.Perfect.Commands
 {
-    //Fix family type naming. For families with only one type, set the family type name to match the family name
+    /// <summary>
+    /// Fix family type naming. For families with only one type, set the family type name to match the family name
+    /// </summary>
     [Autodesk.Revit.Attributes.Transaction(Autodesk.Revit.Attributes.TransactionMode.Manual)]
     class FixFamilyTypeNamesCommand : IExternalCommand
     {
@@ -27,8 +28,9 @@ namespace DougKlassen.Revit.Perfect.Commands
             {
                 t.Start();
 
-                foreach (Family family in familiesToProcess) {
-                    IEnumerable<ElementId>symbolIds = family.GetFamilySymbolIds();
+                foreach (Family family in familiesToProcess)
+                {
+                    IEnumerable<ElementId> symbolIds = family.GetFamilySymbolIds();
                     if (symbolIds.Count() == 1)
                     {
                         singleTypeFamilyCount++;

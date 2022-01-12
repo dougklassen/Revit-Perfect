@@ -7,9 +7,13 @@ using System.Windows.Forms;
 
 namespace DougKlassen.Revit.Perfect.Commands
 {
+    /// <summary>
+    /// Export various data about the current project to a json file
+    /// </summary>
     [Autodesk.Revit.Attributes.Transaction(Autodesk.Revit.Attributes.TransactionMode.ReadOnly)]
     class ExportProjectDataCommand : IExternalCommand
-    {        public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
+    {
+        public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
         {
             Document dbDoc = commandData.Application.ActiveUIDocument.Document;
 

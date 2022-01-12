@@ -8,6 +8,9 @@ using System.Text.RegularExpressions;
 
 namespace DougKlassen.Revit.Perfect.Commands
 {
+    /// <summary>
+    /// For the selected elements, prompt the user to select individual words to be removed from element comments.
+    /// </summary>
     [Autodesk.Revit.Attributes.Transaction(Autodesk.Revit.Attributes.TransactionMode.Manual)]
     class CommentRemoveCommand : IExternalCommand
     {
@@ -21,7 +24,7 @@ namespace DougKlassen.Revit.Perfect.Commands
             UIDocument uiDoc = commandData.Application.ActiveUIDocument;
             Document dbDoc = commandData.Application.ActiveUIDocument.Document;
 
-#region Gather comment values from elements
+            #region Gather comment values from elements
             var selectedElements = uiDoc.Selection.GetElementIds();
 
             if (selectedElements.Count < 1)
@@ -57,20 +60,20 @@ namespace DougKlassen.Revit.Perfect.Commands
                 HashSet<String> currentComments = new HashSet<String>(splitRegex.Split(commentString));
                 activeComments.UnionWith(currentComments);
             }
-#endregion Gather comment values from elements
+            #endregion Gather comment values from elements
 
-#region Select comments to delete
+            #region Select comments to delete
             SelectObjectsWindow window = new SelectObjectsWindow(
                 activeComments,
                 false,
                 "Select Comments",
                 "Select comments to be removed from elements");
 
-            Boolean result = (Boolean) window.ShowDialog();
+            Boolean result = (Boolean)window.ShowDialog();
             IEnumerable<String> tagsToRemove = window.SelectedObjects.Cast<String>();
-#endregion Select commments to delete
+            #endregion Select commments to delete
 
-#region Delete selected comments
+            #region Delete selected comments
             if (!result)
             {
                 return Result.Cancelled;
@@ -118,7 +121,7 @@ namespace DougKlassen.Revit.Perfect.Commands
 
                 return Result.Succeeded;
             }
-#endregion Delete selected comments
+            #endregion Delete selected comments
 
         }
     }

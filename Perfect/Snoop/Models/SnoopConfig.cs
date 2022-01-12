@@ -1,8 +1,8 @@
 ﻿using System;
-using System.ComponentModel;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 
 namespace DougKlassen.Revit.Snoop.Models
 {
@@ -36,7 +36,8 @@ namespace DougKlassen.Revit.Snoop.Models
         /// <summary>
         /// The directory containing all config and task files
         /// </summary>
-        public String HomeDirectoryPath {
+        public String HomeDirectoryPath
+        {
             get
             {
                 return homeDirectoryPath;
@@ -51,7 +52,8 @@ namespace DougKlassen.Revit.Snoop.Models
         /// <summary>
         /// The file name of the configuration file
         /// </summary>
-        public String ConfigFileName {
+        public String ConfigFileName
+        {
             get
             {
                 return configFileName;
@@ -66,7 +68,8 @@ namespace DougKlassen.Revit.Snoop.Models
         /// <summary>
         /// The file name used for task script files
         /// </summary>
-        public String ScriptFileName {
+        public String ScriptFileName
+        {
             get
             {
                 return taskFileName;
@@ -81,7 +84,8 @@ namespace DougKlassen.Revit.Snoop.Models
         /// <summary>
         /// All projects being managed by Snoop 
         /// </summary>
-        public ObservableCollection<SnoopProject> ActiveProjects {
+        public ObservableCollection<SnoopProject> ActiveProjects
+        {
             get
             {
                 return activeProjects;
@@ -96,7 +100,8 @@ namespace DougKlassen.Revit.Snoop.Models
         /// <summary>
         /// All Revit installations available. The key is the version year. The value is the file path.
         /// </summary>
-        public Dictionary<String, String> RevitFilePaths {
+        public Dictionary<String, String> RevitFilePaths
+        {
             get
             {
                 return revitFilePaths;

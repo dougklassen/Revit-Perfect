@@ -9,19 +9,19 @@ using System.Windows.Media.Imaging;
 namespace DougKlassen.Revit.Perfect
 {
     public static class FileLocations
-	{
-		//AddInDirectory is initialized at runtime
-		public static String AddInDirectory;
-		public static String AssemblyName;
-		public static String AssemblyPath;
-		public static readonly String imperialTemplateDirectory = @"C:\ProgramData\Autodesk\RVT 2020\Family Templates\English_I\";
-		public static readonly String addInResourcesDirectory = @"C:\ProgramData\Autodesk\Revit\Addins\2020\Perfect";
-		public static readonly String ResourceNameSpace = @"DougKlassen.Revit.Perfect.Resources";
+    {
+        //AddInDirectory is initialized at runtime
+        public static String AddInDirectory;
+        public static String AssemblyName;
+        public static String AssemblyPath;
+        public static readonly String imperialTemplateDirectory = @"C:\ProgramData\Autodesk\RVT 2020\Family Templates\English_I\";
+        public static readonly String addInResourcesDirectory = @"C:\ProgramData\Autodesk\Revit\Addins\2020\Perfect";
+        public static readonly String ResourceNameSpace = @"DougKlassen.Revit.Perfect.Resources";
         public static readonly String CommandNameSpace = "DougKlassen.Revit.Perfect.Commands.";
-	}
+    }
 
-	public class StartUpApp : IExternalApplication
-	{
+    public class StartUpApp : IExternalApplication
+    {
         BitmapImage largeIcon;
         BitmapImage smallIcon;
 
@@ -32,16 +32,16 @@ namespace DougKlassen.Revit.Perfect
         /// <param name="application">A Reference to the Revit UI</param>
         /// <returns>Whether the application sucessfully started up</returns>
 		Result IExternalApplication.OnStartup(UIControlledApplication application)
-		{
-			//initialize AssemblyName using reflection
-			FileLocations.AssemblyName = Assembly.GetExecutingAssembly().GetName().Name;
-			//initialize AddInDirectory. The addin should be stored in a directory named after the assembly
-			FileLocations.AddInDirectory = application.ControlledApplication.AllUsersAddinsLocation + "\\" + FileLocations.AssemblyName + "\\";
-			FileLocations.AssemblyPath = FileLocations.AddInDirectory + FileLocations.AssemblyName + ".dll";
+        {
+            //initialize AssemblyName using reflection
+            FileLocations.AssemblyName = Assembly.GetExecutingAssembly().GetName().Name;
+            //initialize AddInDirectory. The addin should be stored in a directory named after the assembly
+            FileLocations.AddInDirectory = application.ControlledApplication.AllUsersAddinsLocation + "\\" + FileLocations.AssemblyName + "\\";
+            FileLocations.AssemblyPath = FileLocations.AddInDirectory + FileLocations.AssemblyName + ".dll";
 
-			//load image resources
-			largeIcon = GetEmbeddedImageResource("iconLarge.png");
-			smallIcon = GetEmbeddedImageResource("iconSmall.png");
+            //load image resources
+            largeIcon = GetEmbeddedImageResource("iconLarge.png");
+            smallIcon = GetEmbeddedImageResource("iconSmall.png");
 
             //Set up tab and panel
             String tabName = "DK";
@@ -55,7 +55,7 @@ namespace DougKlassen.Revit.Perfect
             }
             RibbonPanel PerfectRibbonPanel = application.CreateRibbonPanel(tabName, "Perfect Standards");
 
-#region Create Column One-Naming, Clean up, Export
+            #region Create Column One-Naming, Clean up, Export
             PulldownButtonData namingStandardsPulldownButtonData = new PulldownButtonData(
                 name: "AuditNamesToolsPulldown",
                 text: "Name Auditing");
@@ -70,18 +70,13 @@ namespace DougKlassen.Revit.Perfect
                 cleanUpToolsPullDownButtonData,
                 exportDataPullDownButttonData);
 
-    #region Naming Standards Pulldown
+            #region Naming Standards Pulldown
             PulldownButton nameStandardsPullDownButton = (PulldownButton)stackOne[0];
             addButtonToPulldown(
                 pulldown: nameStandardsPullDownButton,
                 commandClass: "AuditViewNamesCommand",
                 buttonText: "Audit View Naming",
                 buttonToolTip: "Check view names against the view naming standard");
-            addButtonToPulldown(
-                pulldown: nameStandardsPullDownButton,
-                commandClass: "RenameFamiliesCommand",
-                buttonText: "Family Names",
-                buttonToolTip: "Rename families according to family naming standards");
             addButtonToPulldown(
                 pulldown: nameStandardsPullDownButton,
                 commandClass: "SetViewTitleCommand",
@@ -91,10 +86,10 @@ namespace DougKlassen.Revit.Perfect
                 pulldown: nameStandardsPullDownButton,
                 commandClass: "FixFamilyTypeNamesCommand",
                 buttonText: "Fix Family Type Names",
-                buttonToolTip: "Set family types in families with only one type to match the family name" );
-    #endregion Naming Standards Pulldown
+                buttonToolTip: "Set family types in families with only one type to match the family name");
+            #endregion Naming Standards Pulldown
 
-    #region Clean Up Pull Down
+            #region Clean Up Pull Down
             PulldownButton cleanUpPullDownButton = (PulldownButton)stackOne[1];
             addButtonToPulldown(
                 pulldown: cleanUpPullDownButton,
@@ -111,9 +106,9 @@ namespace DougKlassen.Revit.Perfect
                 commandClass: "PurgeViewsCommand",
                 buttonText: "Purge Views",
                 buttonToolTip: "Purge unnamed views");
-    #endregion Clean Up Pull Down
+            #endregion Clean Up Pull Down
 
-    #region Export Pulldown
+            #region Export Pulldown
             PulldownButton exportPullDownButton = (PulldownButton)stackOne[2];
             addButtonToPulldown(
                 pulldown: exportPullDownButton,
@@ -150,11 +145,11 @@ namespace DougKlassen.Revit.Perfect
                 commandClass: "ExportProjectDataCommand",
                 buttonText: "Export Project Data",
                 buttonToolTip: "Export a catalog of data about the current project");
-    #endregion Export Pulldown
+            #endregion Export Pulldown
 
-#endregion Create Column One-Naming, Clean up, Export
+            #endregion Create Column One-Naming, Clean up, Export
 
-#region Create Column Two-Geometry, Elements, Schedules
+            #region Create Column Two-Geometry, Elements, Schedules
             PulldownButtonData geometryPullDownButtonData = new PulldownButtonData(
                 name: "GeometryPullDownButton",
                 text: "Fix Geometry");
@@ -165,11 +160,11 @@ namespace DougKlassen.Revit.Perfect
                 name: "SchdeulesPullDownButton",
                 text: "Schedules");
             IList<RibbonItem> stackTwo = PerfectRibbonPanel.AddStackedItems(
-				geometryPullDownButtonData,
-				elementPullDownButtonData,
+                geometryPullDownButtonData,
+                elementPullDownButtonData,
                 schedulesPullDownButtonData);
 
-    #region Geometry Pulldown
+            #region Geometry Pulldown
             PulldownButton geometryPullDownButton = (PulldownButton)stackTwo[0];
             addButtonToPulldown(
                 pulldown: geometryPullDownButton,
@@ -188,15 +183,10 @@ namespace DougKlassen.Revit.Perfect
                 commandClass: "SplitWallByLevelCommand",
                 buttonText: "Split Wall by Level",
                 buttonToolTip: "Split wall by intervening levels");
-    #endregion Geometry Pulldown
+            #endregion Geometry Pulldown
 
-    #region Elements Pulldown
+            #region Elements Pulldown
             PulldownButton elementPullDownButton = (PulldownButton)stackTwo[1];
-            addButtonToPulldown(
-                pulldown: elementPullDownButton,
-                commandClass: "FlagUnitElementsCommand",
-                buttonText: "Flag Unit Elements",
-                buttonToolTip: "Flag elements that are part of a unit group");
             addButtonToPulldown(
                 pulldown: elementPullDownButton,
                 commandClass: "CommentAddCommand",
@@ -207,9 +197,9 @@ namespace DougKlassen.Revit.Perfect
                 commandClass: "CommentRemoveCommand",
                 buttonText: "Remove Comment",
                 buttonToolTip: "Remove space delimited tags from the commment parameter of selected elements");
-    #endregion Elements Pulldown
+            #endregion Elements Pulldown
 
-    #region Schedules Pulldown
+            #region Schedules Pulldown
             PulldownButton schedulesPullDOwnButton = (PulldownButton)stackTwo[2];
             addButtonToPulldown(
                 pulldown: schedulesPullDOwnButton,
@@ -222,11 +212,11 @@ namespace DougKlassen.Revit.Perfect
                 commandClass: "CreateQuantityScheduleCommand",
                 buttonText: "Create a Quantity Schedule",
                 buttonToolTip: "Create a standardized quantity schedule using a configuration template");
-    #endregion Schedules Pulldown
+            #endregion Schedules Pulldown
 
-#endregion Create Column Two-Geometry, Elements, Schedules
+            #endregion Create Column Two-Geometry, Elements, Schedules
 
-#region Create slide out panel-About
+            #region Create slide out panel-About
             PerfectRibbonPanel.AddSlideOut();
             PushButtonData aboutCommandPushButtonData = new PushButtonData(
                 name: "AboutCommandButton",
@@ -239,9 +229,9 @@ namespace DougKlassen.Revit.Perfect
                 AvailabilityClassName = "DougKlassen.Revit.Perfect.Commands.AlwaysAvailableCommandAvailability"
             };
             PerfectRibbonPanel.AddItem(aboutCommandPushButtonData);
-#endregion Create slide out panel-About
+            #endregion Create slide out panel-About
 
-#region Viz Reset Panel
+            #region Viz Reset Panel
             RibbonPanel ResetRibbonPanel = application.CreateRibbonPanel(tabName, "Reset View Overrides");
 
             PushButtonData resetHiddenCommandPushButtonData = new PushButtonData(
@@ -262,9 +252,9 @@ namespace DougKlassen.Revit.Perfect
 
             ResetRibbonPanel.AddItem(resetHiddenCommandPushButtonData);
             ResetRibbonPanel.AddItem(resetGraphicsCommandPushButtonData);
-#endregion Viz Reset Panel
+            #endregion Viz Reset Panel
 
-#region Viz Apply Styles Panel
+            #region Viz Apply Styles Panel
             RibbonPanel ApplyStylesPanel = application.CreateRibbonPanel(tabName, "Apply Override Styles");
 
             PushButtonData pickupStyleCommandPushButtonData = new PushButtonData(
@@ -286,9 +276,9 @@ namespace DougKlassen.Revit.Perfect
             applyStyleCommandPushButtonData.ToolTip = "Apply an override style to selected elements";
             applyStyleCommandPushButtonData.AvailabilityClassName = "DougKlassen.Revit.Perfect.Commands.OverrideableViewCommandAvailability";
             ApplyStylesPanel.AddItem(applyStyleCommandPushButtonData);
-#endregion Viz Apply Styles Panel
+            #endregion Viz Apply Styles Panel
 
-#region Viz Manage Callouts Panel
+            #region Viz Manage Callouts Panel
             RibbonPanel ManageCalloutsPanel = application.CreateRibbonPanel(tabName, "Manage View Callouts");
 
             PushButtonData filterBugsCommandPushButtonData = new PushButtonData(
@@ -300,7 +290,7 @@ namespace DougKlassen.Revit.Perfect
             filterBugsCommandPushButtonData.ToolTip = "Filter Callouts for the current view";
             filterBugsCommandPushButtonData.AvailabilityClassName = "DougKlassen.Revit.Perfect.Commands.SheetCommandAvailability";
             ManageCalloutsPanel.AddItem(filterBugsCommandPushButtonData);
-#endregion Viz Manage Callouts Panel
+            #endregion Viz Manage Callouts Panel
 
             return Result.Succeeded;
         }
@@ -321,16 +311,16 @@ namespace DougKlassen.Revit.Perfect
             String buttonText,
             String buttonToolTip,
             String commandClass,
-            String commandAvailability=null,
-            BitmapImage largeImage=null,
-            BitmapImage smallImage=null)
+            String commandAvailability = null,
+            BitmapImage largeImage = null,
+            BitmapImage smallImage = null)
         {
             //set icons to default if not provided
-            if(null == largeImage)
+            if (null == largeImage)
             {
                 largeImage = largeIcon;
             }
-            if(null == smallImage)
+            if (null == smallImage)
             {
                 smallImage = smallIcon;
             }
@@ -361,27 +351,27 @@ namespace DougKlassen.Revit.Perfect
         /// <param name="application">A reference to the Revit UI</param>
         /// <returns></returns>
 		Result IExternalApplication.OnShutdown(UIControlledApplication application)
-		{
-			return Result.Succeeded;
-		}
+        {
+            return Result.Succeeded;
+        }
 
-		/// <summary>
-		/// Utility method to retrieve an embedded image resource from the assembly
-		/// </summary>
-		/// <param name="resourceName">The name of the image, corresponding to the filename of the embedded resouce added to the solution</param>
-		/// <returns>The loaded image represented as a BitmapImage</returns>
-		BitmapImage GetEmbeddedImageResource(String resourceName)
-		{
-			Assembly asm = Assembly.GetExecutingAssembly();
-			Stream str = asm.GetManifestResourceStream(FileLocations.ResourceNameSpace + "." + resourceName);
+        /// <summary>
+        /// Utility method to retrieve an embedded image resource from the assembly
+        /// </summary>
+        /// <param name="resourceName">The name of the image, corresponding to the filename of the embedded resouce added to the solution</param>
+        /// <returns>The loaded image represented as a BitmapImage</returns>
+        BitmapImage GetEmbeddedImageResource(String resourceName)
+        {
+            Assembly asm = Assembly.GetExecutingAssembly();
+            Stream str = asm.GetManifestResourceStream(FileLocations.ResourceNameSpace + "." + resourceName);
 
-			BitmapImage bmp = new BitmapImage();
-			bmp.BeginInit();
-			bmp.StreamSource = str;
-			bmp.EndInit();
+            BitmapImage bmp = new BitmapImage();
+            bmp.BeginInit();
+            bmp.StreamSource = str;
+            bmp.EndInit();
 
-			return bmp;
-		}
+            return bmp;
+        }
     }
 }
 
@@ -443,7 +433,7 @@ namespace DougKlassen.Revit.Perfect.Commands
             UIDocument uiDoc = applicationData.ActiveUIDocument;
             Document dbDoc = applicationData.ActiveUIDocument.Document;
 
-            if(
+            if (
                 selectedCategories.Contains(Category.GetCategory(dbDoc, BuiltInCategory.OST_Sheets)) ||
                 uiDoc.ActiveView is ViewSheet)
             {
@@ -452,7 +442,7 @@ namespace DougKlassen.Revit.Perfect.Commands
             else
             {
                 return false;
-            }    
+            }
         }
     }
 }

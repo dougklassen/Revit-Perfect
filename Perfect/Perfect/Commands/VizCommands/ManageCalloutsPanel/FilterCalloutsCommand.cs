@@ -1,8 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-
-using Autodesk.Revit.DB;
+﻿using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
+using System;
+using System.Collections.Generic;
 
 namespace DougKlassen.Revit.Perfect.Commands
 {
@@ -47,7 +46,7 @@ namespace DougKlassen.Revit.Perfect.Commands
 
             //Show window
             FilterCalloutsWindow window = new FilterCalloutsWindow(sheets);
-            Boolean result = (Boolean) window.ShowDialog();
+            Boolean result = (Boolean)window.ShowDialog();
             if (!result)
             {
                 return Result.Cancelled;
@@ -78,12 +77,12 @@ namespace DougKlassen.Revit.Perfect.Commands
                         View view = dbDoc.GetElement(viewId) as View;
                         //temporarily enter reveal hidden mode so that hidden callouts are included
                         Boolean alreadyInRevealHidden = view.IsInTemporaryViewMode(TemporaryViewMode.RevealHiddenElements);
-                        if(!alreadyInRevealHidden)
+                        if (!alreadyInRevealHidden)
                         {
                             view.EnableRevealHiddenMode();
                         }
 
-#region process viewers 
+                        #region process viewers 
                         List<ElementId> bugsToHide = new List<ElementId>();
                         List<ElementId> bugsToShow = new List<ElementId>();
                         FilteredElementCollector viewers = new FilteredElementCollector(dbDoc, viewId)
@@ -91,7 +90,7 @@ namespace DougKlassen.Revit.Perfect.Commands
 
                         foreach (Element viewer in viewers)
                         {
-                            if ( viewer.get_Parameter(BuiltInParameter.VIEWER_SHEET_NUMBER).AsString().StartsWith(filterString))
+                            if (viewer.get_Parameter(BuiltInParameter.VIEWER_SHEET_NUMBER).AsString().StartsWith(filterString))
                             {
                                 if (viewer.IsHidden(view))
                                 {
@@ -100,7 +99,7 @@ namespace DougKlassen.Revit.Perfect.Commands
                                 }
                                 //else is already visible
                             }
-                            else if(!viewer.IsHidden(view))
+                            else if (!viewer.IsHidden(view))
                             {
                                 //is currently visible, will be hidden
                                 bugsToHide.Add(viewer.Id);
@@ -116,9 +115,9 @@ namespace DougKlassen.Revit.Perfect.Commands
                         {
                             view.HideElements(bugsToHide);
                         }
-#endregion process viewers 
+                        #endregion process viewers 
 
-#region process markers
+                        #region process markers
                         //process elevation markers to hide all markers that have all viewers hidden
                         List<ElementId> markersToShow = new List<ElementId>();
                         List<ElementId> markersToHide = new List<ElementId>();
@@ -140,12 +139,12 @@ namespace DougKlassen.Revit.Perfect.Commands
                                         viewer.get_Parameter(BuiltInParameter.VIEW_FAMILY).AsString() != null &&
                                         viewer.get_Parameter(BuiltInParameter.VIEW_NAME).AsString() != null)
                                     {
-                                        if ( !viewer.IsHidden(view) &&
+                                        if (!viewer.IsHidden(view) &&
                                             viewer.get_Parameter(BuiltInParameter.VIEW_FAMILY).AsString().Equals("Elevations") &&
                                             viewer.get_Parameter(BuiltInParameter.VIEW_NAME).AsString().Equals(indexedView.Name))
                                         {
                                             hasVisiblePointer = true;
-                                        } 
+                                        }
                                     }
                                 }
                             }
@@ -175,7 +174,7 @@ namespace DougKlassen.Revit.Perfect.Commands
                         {
                             view.HideElements(markersToHide);
                         }
-#endregion process markers
+                        #endregion process markers
 
                         //reset reveal hidden mode if necessary
                         if (!alreadyInRevealHidden)

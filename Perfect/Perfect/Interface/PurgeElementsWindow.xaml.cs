@@ -1,20 +1,10 @@
-﻿using System;
+﻿using Autodesk.Revit.DB;
+using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Linq;
-using System.Text;
+using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
-using System.Text.RegularExpressions;
-
-using Autodesk.Revit.DB;
 
 namespace DougKlassen.Revit.Perfect.Interface
 {
@@ -78,7 +68,7 @@ namespace DougKlassen.Revit.Perfect.Interface
         private void PurgeRegExTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
             IEnumerable<String> matchingLinePatterns = GetMatchingDocLinePatternNames();
-            PurgeElementCountLabel.Content = 
+            PurgeElementCountLabel.Content =
                 1 == matchingLinePatterns.Count() ?
                 matchingLinePatterns.Count() + " element will be purged" :
                 matchingLinePatterns.Count() + " elements will be purged";

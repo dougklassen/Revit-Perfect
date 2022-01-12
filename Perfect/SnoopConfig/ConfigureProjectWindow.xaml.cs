@@ -1,7 +1,6 @@
 ﻿using DougKlassen.Revit.Snoop.Models;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -68,7 +67,7 @@ namespace DougKlassen.Revit.SnoopConfigurator
         {
             Microsoft.Win32.OpenFileDialog selectDialog = new Microsoft.Win32.OpenFileDialog();
             selectDialog.Filter = "Revit Files|*.rvt";
-            Boolean result = (Boolean) selectDialog.ShowDialog();
+            Boolean result = (Boolean)selectDialog.ShowDialog();
             if (result)
             {
                 Project.FilePath = selectDialog.FileName;

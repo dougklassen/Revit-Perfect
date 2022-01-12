@@ -1,13 +1,8 @@
-﻿using System;
-using System.IO;
-using System.Windows.Media.Imaging;
-using System.Reflection;
-
-using Autodesk.Revit.DB;
-using Autodesk.Revit.UI;
-using DougKlassen.Revit.Snoop;
+﻿using Autodesk.Revit.UI;
 using DougKlassen.Revit.Snoop.Models;
 using DougKlassen.Revit.Snoop.Repositories;
+using System;
+using System.IO;
 
 namespace DougKlassen.Revit.Snoop
 {

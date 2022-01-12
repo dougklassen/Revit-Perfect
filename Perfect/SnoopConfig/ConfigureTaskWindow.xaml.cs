@@ -4,16 +4,8 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace DougKlassen.Revit.SnoopConfigurator
 {
@@ -80,7 +72,7 @@ namespace DougKlassen.Revit.SnoopConfigurator
         /// </summary>
         private void ClearParamInterface()
         {
-            while (taskParametersStackPanel.Children.Count>0)
+            while (taskParametersStackPanel.Children.Count > 0)
             {
                 taskParametersStackPanel.Children.RemoveAt(taskParametersStackPanel.Children.Count - 1);
             }
@@ -108,7 +100,7 @@ namespace DougKlassen.Revit.SnoopConfigurator
 
         private void taskTypeComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            Task.TaskType = (SnoopTaskType) taskTypeComboBox.SelectedIndex;
+            Task.TaskType = (SnoopTaskType)taskTypeComboBox.SelectedIndex;
             GenerateParamInterface(Task.TaskType);
         }
     }

@@ -3,6 +3,9 @@ using System.Reflection;
 
 namespace DougKlassen.Revit.Perfect.Commands
 {
+    /// <summary>
+    /// Display a dialog with infomation about the Perfect addin.
+    /// </summary>
     [Autodesk.Revit.Attributes.Transaction(Autodesk.Revit.Attributes.TransactionMode.Manual)]
     class AboutCommand : IExternalCommand
     {

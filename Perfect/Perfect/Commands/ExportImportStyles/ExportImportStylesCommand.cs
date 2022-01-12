@@ -10,6 +10,9 @@ using System.Text.RegularExpressions;
 
 namespace DougKlassen.Revit.Perfect.Commands
 {
+    /// <summary>
+    /// Export graphic overrides to CAD import styles in a file that can be imported and applied to a different Revit project
+    /// </summary>
     [Autodesk.Revit.Attributes.Transaction(Autodesk.Revit.Attributes.TransactionMode.ReadOnly)]
     class ExportImportStylesCommand : IExternalCommand
     {

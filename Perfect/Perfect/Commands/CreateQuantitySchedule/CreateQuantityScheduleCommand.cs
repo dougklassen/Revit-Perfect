@@ -8,6 +8,9 @@ using System.Windows.Forms;
 
 namespace DougKlassen.Revit.Perfect.Commands
 {
+    /// <summary>
+    /// Create a quantity schedule using an Excel file as a template
+    /// </summary>
     [Autodesk.Revit.Attributes.Transaction(Autodesk.Revit.Attributes.TransactionMode.Manual)]
     class CreateQuantityScheduleCommand : IExternalCommand
     {

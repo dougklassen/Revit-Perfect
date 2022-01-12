@@ -1,14 +1,10 @@
-﻿using System;
+﻿using Autodesk.Revit.DB;
+using Autodesk.Revit.UI;
+using DougKlassen.Revit.Perfect.Interface;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-
-using Autodesk.Revit.UI;
-using Autodesk.Revit.DB;
-
-using DougKlassen.Revit.Perfect.Interface;
 
 namespace DougKlassen.Revit.Perfect.Commands
 {
