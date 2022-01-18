@@ -155,6 +155,9 @@
     </Compile>
     <Compile Include="Commands\ResetGraphics\ResetGraphicsCommand.cs" />
     <Compile Include="Commands\ResetHidden\ResetHiddenCommand.cs" />
+    <Compile Include="Interface\EnterRegexWindow.xaml.cs">
+      <DependentUpon>EnterRegexWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Interface\SelectObjectsWindow.xaml.cs">
       <DependentUpon>SelectObjectsWindow.xaml</DependentUpon>
     </Compile>
@@ -166,8 +169,8 @@
     <Compile Include="Commands\PurgeLinePatterns\PurgeLinePatternsCommand.cs" />
     <Compile Include="Commands\PurgeRefPlanes\PurgeRefPlanesCommand.cs" />
     <Compile Include="Commands\SetViewTitle\SetViewTitleCommand.cs" />
-    <Compile Include="Interface\PurgeElementsWindow.xaml.cs">
-      <DependentUpon>PurgeElementsWindow.xaml</DependentUpon>
+    <Compile Include="Interface\RegexSelectElementsWindow.xaml.cs">
+      <DependentUpon>RegexSelectElementsWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Helpers.cs" />
     <Compile Include="Models\IVizSettingsRepo.cs" />
@@ -212,6 +215,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Interface\EnterRegexWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Interface\SelectObjectsWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -220,7 +227,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Interface\PurgeElementsWindow.xaml">
+    <Page Include="Interface\RegexSelectElementsWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

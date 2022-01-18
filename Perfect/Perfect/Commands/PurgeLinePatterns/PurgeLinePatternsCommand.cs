@@ -23,8 +23,8 @@ namespace DougKlassen.Revit.Perfect.Commands
                 .AsEnumerable()
                 .Cast<LinePatternElement>();
 
-            PurgeElementsWindow purgeWindow = new PurgeElementsWindow(dbDoc, typeof(LinePatternElement));
-            purgeWindow.PurgeRegExString = @"^IMPORT-.*$";
+            RegexSelectElementsWindow purgeWindow = new RegexSelectElementsWindow(dbDoc, typeof(LinePatternElement));
+            purgeWindow.SelectRegExString = @"^IMPORT-.*$";
 
             purgeWindow.ShowDialog();
             if (false == purgeWindow.DialogResult)

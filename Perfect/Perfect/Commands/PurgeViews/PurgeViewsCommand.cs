@@ -25,8 +25,8 @@ namespace DougKlassen.Revit.Perfect.Commands
                 .AsEnumerable()
                 .Cast<View>();
 
-            PurgeElementsWindow purgeWindow = new PurgeElementsWindow(dbDoc, typeof(View));
-            purgeWindow.PurgeRegExString
+            RegexSelectElementsWindow purgeWindow = new RegexSelectElementsWindow(dbDoc, typeof(View));
+            purgeWindow.SelectRegExString
                 = @"(^Elevation ([1-9][0-9]|[1-9]) - [a-d]$)|(^3D View ([1-9][0-9]|[1-9])$)|(^Section ([1-9][0-9]|[1-9])$)|(^Drafting [1-9]?[0-9]$)|(^Detail [1-9]?[0-9]$)|(^Callout of .*)|(^Copy of .*)";
 
             purgeWindow.ShowDialog();
