@@ -14,7 +14,7 @@ namespace DougKlassen.Revit.Perfect.Commands
     {
         public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
         {
-            String ttl = "Viz-Reset Graphics Overrides";
+            String ttl = "Reset Graphic Overrides";
             String msg = String.Empty;
             Document dbDoc = commandData.Application.ActiveUIDocument.Document;
             View currentView = commandData.Application.ActiveUIDocument.ActiveView;
@@ -26,17 +26,19 @@ namespace DougKlassen.Revit.Perfect.Commands
                 return Result.Failed;
             }
 
-            List<Element> elementsToCheck = Helpers.GetAllElements(dbDoc).ToList();
-            msg += "All element count: " + elementsToCheck.Count + '\n';
+            List<Element> elementsToReset = Helpers.GetAllElements(dbDoc).ToList();
+            msg += "All element count: " + elementsToReset.Count + '\n';
 
-            foreach (Element e in elementsToCheck)
+            using (Transaction t = new Transaction(dbDoc))
             {
-                using (Transaction t = new Transaction(dbDoc))
+                t.Start("Reset graphics for " + currentView.Name);
+
+                foreach (Element e in elementsToReset)
                 {
-                    t.Start("Viz-" + ttl);
                     currentView.SetElementOverrides(e.Id, new OverrideGraphicSettings());
-                    t.Commit();
                 }
+
+                t.Commit();
             }
 
             TaskDialog.Show(ttl, msg);

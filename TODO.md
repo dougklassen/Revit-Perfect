@@ -1,7 +1,6 @@
 # Commands to add
 
 + Select all
-+ Rework view naming to prefix with arbitrary portion of sheet number
 + Create, manage, and apply view specific override templates
 + Purge imported view specific CAD files from a selected view
 + Import and export survey points
@@ -17,9 +16,11 @@
 + Hide and reveal elements using parameter settings
     - Use imported .csv files to tie elements to construction schedule
 + Allow generation of 4D views using imported schedule
++ Hide all crop boxes
 
 # Completed
 
++ ~~Rework view naming to prefix with sheet number~~
 + ~~Integrate Viz with the rest of the add in, organize the "Commands" folder~~
 + ~~Remove FlagUnitElementsCommand~~
 + ~~Remove RenameFamiliesCommand~~

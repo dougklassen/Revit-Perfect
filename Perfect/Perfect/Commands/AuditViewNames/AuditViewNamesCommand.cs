@@ -29,7 +29,6 @@ namespace DougKlassen.Revit.Perfect.Commands
         Int16 renamedViewCount = 0;
         Int16 failedRenameCount = 0;
 
-
         public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
         {
             EnterRegexWindow window = new EnterRegexWindow();
