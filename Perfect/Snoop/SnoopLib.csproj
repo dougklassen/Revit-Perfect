@@ -16,50 +16,53 @@
     <TargetFrameworkProfile />
   </PropertyGroup>
   <!--Build Configurations-->
-  <PropertyGroup Condition="'$(Configuration)' == 'Rvt2014'">
-    <VersionNumber>2014</VersionNumber>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <DefineConstants>UNITTYPE;</DefineConstants>
-  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)' == 'Rvt2015'">
     <VersionNumber>2015</VersionNumber>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <DefineConstants>UNITTYPE;</DefineConstants>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)' == 'Rvt2016'">
     <VersionNumber>2016</VersionNumber>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <DefineConstants>UNITTYPE;</DefineConstants>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)' == 'Rvt2017'">
     <VersionNumber>2017</VersionNumber>
     <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <DefineConstants>UNITTYPE;</DefineConstants>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)' == 'Rvt2018'">
     <VersionNumber>2018</VersionNumber>
     <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
     <DefineConstants>UNITTYPE;</DefineConstants>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)' == 'Rvt2019'">
     <VersionNumber>2019</VersionNumber>
     <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
     <DefineConstants>UNITTYPE;</DefineConstants>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)' == 'Rvt2020'">
     <VersionNumber>2020</VersionNumber>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <DefineConstants>UNITTYPE;</DefineConstants>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)' == 'Rvt2021'">
     <VersionNumber>2021</VersionNumber>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <DefineConstants>FORGETYPE;</DefineConstants>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)' == 'Rvt2022'">
     <VersionNumber>2022</VersionNumber>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <DefineConstants>FORGETYPE;</DefineConstants>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <!--common settings-->
   <PropertyGroup>
