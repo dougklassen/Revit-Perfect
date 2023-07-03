@@ -15,6 +15,7 @@
     <!--The following line is added so that Visual Studio will allow new WPF windows to be added-->
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <TargetFrameworkProfile />
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
   </PropertyGroup>
   <!--Build Configurations-->
   <PropertyGroup Condition="'$(Configuration)' == 'Rvt2015'">
@@ -76,6 +77,17 @@
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)' == 'Rvt2023'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Rvt2023\</OutputPath>
+    <DefineConstants>DEBUG;TRACE;FORGETYPE;</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
   <!--end Build Configurations-->
   <ItemGroup>
     <Reference Include="BouncyCastle.Crypto, Version=1.8.9.0, Culture=neutral, PublicKeyToken=0e99375e54769942, processorArchitecture=MSIL">
@@ -103,11 +115,11 @@
     <Reference Include="PresentationFramework" />
     <!--begin Revit API References-->
     <Reference Include="RevitAPI">
-      <HintPath>..\..\..\..\..\..\OneDrive - Lease Crutcher Lewis\Code\Revit API\2020\RevitAPI.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\..\..\Autodesk\Revit\2021\RevitAPI.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="RevitAPIUI">
-      <HintPath>..\..\..\..\..\..\OneDrive - Lease Crutcher Lewis\Code\Revit API\2020\RevitAPIUI.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\..\..\Autodesk\Revit\2021\RevitAPIUI.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <!--end Revit API References-->

@@ -17,6 +17,7 @@
     - Use imported .csv files to tie elements to construction schedule
 + Allow generation of 4D views using imported schedule
 + Hide all crop boxes
++ Allow changing sheet number for view callout filter command
 
 # Completed
 

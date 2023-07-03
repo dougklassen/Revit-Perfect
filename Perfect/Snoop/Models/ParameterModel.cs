@@ -21,6 +21,10 @@ namespace DougKlassen.Revit.Snoop.Models
         public String sourceFamily;
         public List<Int32> categories;
 
+        /// <summary>
+        /// Construct a ParameterModel based on a BuiltInParameter
+        /// </summary>
+        /// <param name="param">A BuiltInParameter enum</param>
         public ParameterModel(BuiltInParameter param)
         {
             //GetLabelFor() throws an exception for some enumeration members
@@ -40,6 +44,8 @@ namespace DougKlassen.Revit.Snoop.Models
         {
             name = def.Name;
             group = LabelUtils.GetLabelFor(def.ParameterGroup);
+
+#if UNITTYPE //versions prior to 2021
             try
             {
                 type = LabelUtils.GetLabelFor(def.ParameterType);
@@ -48,7 +54,6 @@ namespace DougKlassen.Revit.Snoop.Models
             {
                 type = Enum.GetName(typeof(ParameterType), def.ParameterType);
             }
-#if UNITTYPE //versions prior to 2021
             try
             {
                 unitType = LabelUtils.GetLabelFor(def.UnitType);
@@ -58,8 +63,8 @@ namespace DougKlassen.Revit.Snoop.Models
                 unitType = Enum.GetName(typeof(UnitType), def.UnitType);
             }
 #endif
-#if FORGETYPE
-    //TODO: code from Forge schema
+#if FORGETYPE            
+            //TODO: code from Forge schema
 #endif
 
             if (def is InternalDefinition)

@@ -75,6 +75,16 @@
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)' == 'Rvt2023'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Rvt2023\</OutputPath>
+    <DefineConstants>DEBUG;TRACE;FORGETYPE;</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
   <!--end Build Configurations-->
   <ItemGroup>
     <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
@@ -90,10 +100,10 @@
     <Reference Include="System.Xml" />
     <!--begin Revit API references-->
     <Reference Include="revitapi">
-      <hintpath>C:\Program Files\Autodesk\Revit $(VersionNumber)\RevitAPI.dll</hintpath>
+      <hintpath>..\..\..\..\..\..\..\..\Autodesk\Revit\2023\RevitAPI.dll</hintpath>
     </Reference>
     <Reference Include="revitapiui">
-      <hintpath>C:\Program Files\Autodesk\Revit $(VersionNumber)\RevitAPIUI.dll</hintpath>
+      <hintpath>..\..\..\..\..\..\..\..\Autodesk\Revit\2023\RevitAPIUI.dll</hintpath>
     </Reference>
     <!--end Revit API references-->
   </ItemGroup>
