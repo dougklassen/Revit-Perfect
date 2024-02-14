@@ -8,7 +8,7 @@ using System.Text;
 namespace DougKlassen.Revit.Perfect.Commands
 {
     /// <summary>
-    /// Fix family type naming. For families with only one type, set the family type name to match the family name
+    /// Fix family units naming. For families with only one units, set the family units name to match the family name
     /// </summary>
     [Autodesk.Revit.Attributes.Transaction(Autodesk.Revit.Attributes.TransactionMode.Manual)]
     class FixFamilyTypeNamesCommand : IExternalCommand

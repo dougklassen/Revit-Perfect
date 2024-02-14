@@ -32,9 +32,9 @@ namespace DougKlassen.Revit.SnoopConfigurator
         }
 
         /// <summary>
-        /// Creates fields for entering parameter values based on the current task type
+        /// Creates fields for entering parameter values based on the current task units
         /// </summary>
-        /// <param name="taskType">The specified task type</param>
+        /// <param name="taskType">The specified task units</param>
         private void GenerateParamInterface(SnoopTaskType taskType)
         {
             ClearParamInterface();
@@ -54,7 +54,7 @@ namespace DougKlassen.Revit.SnoopConfigurator
                         break;
                 }
                 //set the value if it was set on the original task
-                //NOTE: this will fail if the task has two parameters of the same type
+                //NOTE: this will fail if the task has two parameters of the same units
                 foreach (SnoopTaskParameter existingParam in Task.TaskParameters)
                 {
                     if (existingParam.ParameterType == paramType)

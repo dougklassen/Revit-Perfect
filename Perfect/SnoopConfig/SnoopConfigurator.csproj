@@ -3,7 +3,7 @@
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <!--Keep this line updated with the latest configuration-->
-    <Configuration Condition=" '$(Configuration)' == '' ">Rvt2022</Configuration>
+    <Configuration Condition=" '$(Configuration)' == '' ">Rvt2024</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{5A281D54-B00A-4874-822A-4AD7C5E011BB}</ProjectGuid>
     <OutputType>WinExe</OutputType>
@@ -57,6 +57,14 @@
     <VersionNumber>2022</VersionNumber>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Rvt2023|AnyCPU'">
+    <VersionNumber>2023</VersionNumber>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Rvt2024|AnyCPU'">
+    <VersionNumber>2024</VersionNumber>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+  </PropertyGroup>
   <!--Common Settings-->
   <PropertyGroup>
     <OutputPath>bin\$(Configuration)</OutputPath>
@@ -85,6 +93,17 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Rvt2023|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\Rvt2023\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Rvt2024|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Rvt2024\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <DebugType>full</DebugType>
     <PlatformTarget>x64</PlatformTarget>

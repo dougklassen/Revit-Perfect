@@ -18,6 +18,9 @@
 + Allow generation of 4D views using imported schedule
 + Hide all crop boxes
 + Allow changing sheet number for view callout filter command
++ Stamp sheets with detail annotation
+    - Select text or other annotation and copy to selected sheets
++ Sum up length of selected lines
 
 # Completed
 

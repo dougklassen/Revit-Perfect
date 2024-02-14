@@ -29,7 +29,7 @@ namespace DougKlassen.Revit.Snoop
         }
 
         /// <summary>
-        /// Get an ordered list of all task type friendly names, sorted by order in the enumeration
+        /// Get an ordered list of all task units friendly names, sorted by order in the enumeration
         /// </summary>
         /// <returns>A list of all available task types</returns>
         public static List<String> GetFriendlyTaskNames()

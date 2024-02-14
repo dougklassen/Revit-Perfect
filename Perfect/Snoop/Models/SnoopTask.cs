@@ -44,7 +44,7 @@ namespace DougKlassen.Revit.Snoop.Models
         }
 
         /// <summary>
-        /// The type of task
+        /// The units of task
         /// </summary>
         public SnoopTaskType TaskType
         {
@@ -78,9 +78,9 @@ namespace DougKlassen.Revit.Snoop.Models
 
         /// <summary>
         /// Return a canonical list of all parameters types used by a specified SnoopTaskType.
-        /// Parameter type determines the interface presented when setting the parameter.
+        /// Parameter units determines the interface presented when setting the parameter.
         /// </summary>
-        /// <param name="taskType">The specified task type</param>
+        /// <param name="taskType">The specified task units</param>
         /// <returns>Parameters used by the task</returns>
         public static List<SnoopParameterType> GetParameterTypes(SnoopTaskType taskType)
         {

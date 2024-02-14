@@ -189,9 +189,9 @@ namespace DougKlassen.Revit.Perfect.Interface
         }
 
         /// <summary>
-        /// Find a child of an element of the specified type
+        /// Find a child of an element of the specified units
         /// </summary>
-        /// <typeparam name="childItem">The type of the child to look for</typeparam>
+        /// <typeparam name="childItem">The units of the child to look for</typeparam>
         /// <param name="parent">The parent element to search</param>
         /// <returns>The specified child of the parent element</returns>
         private childItem FindVisualChild<childItem>(DependencyObject parent)

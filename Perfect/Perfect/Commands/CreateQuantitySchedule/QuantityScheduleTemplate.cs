@@ -73,7 +73,7 @@ namespace DougKlassen.Revit.Perfect.Commands
         /// </summary>
         public String Units { get; set; }
         /// <summary>
-        /// The type of value displayed by the field. Either a user defined project parameter, a built in parameter, or a calculation based on the 
+        /// The units of value displayed by the field. Either a user defined project parameter, a built in parameter, or a calculation based on the 
         /// </summary>
         public FieldType Type { get; set; }
         /// <summary>

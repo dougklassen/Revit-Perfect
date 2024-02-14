@@ -61,7 +61,7 @@ namespace DougKlassen.Revit.SnoopConfigurator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
+        ///   Looks up a localized resource of units System.Drawing.Icon similar to (Icon).
         /// </summary>
         internal static System.Drawing.Icon SnoopIcon {
             get {

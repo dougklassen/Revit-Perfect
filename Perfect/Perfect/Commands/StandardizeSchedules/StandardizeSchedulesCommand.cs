@@ -7,7 +7,7 @@ namespace DougKlassen.Revit.Perfect.Commands
 {
     /// <summary>
     /// Modify quanity schedules to match standards. Set column headings to include units.
-    /// Set digits past decimal place according to unit type.
+    /// Set digits past decimal place according to unit units.
     /// </summary>
     [Autodesk.Revit.Attributes.Transaction(Autodesk.Revit.Attributes.TransactionMode.Manual)]
     class StandardizeSchedulesCommand : IExternalCommand

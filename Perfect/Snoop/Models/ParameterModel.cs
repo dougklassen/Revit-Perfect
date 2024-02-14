@@ -8,8 +8,17 @@ namespace DougKlassen.Revit.Snoop.Models
     {
         public String name;
         public String group;
-        public String type;
-        public String unitType;
+        /// <summary>
+        /// The user friendly laber for the parameter type
+        /// formerly type, the value corresponding to LabelUtils.GetLabelFor(def.ParameterType)
+        /// Had value such as "Text", "Yes/No", "Length"
+        /// </summary>
+        public String units;
+        /// <summary>
+        ///// formerly value corresonding to LabelUtils.GetLabelFor(def.UnitType).
+        ///// Had value such as "Number", "Number", "Length"
+        ///// </summary>
+        //public String unitType;
         public Int32 id;
         public String guid;
         public Boolean? builtIn;
@@ -40,6 +49,11 @@ namespace DougKlassen.Revit.Snoop.Models
             builtIn = true;
         }
 
+        /// <summary>
+        /// Construct a ParameterModel based on a parameter Definition
+        /// </summary>
+        /// <param name="def"></param>
+        /// <param name="map"></param>
         public ParameterModel(Definition def, BindingMap map)
         {
             name = def.Name;
@@ -48,23 +62,28 @@ namespace DougKlassen.Revit.Snoop.Models
 #if UNITTYPE //versions prior to 2021
             try
             {
-                type = LabelUtils.GetLabelFor(def.ParameterType);
+                units = LabelUtils.GetLabelFor(def.ParameterType);
             }
             catch (Exception)
             {
-                type = Enum.GetName(typeof(ParameterType), def.ParameterType);
+                units = Enum.GetName(typeof(ParameterType), def.ParameterType);
             }
-            try
-            {
-                unitType = LabelUtils.GetLabelFor(def.UnitType);
-            }
-            catch (Exception)
-            {
-                unitType = Enum.GetName(typeof(UnitType), def.UnitType);
-            }
+            //try
+            //{
+            //    unitType = LabelUtils.GetLabelFor(def.UnitType);
+            //}
+            //catch (Exception)
+            //{
+            //    unitType = Enum.GetName(typeof(UnitType), def.UnitType);
+            //}
 #endif
-#if FORGETYPE            
-            //TODO: code from Forge schema
+#if FORGETYPE
+            //TODO: 2021 has GetSpecTypeId(), later versions have GetDataType()
+            ForgeTypeId forgeId = def.GetDataType();
+            units = UnitUtils.GetTypeCatalogStringForUnit(forgeId);
+
+            //ForgeTypeId forgeId = def.GetSpecTypeId();
+            //units = UnitUtils.GetTypeCatalogStringForSpec(forgeId);
 #endif
 
             if (def is InternalDefinition)
