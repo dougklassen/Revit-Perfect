@@ -1,4 +1,5 @@
 ﻿using Autodesk.Revit.DB;
+using DougKlassen.Revit.Snoop;
 using System;
 using System.Collections.Generic;
 
@@ -6,7 +7,13 @@ namespace DougKlassen.Revit.Snoop.Models
 {
     public class ParameterModel
     {
+        /// <summary>
+        /// The display name of the parameter
+        /// </summary>
         public String name;
+        /// <summary>
+        /// 
+        /// </summary>
         public String group;
         /// <summary>
         /// The user friendly laber for the parameter type
@@ -18,7 +25,6 @@ namespace DougKlassen.Revit.Snoop.Models
         ///// formerly value corresonding to LabelUtils.GetLabelFor(def.UnitType).
         ///// Had value such as "Number", "Number", "Length"
         ///// </summary>
-        //public String unitType;
         public Int32 id;
         public String guid;
         public Boolean? builtIn;
@@ -77,13 +83,23 @@ namespace DougKlassen.Revit.Snoop.Models
             //    unitType = Enum.GetName(typeof(UnitType), def.UnitType);
             //}
 #endif
-#if FORGETYPE
             //TODO: 2021 has GetSpecTypeId(), later versions have GetDataType()
-            ForgeTypeId forgeId = def.GetDataType();
-            units = UnitUtils.GetTypeCatalogStringForUnit(forgeId);
-
             //ForgeTypeId forgeId = def.GetSpecTypeId();
             //units = UnitUtils.GetTypeCatalogStringForSpec(forgeId);
+#if FORGETYPE
+            ForgeTypeId forgeId = def.GetDataType();
+            if (UnitUtils.IsUnit(forgeId))
+            {
+                units = UnitUtils.GetTypeCatalogStringForUnit(forgeId);
+            }
+            else if (UnitUtils.IsSymbol(forgeId))
+            {
+                units = "forgeId is symbol";
+            }
+            else
+            {
+                units = "forgeId is not a unit type";
+            }
 #endif
 
             if (def is InternalDefinition)
@@ -165,9 +181,11 @@ namespace DougKlassen.Revit.Snoop.Models
         /// <param name="map">A binding map from the Document</param>
         /// <param name="allElements">All elements in the project</param>
         /// <returns>Encapsulated data for the parameter</returns>
-        public static ParameterModel GetBuiltInParameter(BuiltInParameter param, BindingMap map, IEnumerable<Element> allElements)
+        public static ParameterModel GetBuiltInParameter(BuiltInParameter param, BindingMap map, Document dbDoc)
         {
+
             //attempt to find an element that has this parameter
+            IEnumerable<Element> allElements = SnoopHelpers.GetAllElements(dbDoc);
             foreach (Element e in allElements)
             {
                 Parameter p = e.get_Parameter(param);

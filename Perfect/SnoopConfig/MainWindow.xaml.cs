@@ -252,7 +252,7 @@ namespace DougKlassen.Revit.SnoopConfigurator
         /// <param name="message">The message to add</param>
         private void LogMessage(String message)
         {
-            sessionLog.AppendFormat("{0}: {1}\n\n", Helpers.GetTimeStamp(), message);
+            sessionLog.AppendFormat("{0}: {1}\n\n", SnoopHelpers.GetTimeStamp(), message);
             SessionLog = sessionLog.ToString();
         }
         /// <summary>
@@ -262,7 +262,7 @@ namespace DougKlassen.Revit.SnoopConfigurator
         /// <param name="exception">The exception being documented</param>
         private void LogMessage(string message, Exception exception)
         {
-            sessionLog.AppendFormat("{0}: {1}\n", Helpers.GetTimeStamp(), message);
+            sessionLog.AppendFormat("{0}: {1}\n", SnoopHelpers.GetTimeStamp(), message);
             sessionLog.AppendFormat("---\n{0}\n---\n\n", exception.Message);
             SessionLog = sessionLog.ToString();
         }
@@ -355,7 +355,7 @@ namespace DougKlassen.Revit.SnoopConfigurator
         /// </summary>
         private void ClearScripts()
         {
-            foreach (String version in Helpers.GetRevitVersions())
+            foreach (String version in SnoopHelpers.GetRevitVersions())
             {
                 String scriptFile = fileLocations.GetScriptFilePathForVersion(version);
                 if (File.Exists(scriptFile))
@@ -371,7 +371,7 @@ namespace DougKlassen.Revit.SnoopConfigurator
         private void RefreshActiveScripts()
         {
             List<String> foundScripts = new List<String>();
-            foreach (String version in Helpers.GetRevitVersions())
+            foreach (String version in SnoopHelpers.GetRevitVersions())
             {
                 String scriptPath = fileLocations.GetScriptFilePathForVersion(version);
                 if (File.Exists(scriptPath))

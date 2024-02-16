@@ -1,5 +1,6 @@
 ﻿using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
+using DougKlassen.Revit.Snoop;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,7 +21,7 @@ namespace DougKlassen.Revit.Perfect.Commands
             View currentView = commandData.Application.ActiveUIDocument.ActiveView;
             msg += "Current view: " + currentView.Name + '\n';
 
-            List<Element> elementsToCheck = Helpers.GetAllElements(dbDoc).ToList();
+            List<Element> elementsToCheck = SnoopHelpers.GetAllElements(dbDoc).ToList();
             msg += "All element count: " + elementsToCheck.Count + '\n';
             List<ElementId> elementIdsToUnhide = new List<ElementId>();
 

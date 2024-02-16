@@ -1,5 +1,6 @@
 ﻿using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
+using DougKlassen.Revit.Snoop;
 using DougKlassen.Revit.Snoop.Models;
 using DougKlassen.Revit.Snoop.Repositories;
 using Microsoft.Win32;
@@ -57,7 +58,7 @@ namespace DougKlassen.Revit.Perfect.Commands
             SaveFileDialog dlg = new SaveFileDialog()
             {
                 InitialDirectory = FileLocations.AddInDirectory,
-                FileName = ((null == dbDoc.Title) ? "exported" : dbDoc.Title) + "-styles-" + Helpers.GetTimeStamp(),
+                FileName = ((null == dbDoc.Title) ? "exported" : dbDoc.Title) + "-styles-" + SnoopHelpers.GetTimeStamp(),
                 DefaultExt = ".json",
                 Filter = "JSON files|*.json|Text Files|*.txt|All Files|*.*"
             };

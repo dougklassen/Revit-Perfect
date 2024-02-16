@@ -19,7 +19,7 @@ namespace DougKlassen.Revit.SnoopConfigurator
         {
             Task = task;
             InitializeComponent();
-            taskTypeComboBox.ItemsSource = Helpers.GetFriendlyTaskNames();
+            taskTypeComboBox.ItemsSource = SnoopHelpers.GetFriendlyTaskNames();
             taskTypeComboBox.SelectedIndex = (int)Task.TaskType;
         }
 

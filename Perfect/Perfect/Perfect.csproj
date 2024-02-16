@@ -209,7 +209,7 @@
     <Compile Include="Interface\RegexSelectElementsWindow.xaml.cs">
       <DependentUpon>RegexSelectElementsWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Helpers.cs" />
+    <Compile Include="PerfectHelpers.cs" />
     <Compile Include="Models\IVizSettingsRepo.cs" />
     <Compile Include="Models\VizColor.cs" />
     <Compile Include="Models\VizOverrides.cs" />

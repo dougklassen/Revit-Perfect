@@ -131,7 +131,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="FileLocations.cs" />
-    <Compile Include="Helpers.cs" />
+    <Compile Include="SnoopHelpers.cs" />
     <Compile Include="Models\CategoryModel.cs" />
     <Compile Include="Models\ColorModel.cs" />
     <Compile Include="Models\ObjectStylesModel.cs" />

@@ -21,6 +21,7 @@
 + Stamp sheets with detail annotation
     - Select text or other annotation and copy to selected sheets
 + Sum up length of selected lines
++ Turn off analytical models for all elements
 
 # Completed
 

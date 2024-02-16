@@ -1,5 +1,6 @@
 ﻿using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
+using DougKlassen.Revit.Snoop;
 using DougKlassen.Revit.Snoop.Models;
 using DougKlassen.Revit.Snoop.Repositories;
 using System;
@@ -27,7 +28,7 @@ namespace DougKlassen.Revit.Perfect.Commands
 
             SaveFileDialog saveDialog = new SaveFileDialog()
             {
-                FileName = dbDoc.Title + "-categories-" + Helpers.GetTimeStamp() + ".json",
+                FileName = dbDoc.Title + "-categories-" + SnoopHelpers.GetTimeStamp() + ".json",
                 Filter = "JSON file|*.json",
                 Title = "Save Categories Catalog"
             };

@@ -3,6 +3,7 @@ using Autodesk.Revit.UI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using DougKlassen.Revit.Snoop;
 
 namespace DougKlassen.Revit.Perfect.Commands
 {
@@ -26,7 +27,7 @@ namespace DougKlassen.Revit.Perfect.Commands
                 return Result.Failed;
             }
 
-            List<Element> elementsToReset = Helpers.GetAllElements(dbDoc).ToList();
+            List<Element> elementsToReset = SnoopHelpers.GetAllElements(dbDoc).ToList();
             msg += "All element count: " + elementsToReset.Count + '\n';
 
             using (Transaction t = new Transaction(dbDoc))

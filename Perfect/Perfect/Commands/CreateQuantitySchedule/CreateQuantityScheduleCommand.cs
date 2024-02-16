@@ -1,5 +1,6 @@
 ﻿using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
+using DougKlassen.Revit.Snoop;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -26,7 +27,7 @@ namespace DougKlassen.Revit.Perfect.Commands
         {
             Document dbDoc = commandData.Application.ActiveUIDocument.Document;
 
-            String errorFilePath = FileLocations.AddInDirectory + "error" + Helpers.GetTimeStamp() + ".txt";
+            String errorFilePath = FileLocations.AddInDirectory + "error" + SnoopHelpers.GetTimeStamp() + ".txt";
             String errorMessage = String.Empty;
 
             OpenFileDialog openDialog = new OpenFileDialog()
@@ -87,7 +88,7 @@ namespace DougKlassen.Revit.Perfect.Commands
             IEnumerable<QuantityScheduleTemplate> templatesToAdd = window.GetCheckedTemplates();
             foreach (QuantityScheduleTemplate template in templatesToAdd)
             {
-                errors.AddRange(Helpers.CreateTemplate(dbDoc, template));
+                errors.AddRange(PerfectHelpers.CreateTemplate(dbDoc, template));
             }
 
             if (errors.Count > 0)
