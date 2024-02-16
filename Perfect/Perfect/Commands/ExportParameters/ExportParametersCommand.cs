@@ -34,9 +34,10 @@ namespace DougKlassen.Revit.Perfect.Commands
                 paramData.Add(new ParameterModel(param, map));
             }
 
+            IEnumerable<Element> allElements = SnoopHelpers.GetAllElements(dbDoc);
             foreach (BuiltInParameter builtIn in Enum.GetValues(typeof(BuiltInParameter)))
             {
-                paramData.Add(ParameterModel.GetBuiltInParameter(builtIn, map, dbDoc));
+                paramData.Add(ParameterModel.GetBuiltInParameter(builtIn, map, allElements));
             }
 
             //TODO: autoincrement file name

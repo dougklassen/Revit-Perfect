@@ -1,4 +1,5 @@
 ﻿using Autodesk.Revit.DB;
+using Autodesk.Revit.UI;
 using DougKlassen.Revit.Snoop;
 using System;
 using System.Collections.Generic;
@@ -12,7 +13,12 @@ namespace DougKlassen.Revit.Snoop.Models
         /// </summary>
         public String name;
         /// <summary>
-        /// 
+        /// The internal label Revit uses for this parameter in the BuiltInParameter enum 
+        /// </summary>
+        public String builtInName;
+        /// <summary>
+        /// The group the parameter belongs to. This will be the collapsible subsection it is listed under
+        /// in the properties pallete.
         /// </summary>
         public String group;
         /// <summary>
@@ -39,19 +45,20 @@ namespace DougKlassen.Revit.Snoop.Models
         /// <summary>
         /// Construct a ParameterModel based on a BuiltInParameter
         /// </summary>
-        /// <param name="param">A BuiltInParameter enum</param>
-        public ParameterModel(BuiltInParameter param)
+        /// <param name="builtInParam">A BuiltInParameter enum</param>
+        public ParameterModel(BuiltInParameter builtInParam)
         {
             //GetLabelFor() throws an exception for some enumeration members
             try
             {
-                name = LabelUtils.GetLabelFor(param);
+                name = LabelUtils.GetLabelFor(builtInParam);
             }
             catch (Exception)
             {
-                name = Enum.GetName(typeof(BuiltInParameter), param);
+                name = null;
             }
-            id = (Int32)param;
+            builtInName = Enum.GetName(typeof(BuiltInParameter), builtInParam);
+            id = (Int32)builtInParam;
             builtIn = true;
         }
 
@@ -177,25 +184,25 @@ namespace DougKlassen.Revit.Snoop.Models
         /// use the ParameterModel(BuiltInParameter param) constructor. This method will only complete data for parameters
         /// that are in use by at least one element in the model, so larger projects are more likely to return a full result.
         /// </summary>
-        /// <param name="param">The built in parameter to export data for</param>
+        /// <param name="builtInParam">The built in parameter to export data for</param>
         /// <param name="map">A binding map from the Document</param>
         /// <param name="allElements">All elements in the project</param>
         /// <returns>Encapsulated data for the parameter</returns>
-        public static ParameterModel GetBuiltInParameter(BuiltInParameter param, BindingMap map, Document dbDoc)
+        public static ParameterModel GetBuiltInParameter(BuiltInParameter builtInParam, BindingMap map, IEnumerable<Element> allElements)
         {
-
             //attempt to find an element that has this parameter
-            IEnumerable<Element> allElements = SnoopHelpers.GetAllElements(dbDoc);
             foreach (Element e in allElements)
             {
-                Parameter p = e.get_Parameter(param);
+                Parameter p = e.get_Parameter(builtInParam);
                 if (p != null)
                 {
-                    return new ParameterModel(p.Definition, map);
+                    ParameterModel pm = new ParameterModel(p.Definition, map);
+                    pm.builtInName = Enum.GetName(typeof(BuiltInParameter), builtInParam);
+                    return pm;
                 }
             }
             //fallback
-            return new ParameterModel(param);
+            return new ParameterModel(builtInParam);
         }
     }
 }
