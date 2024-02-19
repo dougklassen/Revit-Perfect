@@ -17,37 +17,32 @@
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>false</Deterministic>
     <TargetFrameworkProfile />
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <!--Build Configurations-->
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Rvt2015|AnyCPU'">
     <VersionNumber>2015</VersionNumber>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
-    <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Rvt2016|AnyCPU'">
     <VersionNumber>2016</VersionNumber>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
-    <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Rvt2017|AnyCPU'">
     <VersionNumber>2017</VersionNumber>
     <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
-    <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Rvt2018|AnyCPU'">
     <VersionNumber>2018</VersionNumber>
     <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
-    <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Rvt2019|AnyCPU'">
     <VersionNumber>2019</VersionNumber>
     <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
-    <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Rvt2020|AnyCPU'">
     <VersionNumber>2020</VersionNumber>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
-    <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Rvt2021|AnyCPU'">
     <VersionNumber>2021</VersionNumber>

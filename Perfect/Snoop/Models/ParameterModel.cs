@@ -28,9 +28,8 @@ namespace DougKlassen.Revit.Snoop.Models
         /// </summary>
         public String units;
         /// <summary>
-        ///// formerly value corresonding to LabelUtils.GetLabelFor(def.UnitType).
-        ///// Had value such as "Number", "Number", "Length"
-        ///// </summary>
+        /// The id of the parameter definition. This corresponds to the Enum value for builtin parameters
+        /// </summary>
         public Int32 id;
         public String guid;
         public Boolean? builtIn;
@@ -81,31 +80,19 @@ namespace DougKlassen.Revit.Snoop.Models
             {
                 units = Enum.GetName(typeof(ParameterType), def.ParameterType);
             }
-            //try
-            //{
-            //    unitType = LabelUtils.GetLabelFor(def.UnitType);
-            //}
-            //catch (Exception)
-            //{
-            //    unitType = Enum.GetName(typeof(UnitType), def.UnitType);
-            //}
 #endif
-            //TODO: 2021 has GetSpecTypeId(), later versions have GetDataType()
-            //ForgeTypeId forgeId = def.GetSpecTypeId();
-            //units = UnitUtils.GetTypeCatalogStringForSpec(forgeId);
-#if FORGETYPE
+#if FORGETYPE2021 //version 2021 only
+            ForgeTypeId forgeId = def.GetSpecTypeId();
+            if (UnitUtils.IsMeasurableSpec(forgeId))
+            {
+                units = UnitUtils.GetTypeCatalogStringForSpec(forgeId);
+            }
+#endif
+#if FORGETYPE //versions 2022 and higher
             ForgeTypeId forgeId = def.GetDataType();
-            if (UnitUtils.IsUnit(forgeId))
+            if (UnitUtils.IsMeasurableSpec(forgeId))
             {
-                units = UnitUtils.GetTypeCatalogStringForUnit(forgeId);
-            }
-            else if (UnitUtils.IsSymbol(forgeId))
-            {
-                units = "forgeId is symbol";
-            }
-            else
-            {
-                units = "forgeId is not a unit type";
+                units = UnitUtils.GetTypeCatalogStringForSpec(forgeId);
             }
 #endif
 
@@ -190,6 +177,7 @@ namespace DougKlassen.Revit.Snoop.Models
         /// <returns>Encapsulated data for the parameter</returns>
         public static ParameterModel GetBuiltInParameter(BuiltInParameter builtInParam, BindingMap map, IEnumerable<Element> allElements)
         {
+            //TODO: Is there another way to do this? I haven't found a way to access a parameter definition directly using the BuiltInParam enum value
             //attempt to find an element that has this parameter
             foreach (Element e in allElements)
             {
